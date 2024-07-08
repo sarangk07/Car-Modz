@@ -2,17 +2,71 @@
 
 import React from 'react'
 import Carousel from '../components/carousal'
-import Link from 'next/link';
-import { useSelector } from 'react-redux';
+// import Link from 'next/link';
+import { useEffect } from 'react';
+import { useSelector,useDispatch } from 'react-redux';
+import { fetchUserData } from '../utils/fetchUser';
+import { useRouter } from 'next/navigation';
+import Logout from '../components/Logout';
+import axios from 'axios';
+import { clearUser } from '../redux/slices/userSlice';
+
 
 function Home() {
+  const route = useRouter()
   const images = [
     'https://i.pinimg.com/originals/bf/72/f9/bf72f91268216b97ef0f8976e8314432.jpg',
     'https://i.pinimg.com/originals/14/c5/91/14c5913ac14df4378a20cda4c7c7eb26.jpg',
     'https://i.pinimg.com/originals/1a/1e/22/1a1e220a07b5a89ef92732a03a153889.jpg',
   ];
+
+  
+
+
+
   const user = useSelector((state) => state.user);
-  console.log(user.userInfo.email,"user infos");
+  console.log(user,"user infos");
+  const dispatch = useDispatch();
+  
+
+  useEffect(() => {
+    const token = localStorage.getItem('token-access')
+    if(!token){
+      route.push('/login')
+    }
+    fetchUserData(dispatch);
+  }, [dispatch]);
+
+  const handleDeleteAccount = async () => {
+    const confirmation = window.confirm("Are you sure? After deleting, you can't recover your account.");
+
+    if (confirmation) {
+        try {
+            const token = localStorage.getItem('token-access');
+            const response = await axios.delete('http://127.0.0.1:8000/api/delete_account/', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (response.status === 204) {
+                console.log('Account deleted successfully');
+                localStorage.removeItem('token-access');
+                localStorage.removeItem('token-refresh');
+                localStorage.removeItem('username');
+                dispatch(clearUser());
+                route.push('/login');
+            } else {
+                console.error('Failed to delete account');
+            }
+        } catch (error) {
+            console.error('Error deleting account:', error);
+        }
+    } else {
+        console.log('Account deletion cancelled');
+    }
+  };
+
+
   return (
     <div className='bg-[#1a1a2e] w-full text-[#f4ecee] h-[1550px] flex flex-col justify-stretch items-stretch'>
       <div className="navBar h-fit bg-[#1a1a2e] border-b border-[#0f3460] shadow-md">nav</div>
@@ -21,16 +75,17 @@ function Home() {
             <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 mt-4 mx-2'>
               <div className='flex'>
                 <div>
-                  <h3 className="text-white font-semibold">{user.username}</h3>
-                  <p className='text-xs'>Punto 1.6</p>
-                  <p>{user.userInfo.email}</p>
+                  <h3 className="text-white font-semibold">{user.fullname}</h3>
+                  <p className='text-xs'>{user.car}</p>
+                  <p>{user.email}</p>
                 </div>
-                <Link href='/profileU'>
-                  <img src="https://i.pinimg.com/564x/f5/04/7f/f5047fb11c11eef52ab8e661addbc9ed.jpg" alt="" className='bg-[#0f3460] w-10 rounded-xl h-10 ml-5'/>
-                </Link>
-              </div>
+                <div>
+                <img src="https://i.pinimg.com/564x/f5/04/7f/f5047fb11c11eef52ab8e661addbc9ed.jpg" alt="" className='bg-[#0f3460] w-16 rounded-xl h-10 ml-2'/>
+                </div>
+                </div>
               <div className='flex justify-around mt-2'>
-                <a className="hover:text-white transition-colors duration-300">logout</a>
+                <Logout/>
+                <button onClick={handleDeleteAccount}>delete your account</button>
                 <a href="" className="hover:text-white transition-colors duration-300">more</a>
               </div>
             </div>
@@ -38,9 +93,7 @@ function Home() {
             <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 mx-2'>
               <p className='text-white font-semibold mb-2'>Suggestions</p>
               <div className='flex items-center mb-2'>
-                <Link href='/profileSO'>
                   <img src="https://wolfmoto.in/wp-content/themes/wolf-motors/images/logo.png" alt="" className='bg-[#0f3460] w-10 rounded-xl h-10 mr-3'/>
-                </Link>
                 <div>
                   <p className='text-xs'>Wolf Performance</p>
                   <p className='text-xs mt-1'>Rating</p>
@@ -89,9 +142,9 @@ function Home() {
                 <div className='h-1/4 w-full md:hidden'>
                   <div className='flex justify-between items-start p-4 bg-[#16213e] rounded-xl m-2'>
                     <div>
-                      <h3 className="text-white font-semibold">{user.userInfo.username}</h3>
-                      <p className='text-xs'>Punto 1.6</p>
-                      <p>{user.userInfo.email}</p>
+                      <h3 className="text-white font-semibold">{user.username}</h3>
+                      <p className='text-xs'>{user.car}</p>
+                      <p>{user.email}</p>
                     </div>
                     <img src="https://i.pinimg.com/564x/f5/04/7f/f5047fb11c11eef52ab8e661addbc9ed.jpg" alt="" className='bg-[#0f3460] w-10 rounded-xl h-10'/>
                   </div>
