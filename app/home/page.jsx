@@ -3,13 +3,14 @@
 import React from 'react'
 import Carousel from '../components/carousal'
 // import Link from 'next/link';
-import { useEffect } from 'react';
+import { useState,useEffect } from 'react';
 import { useSelector,useDispatch } from 'react-redux';
-import { fetchUserData } from '../utils/fetchUser';
+import { fetchUserData,fetchAllUsers  } from '../utils/fetchUser';
 import { useRouter } from 'next/navigation';
 import Logout from '../components/Logout';
 import axios from 'axios';
 import { clearUser } from '../redux/slices/userSlice';
+import PostCreate from '../(user)/components/PostCreate';
 
 
 function Home() {
@@ -20,22 +21,16 @@ function Home() {
     'https://i.pinimg.com/originals/1a/1e/22/1a1e220a07b5a89ef92732a03a153889.jpg',
   ];
 
-  
-
-
-
   const user = useSelector((state) => state.user);
+  const allusers = useSelector((state) => state.user.users);
   console.log(user,"user infos");
+  
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true); 
+  const [choice,setChoice] = useState('default')
   
 
-  useEffect(() => {
-    const token = localStorage.getItem('token-access')
-    if(!token){
-      route.push('/login')
-    }
-    fetchUserData(dispatch);
-  }, [dispatch]);
+ 
 
   const handleDeleteAccount = async () => {
     const confirmation = window.confirm("Are you sure? After deleting, you can't recover your account.");
@@ -67,10 +62,88 @@ function Home() {
   };
 
 
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log('Starting fetchUserData');
+      await fetchUserData(dispatch);
+      console.log('Completed fetchUserData');
+      
+      console.log('Starting fetchAllUsers');
+      await fetchAllUsers(dispatch);
+      
+      console.log('Completed fetchAllUsers');
+      setLoading(false); 
+    };
+
+    fetchData();
+
+    if (!user.username && !loading) {
+      route.push('/login');
+    }
+  }, [dispatch, user.username, loading, route]);
+  console.log(allusers,'all users');
+
+
+
+
+  const [fullname,setFullname] = useState('')
+  // const [email,setEmail] = useState('')
+  const [car,setCar] = useState('')
+  const [username,setusername] = useState('')
+
+
+
+  const handleEditProfile = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token-access');
+    console.log('datas: ', fullname, car, username);
+
+    // Create an object to hold the updated fields
+    let updatedData = {};
+
+    if (fullname) updatedData.fullname = fullname;
+    if (car) updatedData.car = car;
+    if (username) updatedData.username = username;
+
+    // If no fields are updated, return early
+    if (Object.keys(updatedData).length === 0) {
+      alert('No fields to update');
+      return;
+    }
+    console.log('datas: ', fullname, car, username);
+
+    try {
+      const response = await axios.patch(
+        'http://127.0.0.1:8000/api/user/update/',
+        updatedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log('Profile updated successfully:', response.data);
+      setChoice('default');
+    } catch (error) {
+      console.error('Error updating profile:', error.response ? error.response.data : error.message);
+      alert('Failed to update profile. Please try again.');
+    }
+
+
+    setChoice('default')
+  };
+
+
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className='bg-[#1a1a2e] w-full text-[#f4ecee] h-[1550px] flex flex-col justify-stretch items-stretch'>
-      <div className="navBar h-fit bg-[#1a1a2e] border-b border-[#0f3460] shadow-md">nav</div>
-      <div className="mainbody h-5/6 flex">
+      <div className="h-fit bg-[#1a1a2e] border-b border-[#0f3460] shadow-md">nav</div>
+      <div className="h-5/6 flex">
         <div className='flex-col bg-[#16213e] md:w-1/6 border-r border-[#0f3460] hidden md:flex'>
             <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 mt-4 mx-2'>
               <div className='flex'>
@@ -85,10 +158,32 @@ function Home() {
                 </div>
               <div className='flex justify-around mt-2'>
                 <Logout/>
-                <button onClick={handleDeleteAccount}>delete your account</button>
+                {/* <button onClick={handleDeleteAccount}>delete your account</button> */}
                 <a href="" className="hover:text-white transition-colors duration-300">more</a>
               </div>
+              <button onClick={()=>setChoice('edit-profile')}>edit</button>
             </div>
+              {
+                choice == 'edit-profile' ?
+                <>
+                <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 mt-4 mx-2 '>
+                  <h4 className='text-center'>Edit Your Profile</h4>
+                  <form action="" onSubmit={handleEditProfile } className=' flex flex-col items-center mt-5' >
+                    <input type="text" className='w-4/5 mb-2'  name='fullname' placeholder='fullname' value={fullname} onChange={(e)=>setFullname(e.target.value)}/>
+                    {/* <input type="email" className='w-4/5 mb-2' placeholder='change email' name='email' onChange={(e)=>setEmail(e.target.value)}/> */}
+                    <input type="text" className='w-4/5 mb-2' placeholder='change car' name='car' value={car}  onChange={(e)=>setCar(e.target.value)}/>
+                    <input type="text" className='w-4/5 mb-2' placeholder='change username' name='username' value={username}  onChange={(e)=>setusername(e.target.value)}/>
+                    <button type='submit'>Update</button>
+                  </form>
+                </div>
+                </> 
+                
+                :
+                
+                <>
+                
+                </>
+              }
 
             <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 mx-2'>
               <p className='text-white font-semibold mb-2'>Suggestions</p>
@@ -111,27 +206,37 @@ function Home() {
 
             <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mx-2'>
               <p className='text-white font-semibold mb-2'>Similar cars owners</p>
-              <div className='flex justify-between items-center mb-2 bg-[#16213e] rounded-lg p-2'>
-                <div className='flex items-center'>
-                  <img src="https://i.pinimg.com/564x/f1/74/17/f17417530e7fbd941fb8cf9d6a06509c.jpg" alt="" className='bg-[#0f3460] w-8 rounded-xl h-8 mr-2'/>
-                  <p>Arjun</p>
+              {allusers.filter((x) => x.car === user.car && x.id !== user.id).map((x) => (
+                <div key={x.id} className='flex justify-between items-center mb-2 bg-[#16213e] rounded-lg p-2'>
+                  <div className='flex items-center'>
+                    <img src={x.profile_pic} alt="" className='bg-[#0f3460] w-8 rounded-xl h-8 mr-2' />
+                    <p>{x.fullname}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs hover:text-white transition-colors duration-300 cursor-pointer">Connect</p>
+                    <p className='text-xs mt-1 hover:text-white transition-colors duration-300 cursor-pointer'>Message</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs hover:text-white transition-colors duration-300">Connect</p>
-                  <p className='text-xs mt-1 hover:text-white transition-colors duration-300'>Message</p>
-                </div>
-              </div>
+              ))}
+            </div>
 
-              <div className='flex justify-between items-center bg-[#16213e] rounded-lg p-2'>
+
+
+
+            <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mx-2'>
+              <p className='text-white font-semibold mb-2'>Suggestons</p>
+              {allusers.map((x) => (
+              <div key={x.id} className='flex justify-between items-center mb-2 bg-[#16213e] rounded-lg p-2'>
                 <div className='flex items-center'>
-                  <img src="https://i.pinimg.com/564x/0f/33/9a/0f339a9675cf166d1e9e8c7439327256.jpg" alt="" className='bg-[#0f3460] w-8 rounded-xl h-8 mr-2'/>
-                  <p>Ranjan</p>
+                  <img src={x.profile_pic} alt="" className='bg-[#0f3460] w-8 rounded-xl h-8 mr-2' />
+                  <p>{x.fullname}</p>
                 </div>
                 <div>
-                  <p className="text-xs hover:text-white transition-colors duration-300">Connect</p>
-                  <p className='text-xs mt-1 hover:text-white transition-colors duration-300'>Message</p>
+                  <p className="text-xs hover:text-white transition-colors duration-300 cursor-pointer">Connect</p>
+                  <p className='text-xs mt-1 hover:text-white transition-colors duration-300 cursor-pointer'>Message</p>
                 </div>
               </div>
+            ))}
             </div>
         </div>
         <div className='md:w-5/6 w-full'>
@@ -156,6 +261,7 @@ function Home() {
               <div className='md:w-1/3 hidden md:flex border-r border-[#0f3460]'>chats</div>
               <div className='md:w-2/3 h-full flex flex-col'>
                 <div className="text-center mb-4">posts</div>
+                <PostCreate/>
                 <div className='flex-1 overflow-y-auto m-3'  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                   <div className='border-b-4 border-zinc-900 bg-zinc-700 h-[100vh] mb-5 object-cover rounded-3xl'>
                     <img src="https://i.pinimg.com/564x/f5/04/7f/f5047fb11c11eef52ab8e661addbc9ed.jpg" alt="" className='relative w-full h-[90%] rounded-3xl' />

@@ -1,3 +1,4 @@
+// userSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -10,6 +11,7 @@ const initialState = {
   is_shopOwner: false,
   accessToken: '',
   refreshToken: '',
+  users: [], 
 };
 
 const userSlice = createSlice({
@@ -27,6 +29,9 @@ const userSlice = createSlice({
       state.accessToken = action.payload.accessToken || state.accessToken;
       state.refreshToken = action.payload.refreshToken || state.refreshToken;
     },
+    setUsers: (state, action) => {
+      state.users = action.payload;
+    },
     clearUser: (state) => {
       state.id = '';
       state.username = '';
@@ -41,5 +46,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, clearUser } = userSlice.actions;
+export const { setUser, setUsers, clearUser } = userSlice.actions;
 export default userSlice.reducer;
