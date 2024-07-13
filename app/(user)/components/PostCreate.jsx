@@ -72,6 +72,7 @@ function PostCreate() {
                     )}
 
                     <button type='submit'>Create</button>
+                    <p className='cursor-pointer' onClick={()=>setChoice('default')}>cancel</p>
                 </form>
             )}
         </div>
