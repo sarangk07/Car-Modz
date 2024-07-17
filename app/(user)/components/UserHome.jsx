@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import Logout from '@/app/components/Logout';
 import axios from 'axios';
 import { clearUser } from '@/app/redux/slices/userSlice';
-import PostCreate from './PostCreate';
+import PostDisplay from './postDisplay';
 
 
 function UserHome() {
@@ -100,14 +100,14 @@ function UserHome() {
     const token = localStorage.getItem('token-access');
     console.log('datas: ', fullname, car, username);
 
-    // Create an object to hold the updated fields
+    
     let updatedData = {};
 
     if (fullname) updatedData.fullname = fullname;
     if (car) updatedData.car = car;
     if (username) updatedData.username = username;
 
-    // If no fields are updated, return early
+    
     if (Object.keys(updatedData).length === 0) {
       alert('No fields to update');
       return;
@@ -174,6 +174,8 @@ function UserHome() {
                     <input type="text" className='w-4/5 mb-2' placeholder='change car' name='car' value={car}  onChange={(e)=>setCar(e.target.value)}/>
                     <input type="text" className='w-4/5 mb-2' placeholder='change username' name='username' value={username}  onChange={(e)=>setusername(e.target.value)}/>
                     <button type='submit'>Update</button>
+                    <button onClick={()=>setChoice('default')}>cancel</button>
+
                   </form>
                 </div>
                 </> 
@@ -259,34 +261,11 @@ function UserHome() {
             <div className="flex  h-2/3 w-full bg-[#1a1a2e] p-4">
               {/* <p className="text-white font-semibold mb-4">Body</p> */}
               <div className='md:w-1/3 hidden md:flex border-r border-[#0f3460]'>chats</div>
-              <div className='md:w-2/3 h-full flex flex-col'>
-                <div className="text-center mb-4">posts</div>
-                <PostCreate/>
-                <div className='flex justify-between mt-3 mb-2'>
-                  <p className='cursor-pointer'>users</p>
-                  <p className='cursor-pointer'>shops</p>
-                </div>
-                <div className='flex-1 overflow-y-auto m-3'  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                  <div className='border-b-4 border-zinc-900 bg-zinc-700 h-[100vh] mb-5 object-cover rounded-3xl'>
-                    <img src="https://i.pinimg.com/564x/f5/04/7f/f5047fb11c11eef52ab8e661addbc9ed.jpg" alt="" className='relative w-full h-[90%] rounded-3xl' />
-                    <div className='flex justify-between items-center mt-0 mb-0 pt-5 ml-5 mr-5 h-[10%]'>
-                      <button>like</button>
-                      <button>comment</button>
-                      <button>share</button>
-                    </div>    
-                  </div>
 
-                  <div className='border-b-4 border-zinc-900 bg-zinc-700 h-[100vh] mb-5 object-cover rounded-3xl'>
-                    <img src="https://i.pinimg.com/originals/d3/d4/43/d3d44386662eaf2c3b6b070bc29226ed.jpg " alt="" className='relative w-full h-[90%] rounded-3xl' />
-                    <div className='flex justify-between items-center mt-0 mb-0 pt-5 ml-5 mr-5 h-[10%]'>
-                      <button>like</button>
-                      
-                      <button>comment</button>
-                      <button>share</button>
-                    </div>     
-                  </div>
-                </div>
-              </div>
+
+              <PostDisplay/>
+
+              
               
             </div>
         </div>

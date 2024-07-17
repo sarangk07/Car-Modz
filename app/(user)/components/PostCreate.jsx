@@ -50,15 +50,15 @@ function PostCreate() {
         <div>
             <button onClick={() => setChoice('create')}>Create Post</button>
             {choice === 'create' && (
-                <form onSubmit={handleSubmit} className='flex flex-col bg-gray-700 items-center'>
+                <form onSubmit={handleSubmit} className='flex flex-col bg-gray-700 items-center '>
                     <label htmlFor="title">Title</label>
-                    <input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} required/>
+                    <input type="text" id="title" className='text-gray-700' value={title} onChange={(e) => setTitle(e.target.value)} required/>
 
                     <label htmlFor="content">Description</label>
-                    <textarea id="content" value={content} onChange={(e) => setContent(e.target.value)} required/>
+                    <textarea id="content" className='text-gray-700' value={content} onChange={(e) => setContent(e.target.value)} required/>
 
                     <label htmlFor="image">Upload Image</label>
-                    <input type="file" id="image" onChange={handleFileChange} required/>
+                    <input type="file" id="image" className='text-gray-700' onChange={handleFileChange} required/>
 
                     {selectedFile && (
                         <div className='flex flex-col items-center'>

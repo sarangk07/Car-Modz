@@ -37,6 +37,7 @@ function Login() {
                 localStorage.setItem('token-refresh', refresh);
                 localStorage.setItem('username', user.username);
                 dispatch(setUser({ username, accessToken: access, refreshToken: refresh, userInfo: user }));
+                setCredentials({ username: '', password: '' });
                 router.push('home');
             } else {
                 console.error('Login failed. Please try again.');
@@ -77,6 +78,7 @@ function Login() {
             const response = await axios.post('http://127.0.0.1:8000/api/register/', payload);
             if (response.status === 201) {
                 console.log('Registration successful');
+                setRegisterCredentials({ username: '', fullname: '', email: '', car: '', password: '', confirmPassword: '' }); 
                 setPage('login');
             } else {
                 console.error('Registration failed');
