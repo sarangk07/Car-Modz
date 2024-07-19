@@ -5,7 +5,7 @@ import Carousel from '@/app/components/carousal';
 // import Link from 'next/link';
 import { useState,useEffect } from 'react';
 import { useSelector,useDispatch } from 'react-redux';
-import { fetchUserData,fetchAllUsers } from '@/app/utils/fetchUser';
+import { fetchUserData,fetchAllUsers,followUser,unfollowUser } from '@/app/utils/fetchUser';
 import { useRouter } from 'next/navigation';
 import Logout from '@/app/components/Logout';
 import axios from 'axios';
@@ -64,17 +64,38 @@ function UserHome() {
 
 
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     console.log('Starting fetchUserData');
+  //     await fetchUserData(dispatch);
+  //     console.log('Completed fetchUserData');
+      
+  //     console.log('Starting fetchAllUsers');
+  //     await fetchAllUsers(dispatch);
+      
+  //     console.log('Completed fetchAllUsers');
+  //     setLoading(false); 
+  //   };
+
+  //   fetchData();
+
+  //   if (!user.username && !loading) {
+  //     route.push('/login');
+  //   }
+  // }, [dispatch, user.username, loading, route]);
+  // console.log(allusers,'all users');
+
+
   useEffect(() => {
     const fetchData = async () => {
       console.log('Starting fetchUserData');
       await fetchUserData(dispatch);
       console.log('Completed fetchUserData');
-      
+
       console.log('Starting fetchAllUsers');
       await fetchAllUsers(dispatch);
-      
       console.log('Completed fetchAllUsers');
-      setLoading(false); 
+      setLoading(false);
     };
 
     fetchData();
@@ -82,8 +103,9 @@ function UserHome() {
     if (!user.username && !loading) {
       route.push('/login');
     }
-  }, [dispatch, user.username, loading, route]);
-  console.log(allusers,'all users');
+}, [dispatch, user.username, loading, route]);
+
+
 
 
 
@@ -92,48 +114,103 @@ function UserHome() {
   // const [email,setEmail] = useState('')
   const [car,setCar] = useState('')
   const [username,setusername] = useState('')
+  const [selectedFile, setSelectedFile] = useState(null);
 
 
+
+
+  // const handleEditProfile = async (e) => {
+  //   e.preventDefault();
+  //   const token = localStorage.getItem('token-access');
+  //   console.log('datas: ', fullname, car, username);
+
+    
+  //   let updatedData = {};
+
+  //   if (fullname) updatedData.fullname = fullname;
+  //   if (car) updatedData.car = car;
+  //   if (username) updatedData.username = username;
+  //   if (selectedFile) updatedData.profile_pic = selectedFile;
+
+    
+  //   if (Object.keys(updatedData).length === 0) {
+  //     alert('No fields to update');
+  //     return;
+  //   }
+  //   console.log('datas: ', fullname, car, username);
+
+  //   try {
+  //     const response = await axios.patch(
+  //       'http://127.0.0.1:8000/api/user/update/',
+  //       updatedData,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     console.log('Profile updated successfully:', response.data);
+  //     setChoice('default');
+  //   } catch (error) {
+  //     console.error('Error updating profile:', error.response ? error.response.data : error.message);
+  //     alert('Failed to update profile. Please try again.');
+  //   }
+
+
+  //   setChoice('default')
+  // };
 
   const handleEditProfile = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token-access');
-    console.log('datas: ', fullname, car, username);
-
-    
-    let updatedData = {};
-
-    if (fullname) updatedData.fullname = fullname;
-    if (car) updatedData.car = car;
-    if (username) updatedData.username = username;
-
-    
-    if (Object.keys(updatedData).length === 0) {
+  
+    const formData = new FormData();
+  
+    if (fullname) formData.append('fullname', fullname);
+    if (car) formData.append('car', car);
+    if (username) formData.append('username', username);
+    if (selectedFile) formData.append('profile_pic', selectedFile);
+  
+    if (formData.entries().next().done) {
       alert('No fields to update');
       return;
     }
-    console.log('datas: ', fullname, car, username);
-
+  
     try {
       const response = await axios.patch(
         'http://127.0.0.1:8000/api/user/update/',
-        updatedData,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
           },
         }
       );
       console.log('Profile updated successfully:', response.data);
       setChoice('default');
+      // Optionally, update the user state here
     } catch (error) {
       console.error('Error updating profile:', error.response ? error.response.data : error.message);
       alert('Failed to update profile. Please try again.');
     }
-
-
-    setChoice('default')
   };
+
+
+
+
+
+
+  const handleChangePic = (event) => {
+    setSelectedFile(event.target.files[0]);
+};
+const BASE_URL = 'http://127.0.0.1:8000';
+
+
+
+
+
+
 
 
 
@@ -142,18 +219,30 @@ function UserHome() {
   }
   return (
     <div className='bg-[#1a1a2e] w-full text-[#f4ecee] h-[1550px] flex flex-col justify-stretch items-stretch'>
-      <div className="h-fit bg-[#1a1a2e] border-b border-[#0f3460] shadow-md">nav</div>
+      <div className="h-fit bg-[#1a1a2e] border-b border-[#0f3460] shadow-md"></div>
       <div className="h-5/6 flex">
         <div className='flex-col bg-[#16213e] md:w-1/6 border-r border-[#0f3460] hidden md:flex'>
+
+{/* user profile details---------------- */}
+
+
             <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 mt-4 mx-2'>
               <div className='flex'>
                 <div>
                   <h3 className="text-white font-semibold">{user.fullname}</h3>
                   <p className='text-xs'>{user.car}</p>
                   <p>{user.email}</p>
+                  <div className="flex justify-between mt-2">
+                    <p className="text-sm">
+                      <span className="font-bold">{user && user.followers ? user.followers.length : 0}</span> followers
+                    </p>
+                    <p className="text-sm">
+                      <span className="font-bold">{user && user.following ? user.following.length : 0}</span> following
+                    </p>
+                  </div>
                 </div>
                 <div>
-                <img src="https://i.pinimg.com/564x/f5/04/7f/f5047fb11c11eef52ab8e661addbc9ed.jpg" alt="" className='bg-[#0f3460] w-16 rounded-xl h-10 ml-2'/>
+                <img src={user.profile_pic ? `${BASE_URL}${user.profile_pic}` : ''} alt="" className='bg-[#0f3460] w-16 rounded-xl h-10 ml-2'/>
                 </div>
                 </div>
               <div className='flex justify-around mt-2'>
@@ -163,12 +252,22 @@ function UserHome() {
               </div>
               <button onClick={()=>setChoice('edit-profile')}>edit</button>
             </div>
+
+
+
+
+
+{/* edit profile tab---------------- */}
+
+
               {
                 choice == 'edit-profile' ?
                 <>
                 <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 mt-4 mx-2 '>
                   <h4 className='text-center'>Edit Your Profile</h4>
                   <form action="" onSubmit={handleEditProfile } className=' flex flex-col items-center mt-5' >
+                    <label htmlFor="profilePic">Upload / change DP</label>
+                    <input type="file" className='w-4/5 mb-2' name='profilePic' onChange={handleChangePic}/>
                     <input type="text" className='w-4/5 mb-2'  name='fullname' placeholder='fullname' value={fullname} onChange={(e)=>setFullname(e.target.value)}/>
                     {/* <input type="email" className='w-4/5 mb-2' placeholder='change email' name='email' onChange={(e)=>setEmail(e.target.value)}/> */}
                     <input type="text" className='w-4/5 mb-2' placeholder='change car' name='car' value={car}  onChange={(e)=>setCar(e.target.value)}/>
@@ -186,6 +285,10 @@ function UserHome() {
                 
                 </>
               }
+
+
+{/* shop suggestions---------------- */}
+
 
             <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 mx-2'>
               <p className='text-white font-semibold mb-2'>Suggestions</p>
@@ -206,12 +309,17 @@ function UserHome() {
               </div>
             </div>
 
+
+
+{/* similar car owner suggestions---------------- */}
+
+
             <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mx-2'>
               <p className='text-white font-semibold mb-2'>Similar cars owners</p>
               {allusers.filter((x) => x.car === user.car && x.id !== user.id).map((x) => (
                 <div key={x.id} className='flex justify-between items-center mb-2 bg-[#16213e] rounded-lg p-2'>
                   <div className='flex items-center'>
-                    <img src={x.profile_pic} alt="" className='bg-[#0f3460] w-8 rounded-xl h-8 mr-2' />
+                    <img src={x.profile_pic ? `${BASE_URL}${x.profile_pic}` : ''} alt="" className='bg-[#0f3460] w-8 rounded-xl h-8 mr-2' />
                     <p>{x.fullname}</p>
                   </div>
                   <div>
@@ -224,49 +332,89 @@ function UserHome() {
 
 
 
+{/* suggested users---------------- */}
 
-            <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mx-2'>
+
+            <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mx-2 mt-3 overflow-scroll' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               <p className='text-white font-semibold mb-2'>Suggestons</p>
-              {allusers.map((x) => (
-              <div key={x.id} className='flex justify-between items-center mb-2 bg-[#16213e] rounded-lg p-2'>
-                <div className='flex items-center'>
-                  <img src={x.profile_pic} alt="" className='bg-[#0f3460] w-8 rounded-xl h-8 mr-2' />
-                  <p>{x.fullname}</p>
-                </div>
-                <div>
-                  <p className="text-xs hover:text-white transition-colors duration-300 cursor-pointer">Connect</p>
-                  <p className='text-xs mt-1 hover:text-white transition-colors duration-300 cursor-pointer'>Message</p>
-                </div>
-              </div>
-            ))}
+              {
+                allusers.map((userItem) => (
+                  <div key={userItem.id} className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 w-full md:w-full lg:w-full'>
+                    <div className='flex'>
+                      <img src={userItem.profile_pic ? `${BASE_URL}${userItem.profile_pic}` : ''} alt="" className='bg-[#0f3460] w-full rounded-xl h-16 mr-3'/>
+                      <div>
+                        <h3 className='text-white font-semibold'>{userItem.fullname}</h3>
+                        <p className='text-xs'>{userItem.car}</p>
+                        {/* <p>{userItem.email}</p> */}
+                        {/* <div className="flex justify-between mt-2">
+                          <p className="text-sm">
+                            <span className="font-bold">{userItem.followers_count}</span> followers
+                          </p>
+                          <p className="text-sm">
+                            <span className="font-bold">{userItem.following_count}</span> following
+                          </p>
+                        </div> */}
+                       {
+                        userItem.followers.some(follower => follower.follower === user.id) ? (
+                          <button onClick={() => unfollowUser(userItem.id, dispatch)} className='mt-2'>Unfollow</button>
+                        ) : (
+                          <button onClick={() => followUser(userItem.id, dispatch)} className='mt-2'>Follow</button>
+                        )
+                      }
+                      </div>
+                    </div>
+                  </div>
+                ))
+              }
             </div>
         </div>
+
+
+
+
+{/* main div---------------- */}
+
+
         <div className='md:w-5/6 w-full'>
             <div className="header h-1/3 w-full bg-[#1a1a2e] border-b border-[#0f3460]">
                 <div className='h-3/4 m:h-full w-full'>
                   <Carousel images={images}/>
                 </div>
+
+
+
+{/* user info in mobile view only---------------- */}
+
+
                 <div className='h-1/4 w-full md:hidden'>
                   <div className='flex justify-between items-start p-4 bg-[#16213e] rounded-xl m-2'>
                     <div>
                       <h3 className="text-white font-semibold">{user.username}</h3>
                       <p className='text-xs'>{user.car}</p>
                       <p>{user.email}</p>
+                       {/* <button onClick={()=>setChoice('edit-profile')}>edit</button> */}
+
                     </div>
+                    <div className="flex flex-col justify-between mt-2">
                     <img src="https://i.pinimg.com/564x/f5/04/7f/f5047fb11c11eef52ab8e661addbc9ed.jpg" alt="" className='bg-[#0f3460] w-10 rounded-xl h-10'/>
+
+                    <p className="text-sm">
+                      <span className="font-bold">{user && user.followers ? user.followers.length : 0}</span> followers
+                    </p>
+                    <p className="text-sm">
+                      <span className="font-bold">{user && user.following ? user.following.length : 0}</span> following
+                    </p>
+                  </div>
                   </div>
                 </div>
+
+
             </div>
 
             <div className="flex  h-2/3 w-full bg-[#1a1a2e] p-4">
               {/* <p className="text-white font-semibold mb-4">Body</p> */}
               <div className='md:w-1/3 hidden md:flex border-r border-[#0f3460]'>chats</div>
-
-
               <PostDisplay/>
-
-              
-              
             </div>
         </div>
       </div>

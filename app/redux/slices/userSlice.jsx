@@ -11,6 +11,8 @@ const initialState = {
   is_shopOwner: false,
   accessToken: '',
   refreshToken: '',
+  followers_count: 0,
+  following_count: 0,
   users: [], 
 };
 
@@ -28,6 +30,11 @@ const userSlice = createSlice({
       state.is_shopOwner = action.payload.is_shopOwner;
       state.accessToken = action.payload.accessToken || state.accessToken;
       state.refreshToken = action.payload.refreshToken || state.refreshToken;
+      state.followers_count = action.payload.followers_count || 0;
+      state.following_count = action.payload.following_count || 0;
+
+      state.followers = action.payload.followers;
+      state.following = action.payload.following;
     },
     setUsers: (state, action) => {
       state.users = action.payload;
@@ -42,9 +49,21 @@ const userSlice = createSlice({
       state.is_shopOwner = false;
       state.accessToken = '';
       state.refreshToken = '';
+      state.followers_count = 0;
+      state.following_count = 0;
+      
+      state.followers = 0;
+      state.following = 0;
+    },
+
+    updateFollowerCount: (state, action) => {
+      state.followers_count = action.payload;
+    },
+    updateFollowingCount: (state, action) => {
+      state.following_count = action.payload;
     },
   },
 });
 
-export const { setUser, setUsers, clearUser } = userSlice.actions;
+export const { setUser, setUsers, clearUser,updateFollowerCount ,updateFollowingCount} = userSlice.actions;
 export default userSlice.reducer;
