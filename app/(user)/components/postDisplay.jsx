@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import PostCreate from './PostCreate';
 import { useSelector } from 'react-redux';
+import Image from 'next/image';
+import Comments from './comments';
+import Like from './like';
 
 function PostDisplay() {
     const user = useSelector((state) => state.user);
@@ -64,10 +67,14 @@ function PostDisplay() {
                                         
                                     </div>
                                     <img src={x.image} alt="" className='relative w-full h-[90%] rounded-sm' />
-                                    <div className='rounded-xl border-b-4 border-blue-300 flex justify-between items-center mt-0 pt-2 h-[10%]'>
-                                        <button>like</button>
-                                        <button>comment</button>
+                                    <div className='rounded-xl flex-col border-b-4 border-blue-300 flex  mt-0 pt-2 h-[10%]'>
+                                    <div className='flex items-stretch justify-between'>
+                                        <Like postId={x.id}/>
                                         <button>share</button>
+                                        </div>
+                                        <div className='flex'>
+                                            <Comments postId={x.id}/>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -89,10 +96,14 @@ function PostDisplay() {
                                         </div>
                                     </div>
                                     <img src={x.image} alt="" className='relative w-full h-[90%] rounded-sm' />
-                                    <div className='rounded-xl border-b-4 border-blue-300 flex justify-between items-center mt-0 pt-2 h-[10%]'>
-                                        <button>like</button>
-                                        <button>comment</button>
+                                    <div className='rounded-xl flex-col border-b-4 border-blue-300 flex  mt-0 pt-2 h-[10%]'>
+                                    <div className='flex items-stretch justify-between'>
+                                        <Like postId={x.id}/>
                                         <button>share</button>
+                                        </div>
+                                        <div className='flex'>
+                                            <Comments postId={x.id}/>
+                                        </div>
                                     </div>
                                 </div>
                             ))}

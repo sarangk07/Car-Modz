@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Carousel from '@/app/components/carousal';
-// import Link from 'next/link';
+
 import { useState,useEffect } from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import { fetchUserData,fetchAllUsers,followUser,unfollowUser } from '@/app/utils/fetchUser';
@@ -11,6 +11,11 @@ import Logout from '@/app/components/Logout';
 import axios from 'axios';
 import { clearUser } from '@/app/redux/slices/userSlice';
 import PostDisplay from './postDisplay';
+
+import DeleteAcc from './deleteAcc';
+import SuggestedUsers from './suggestedUser';
+
+
 
 
 function UserHome() {
@@ -30,60 +35,6 @@ function UserHome() {
   const [choice,setChoice] = useState('default')
   
 
- 
-
-  const handleDeleteAccount = async () => {
-    const confirmation = window.confirm("Are you sure? After deleting, you can't recover your account.");
-
-    if (confirmation) {
-        try {
-            const token = localStorage.getItem('token-access');
-            const response = await axios.delete('http://127.0.0.1:8000/api/delete_account/', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            if (response.status === 204) {
-                console.log('Account deleted successfully');
-                localStorage.removeItem('token-access');
-                localStorage.removeItem('token-refresh');
-                localStorage.removeItem('username');
-                dispatch(clearUser());
-                route.push('/login');
-            } else {
-                console.error('Failed to delete account');
-            }
-        } catch (error) {
-            console.error('Error deleting account:', error);
-        }
-    } else {
-        console.log('Account deletion cancelled');
-    }
-  };
-
-
-
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     console.log('Starting fetchUserData');
-  //     await fetchUserData(dispatch);
-  //     console.log('Completed fetchUserData');
-      
-  //     console.log('Starting fetchAllUsers');
-  //     await fetchAllUsers(dispatch);
-      
-  //     console.log('Completed fetchAllUsers');
-  //     setLoading(false); 
-  //   };
-
-  //   fetchData();
-
-  //   if (!user.username && !loading) {
-  //     route.push('/login');
-  //   }
-  // }, [dispatch, user.username, loading, route]);
-  // console.log(allusers,'all users');
 
 
   useEffect(() => {
@@ -119,46 +70,6 @@ function UserHome() {
 
 
 
-  // const handleEditProfile = async (e) => {
-  //   e.preventDefault();
-  //   const token = localStorage.getItem('token-access');
-  //   console.log('datas: ', fullname, car, username);
-
-    
-  //   let updatedData = {};
-
-  //   if (fullname) updatedData.fullname = fullname;
-  //   if (car) updatedData.car = car;
-  //   if (username) updatedData.username = username;
-  //   if (selectedFile) updatedData.profile_pic = selectedFile;
-
-    
-  //   if (Object.keys(updatedData).length === 0) {
-  //     alert('No fields to update');
-  //     return;
-  //   }
-  //   console.log('datas: ', fullname, car, username);
-
-  //   try {
-  //     const response = await axios.patch(
-  //       'http://127.0.0.1:8000/api/user/update/',
-  //       updatedData,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     console.log('Profile updated successfully:', response.data);
-  //     setChoice('default');
-  //   } catch (error) {
-  //     console.error('Error updating profile:', error.response ? error.response.data : error.message);
-  //     alert('Failed to update profile. Please try again.');
-  //   }
-
-
-  //   setChoice('default')
-  // };
 
   const handleEditProfile = async (e) => {
     e.preventDefault();
@@ -197,13 +108,11 @@ function UserHome() {
   };
 
 
-
-
-
-
   const handleChangePic = (event) => {
     setSelectedFile(event.target.files[0]);
 };
+
+//for local img loading/displaying[for completion of uploaded img url] ......
 const BASE_URL = 'http://127.0.0.1:8000';
 
 
@@ -242,19 +151,16 @@ const BASE_URL = 'http://127.0.0.1:8000';
                   </div>
                 </div>
                 <div>
-                <img src={user.profile_pic ? `${BASE_URL}${user.profile_pic}` : ''} alt="" className='bg-[#0f3460] w-16 rounded-xl h-10 ml-2'/>
+                <img src={user.profile_pic ? `${BASE_URL}${user.profile_pic}` : ''} alt="" className='bg-[#0f3460] w-8 rounded-xl h-8 ml-2'/>
                 </div>
                 </div>
               <div className='flex justify-around mt-2'>
                 <Logout/>
-                {/* <button onClick={handleDeleteAccount}>delete your account</button> */}
                 <a href="" className="hover:text-white transition-colors duration-300">more</a>
+                {/* <DeleteAcc/> */}
               </div>
               <button onClick={()=>setChoice('edit-profile')}>edit</button>
             </div>
-
-
-
 
 
 {/* edit profile tab---------------- */}
@@ -310,7 +216,6 @@ const BASE_URL = 'http://127.0.0.1:8000';
             </div>
 
 
-
 {/* similar car owner suggestions---------------- */}
 
 
@@ -331,45 +236,14 @@ const BASE_URL = 'http://127.0.0.1:8000';
             </div>
 
 
-
 {/* suggested users---------------- */}
 
 
             <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mx-2 mt-3 overflow-scroll' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               <p className='text-white font-semibold mb-2'>Suggestons</p>
-              {
-                allusers.map((userItem) => (
-                  <div key={userItem.id} className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 w-full md:w-full lg:w-full'>
-                    <div className='flex'>
-                      <img src={userItem.profile_pic ? `${BASE_URL}${userItem.profile_pic}` : ''} alt="" className='bg-[#0f3460] w-full rounded-xl h-16 mr-3'/>
-                      <div>
-                        <h3 className='text-white font-semibold'>{userItem.fullname}</h3>
-                        <p className='text-xs'>{userItem.car}</p>
-                        {/* <p>{userItem.email}</p> */}
-                        {/* <div className="flex justify-between mt-2">
-                          <p className="text-sm">
-                            <span className="font-bold">{userItem.followers_count}</span> followers
-                          </p>
-                          <p className="text-sm">
-                            <span className="font-bold">{userItem.following_count}</span> following
-                          </p>
-                        </div> */}
-                       {
-                        userItem.followers.some(follower => follower.follower === user.id) ? (
-                          <button onClick={() => unfollowUser(userItem.id, dispatch)} className='mt-2'>Unfollow</button>
-                        ) : (
-                          <button onClick={() => followUser(userItem.id, dispatch)} className='mt-2'>Follow</button>
-                        )
-                      }
-                      </div>
-                    </div>
-                  </div>
-                ))
-              }
+              <SuggestedUsers/>
             </div>
         </div>
-
-
 
 
 {/* main div---------------- */}
@@ -380,7 +254,6 @@ const BASE_URL = 'http://127.0.0.1:8000';
                 <div className='h-3/4 m:h-full w-full'>
                   <Carousel images={images}/>
                 </div>
-
 
 
 {/* user info in mobile view only---------------- */}
@@ -407,8 +280,6 @@ const BASE_URL = 'http://127.0.0.1:8000';
                   </div>
                   </div>
                 </div>
-
-
             </div>
 
             <div className="flex  h-2/3 w-full bg-[#1a1a2e] p-4">
