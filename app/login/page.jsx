@@ -111,7 +111,7 @@ function Login() {
                                     name="username"
                                     onChange={handleChange}
                                     type="text"
-                                    className='bg-transparent border-b-2 border-b-slate-800 m-0'
+                                    className='bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
                                     placeholder='Enter username'
                                     required
                                 />
@@ -122,7 +122,7 @@ function Login() {
                                     name="password"
                                     onChange={handleChange}
                                     type="password"
-                                    className='bg-transparent border-b-2 border-b-slate-800 m-0'
+                                    className='bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
                                     placeholder='Enter password'
                                     required
                                 />
@@ -146,7 +146,7 @@ function Login() {
                                     name="username"
                                     onChange={handleChangeR}
                                     type="text"
-                                    className='bg-transparent border-b-2 border-b-slate-800 m-0'
+                                    className='bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
                                     placeholder='Enter username'
                                     required
                                 />
@@ -157,7 +157,7 @@ function Login() {
                                     name="fullname"
                                     onChange={handleChangeR}
                                     type="text"
-                                    className='bg-transparent border-b-2 border-b-slate-800 m-0'
+                                    className='bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
                                     placeholder='Enter fullname'
                                     required
                                 />
@@ -172,7 +172,7 @@ function Login() {
                                     name="email"
                                     onChange={handleChangeR}
                                     type="email"
-                                    className='bg-transparent border-b-2 border-b-slate-800 m-0'
+                                    className='bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
                                     placeholder='Enter email'
                                     required
                                 />
@@ -184,7 +184,7 @@ function Login() {
                                         name="car"
                                         onChange={handleChangeR}
                                         type="text"
-                                        className='bg-transparent border-b-2 border-b-slate-800 m-0'
+                                        className='bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
                                     />
                                 </div>
                             )}
@@ -194,7 +194,7 @@ function Login() {
                                     name="password"
                                     onChange={handleChangeR}
                                     type="password"
-                                    className='bg-transparent border-b-2 border-b-slate-800 m-0'
+                                    className='bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
                                     placeholder='Enter password'
                                     required
                                 />
@@ -205,7 +205,7 @@ function Login() {
                                     name="confirmPassword"
                                     onChange={handleChangeR}
                                     type="password"
-                                    className='bg-transparent border-b-2 border-b-slate-800 m-0'
+                                    className='bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
                                     placeholder='Enter password'
                                     required
                                 />

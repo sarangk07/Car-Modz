@@ -31,6 +31,10 @@ function PostDisplay() {
         };
 
         fetchPosts();
+
+
+        
+
     }, []);
   return (
     <>
@@ -42,8 +46,8 @@ function PostDisplay() {
                   {
                     choice == 'users' ? 
                         <>
-                            <p onClick={()=>setChoice2('user')}>own</p>
-                            <p onClick={()=>setChoice2('default')}>dicover</p>
+                            <p onClick={()=>setChoice2('user')} className='cursor-pointer'>own</p>
+                            <p onClick={()=>setChoice2('default')} className='cursor-pointer'>dicover</p>
                         </> 
                         :
                     <> </>
@@ -67,10 +71,19 @@ function PostDisplay() {
                                         
                                     </div>
                                     <img src={x.image} alt="" className='relative w-full h-[90%] rounded-sm' />
-                                    <div className='rounded-xl flex-col border-b-4 border-blue-300 flex  mt-0 pt-2 h-[10%]'>
+                                    <div className='rounded-xl flex-col border-b-4 border-blue-300 flex pb-3 mt-0 pt-3 h-[10%]'>
                                     <div className='flex items-stretch justify-between'>
+                                        <div className='flex'>
                                         <Like postId={x.id}/>
-                                        <button>share</button>
+                                        </div>
+                                        
+                                        <button>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+                                        </svg>
+
+                                        </button>
+                                    
                                         </div>
                                         <div className='flex'>
                                             <Comments postId={x.id}/>
@@ -86,7 +99,7 @@ function PostDisplay() {
                         <div className='mb-5 pr-5 pl-5'>
                             {post.filter(x => x.author.id !== user.id).map(x => (
                                 <div key={x.id} className='ml-5 mr-5 mb-10 object-cover'>
-                                    <div className='rounded-xl border-t-4 border-blue-300 flex justify-between t mb-3 mt-0 pt-2 h-[10%]'>
+                                    <div className='rounded-xl border-t-4 border-blue-300 flex justify-between  mb-3 mt-0 pt-3 h-[10%]'>
                                         <div className='flex flex-col'>
                                             <h2>{x.title}</h2>
                                             <p className='text-sm'>{x.content}</p>
@@ -96,10 +109,18 @@ function PostDisplay() {
                                         </div>
                                     </div>
                                     <img src={x.image} alt="" className='relative w-full h-[90%] rounded-sm' />
-                                    <div className='rounded-xl flex-col border-b-4 border-blue-300 flex  mt-0 pt-2 h-[10%]'>
+                                    <div className='rounded-xl flex-col border-b-4 border-blue-300 flex  pb-3 mt-0 pt-2 h-[10%]'>
                                     <div className='flex items-stretch justify-between'>
+                                        <div className='flex'>
                                         <Like postId={x.id}/>
-                                        <button>share</button>
+                                        </div>
+                                        
+                                        <button>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+                                        </svg>
+                                        </button>
+                                          
                                         </div>
                                         <div className='flex'>
                                             <Comments postId={x.id}/>

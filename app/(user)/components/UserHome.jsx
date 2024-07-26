@@ -12,8 +12,8 @@ import axios from 'axios';
 import { clearUser } from '@/app/redux/slices/userSlice';
 import PostDisplay from './postDisplay';
 
-import DeleteAcc from './deleteAcc';
 import SuggestedUsers from './suggestedUser';
+import EditProfile from './EditProfile';
 
 
 
@@ -32,7 +32,6 @@ function UserHome() {
   
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true); 
-  const [choice,setChoice] = useState('default')
   
 
 
@@ -61,56 +60,56 @@ function UserHome() {
 
 
 
-  const [fullname,setFullname] = useState('')
-  // const [email,setEmail] = useState('')
-  const [car,setCar] = useState('')
-  const [username,setusername] = useState('')
-  const [selectedFile, setSelectedFile] = useState(null);
+//   const [fullname,setFullname] = useState('')
+//   // const [email,setEmail] = useState('')
+//   const [car,setCar] = useState('')
+//   const [username,setusername] = useState('')
+//   const [selectedFile, setSelectedFile] = useState(null);
 
 
 
 
 
-  const handleEditProfile = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem('token-access');
+//   const handleEditProfile = async (e) => {
+//     e.preventDefault();
+//     const token = localStorage.getItem('token-access');
   
-    const formData = new FormData();
+//     const formData = new FormData();
   
-    if (fullname) formData.append('fullname', fullname);
-    if (car) formData.append('car', car);
-    if (username) formData.append('username', username);
-    if (selectedFile) formData.append('profile_pic', selectedFile);
+//     if (fullname) formData.append('fullname', fullname);
+//     if (car) formData.append('car', car);
+//     if (username) formData.append('username', username);
+//     if (selectedFile) formData.append('profile_pic', selectedFile);
   
-    if (formData.entries().next().done) {
-      alert('No fields to update');
-      return;
-    }
+//     if (formData.entries().next().done) {
+//       alert('No fields to update');
+//       return;
+//     }
   
-    try {
-      const response = await axios.patch(
-        'http://127.0.0.1:8000/api/user/update/',
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-      console.log('Profile updated successfully:', response.data);
-      setChoice('default');
-      // Optionally, update the user state here
-    } catch (error) {
-      console.error('Error updating profile:', error.response ? error.response.data : error.message);
-      alert('Failed to update profile. Please try again.');
-    }
-  };
+//     try {
+//       const response = await axios.patch(
+//         'http://127.0.0.1:8000/api/user/update/',
+//         formData,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             'Content-Type': 'multipart/form-data',
+//           },
+//         }
+//       );
+//       console.log('Profile updated successfully:', response.data);
+//       setChoice('default');
+//       // Optionally, update the user state here
+//     } catch (error) {
+//       console.error('Error updating profile:', error.response ? error.response.data : error.message);
+//       alert('Failed to update profile. Please try again.');
+//     }
+//   };
 
 
-  const handleChangePic = (event) => {
-    setSelectedFile(event.target.files[0]);
-};
+//   const handleChangePic = (event) => {
+//     setSelectedFile(event.target.files[0]);
+// };
 
 //for local img loading/displaying[for completion of uploaded img url] ......
 const BASE_URL = 'http://127.0.0.1:8000';
@@ -134,63 +133,8 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 {/* user profile details---------------- */}
 
-
-            <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 mt-4 mx-2'>
-              <div className='flex'>
-                <div>
-                  <h3 className="text-white font-semibold">{user.fullname}</h3>
-                  <p className='text-xs'>{user.car}</p>
-                  <p>{user.email}</p>
-                  <div className="flex justify-between mt-2">
-                    <p className="text-sm">
-                      <span className="font-bold">{user && user.followers ? user.followers.length : 0}</span> followers
-                    </p>
-                    <p className="text-sm">
-                      <span className="font-bold">{user && user.following ? user.following.length : 0}</span> following
-                    </p>
-                  </div>
-                </div>
-                <div>
-                <img src={user.profile_pic ? `${BASE_URL}${user.profile_pic}` : ''} alt="" className='bg-[#0f3460] w-8 rounded-xl h-8 ml-2'/>
-                </div>
-                </div>
-              <div className='flex justify-around mt-2'>
-                <Logout/>
-                <a href="" className="hover:text-white transition-colors duration-300">more</a>
-                {/* <DeleteAcc/> */}
-              </div>
-              <button onClick={()=>setChoice('edit-profile')}>edit</button>
-            </div>
-
-
-{/* edit profile tab---------------- */}
-
-
-              {
-                choice == 'edit-profile' ?
-                <>
-                <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 mt-4 mx-2 '>
-                  <h4 className='text-center'>Edit Your Profile</h4>
-                  <form action="" onSubmit={handleEditProfile } className=' flex flex-col items-center mt-5' >
-                    <label htmlFor="profilePic">Upload / change DP</label>
-                    <input type="file" className='w-4/5 mb-2' name='profilePic' onChange={handleChangePic}/>
-                    <input type="text" className='w-4/5 mb-2'  name='fullname' placeholder='fullname' value={fullname} onChange={(e)=>setFullname(e.target.value)}/>
-                    {/* <input type="email" className='w-4/5 mb-2' placeholder='change email' name='email' onChange={(e)=>setEmail(e.target.value)}/> */}
-                    <input type="text" className='w-4/5 mb-2' placeholder='change car' name='car' value={car}  onChange={(e)=>setCar(e.target.value)}/>
-                    <input type="text" className='w-4/5 mb-2' placeholder='change username' name='username' value={username}  onChange={(e)=>setusername(e.target.value)}/>
-                    <button type='submit'>Update</button>
-                    <button onClick={()=>setChoice('default')}>cancel</button>
-
-                  </form>
-                </div>
-                </> 
-                
-                :
-                
-                <>
-                
-                </>
-              }
+<EditProfile/>
+           
 
 
 {/* shop suggestions---------------- */}
@@ -215,7 +159,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
               </div>
             </div>
 
-
+ 
 {/* similar car owner suggestions---------------- */}
 
 
@@ -259,14 +203,14 @@ const BASE_URL = 'http://127.0.0.1:8000';
 {/* user info in mobile view only---------------- */}
 
 
-                <div className='h-1/4 w-full md:hidden'>
-                  <div className='flex justify-between items-start p-4 bg-[#16213e] rounded-xl m-2'>
-                    <div>
+                <div className='h-1/4 bottom-10 relative w-full md:hidden'>
+                  <div className='flex  justify-between items-start p-4 bg-[#16213e] rounded-xl m-2'>
+                    <div className='mb-5'>
                       <h3 className="text-white font-semibold">{user.username}</h3>
                       <p className='text-xs'>{user.car}</p>
                       <p>{user.email}</p>
                        {/* <button onClick={()=>setChoice('edit-profile')}>edit</button> */}
-
+                       <Logout/>
                     </div>
                     <div className="flex flex-col justify-between mt-2">
                     <img src="https://i.pinimg.com/564x/f5/04/7f/f5047fb11c11eef52ab8e661addbc9ed.jpg" alt="" className='bg-[#0f3460] w-10 rounded-xl h-10'/>
@@ -290,14 +234,14 @@ const BASE_URL = 'http://127.0.0.1:8000';
         </div>
       </div>
       <div className="footer h-1/6 bg-[#16213e] border-t border-[#0f3460]">
-        <div className='flex justify-center h-fit bg-[#0f3460] text-white p-2'>site info</div>
+        <div className='flex justify-center h-fit bg-[#0f3460] text-white p-2'>ModHeven</div>
         <div className='flex flex-col items-center justify-center h-fit mt-4'>
-          <p className="text-white mb-2">follow us on</p>
+          <p className="text-white mb-2">Contact Us</p>
           <ul className='flex space-x-4'>
-            <li className="hover:text-white transition-colors duration-300">Facebook</li>
-            <li className="hover:text-white transition-colors duration-300">X</li>
-            <li className="hover:text-white transition-colors duration-300">Instagram</li>
-            <li className="hover:text-white transition-colors duration-300">Telegram</li>
+            <li className="hover:text-white transition-colors duration-300">Report</li>
+            <li className="hover:text-white transition-colors duration-300">Help Desk</li>
+            {/* <li className="hover:text-white transition-colors duration-300">Instagram</li>
+            <li className="hover:text-white transition-colors duration-300">Telegram</li> */}
           </ul>
         </div>
       </div>
