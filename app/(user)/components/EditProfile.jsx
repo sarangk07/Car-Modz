@@ -89,7 +89,7 @@ function EditProfile() {
             </div>
           </div>
           <div>
-            <img src={user.profile_pic ? `${BASE_URL}${user.profile_pic}` : ''} alt="" className='bg-[#0f3460] w-8 rounded-xl h-8 ml-2'/>
+            <img src={user.profile_pic ? `${BASE_URL}${user.profile_pic}` :'./profile.png'} alt="" className='bg-transparent w-8 rounded-xl h-8 ml-2'/>
           </div>
         </div>
         <div className='flex justify-around mt-2'>

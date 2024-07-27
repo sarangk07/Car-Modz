@@ -146,8 +146,8 @@ function Login() {
                                     name="username"
                                     onChange={handleChangeR}
                                     type="text"
-                                    className='bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
-                                    placeholder='Enter username'
+                                    className=' bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
+                                    placeholder="fixed , can't change"
                                     required
                                 />
                             </div>
