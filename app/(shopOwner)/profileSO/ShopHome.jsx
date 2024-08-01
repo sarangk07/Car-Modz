@@ -3,96 +3,136 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
-
+import { setShop } from '@/app/redux/slices/shopSlice';
 import Logout from '@/app/components/Logout';
 import axios from 'axios';
 
 function ShopHome() {
   const user = useSelector((state) => state.user);
+  const shop = useSelector((state) => state.shop); 
+  const dispatch = useDispatch();
   
   const router = useRouter();
   const [choice, setChoice] = useState('default');
+  const [shopData, setShopData] = useState({
+    shop_name: '',
+    description: '',
+    shop_image: null,
+    shop_bg_img: null,
+  });
   
   useEffect(() => {
-    const fetchFun = async () => {
+    const fetchShopData = async () => {
       const token = localStorage.getItem('token-access');
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/shop', {
-          method: 'GET',
+        const response = await axios.get('http://127.0.0.1:8000/api/shop', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log(data, 'shopsss details');
+  
+        
+        const data = response.data; 
+        dispatch(setShop(data));
+        console.log(data, 'shop details');
       } catch (error) {
         console.error('Error fetching shop details:', error);
       }
     };
-    fetchFun();
-  }, []);
+    fetchShopData();
+  }, [dispatch]);
+  
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    
+    console.log('Update shop with:', shopData);
+    
+  };
 
   return (
-    <div className='flex bg-slate-400 h-[1550px] w-full'>
-      <div className='w-1/3 hidden md:flex md:flex-col'>
-        <div>
-          <h3>{user.username}</h3>
-          <p>{user.fullname}</p>
-          <p>{user.email}</p>
-        </div>
-        <div className='flex flex-col'>
-          <button onClick={() => setChoice('edit')}>Edit / Update Shop Info</button>
+    <div className='flex flex-col md:flex-row bg-slate-400 h-[1550px] w-full'>
+      <div className='flex flex-col md:flex md:flex-col md:w-1/3 w-full'>
+          <div className='flex flex-col md:flex md:flex-col bg-slate-800 mt-5 mb-5  p-3'>
+            <div>
+              <h3>{user.username}</h3>
+              <p>{user.fullname}</p>
+              <p>{user.email}</p>
+              <Logout />
 
-          {choice === 'edit' && (
-            <form onSubmit={handleUpdate}>
-              <label htmlFor="shop_name">Change your name</label>
-              <input
-                type="text"
-                id="shop_name"
-                value={shopData.shop_name}
-                onChange={(e) => setShopData({ ...shopData, shop_name: e.target.value })}
-                required
-              />
-              <label htmlFor="description">Description</label>
-              <input
-                type="text"
-                id="description"
-                value={shopData.description}
-                onChange={(e) => setShopData({ ...shopData, description: e.target.value })}
-                required
-              />
-              <label htmlFor="shop_image">Shop Image</label>
-              <input type="file" id="shop_image" onChange={(e) => setShopData({ ...shopData, shop_image: e.target.files[0] })} />
-              <label htmlFor="shop_bg_img">Shop Background Image</label>
-              <input type="file" id="shop_bg_img" onChange={(e) => setShopData({ ...shopData, shop_bg_img: e.target.files[0] })} />
-              <button type="submit">Update</button>
-              <button type="button" onClick={() => setChoice('default')}>Cancel</button>
-            </form>
-          )}
+            </div>
+           
+          </div>
 
-          <Logout />
-        </div>
+
+
+
+
+          <div className='bg-pink-900 mt-5 mb-5 p-3'>
+            <div>
+              {/* <div>Top</div> */}
+              <div>Shop info</div>
+              {shop && Object.keys(shop).length > 0 ? (
+                <>
+                <div>
+                  <div>name: {shop.shop_name}</div>
+                  <div>description: {shop.description}</div>
+                  {/* <div>created at: {shop.created_at}</div> */}
+                  <div>{shop.is_verified ? 'Yes' : 'Shop Is Not Verified'}</div>
+                  <div>rating: {shop.rating || 'Not rated'}</div>
+                  <button onClick={() => setChoice('edit')}>Edit / Update Shop Info</button>
+
+                </div>
+                <div className='flex flex-col'>
+                  {choice === 'edit' && (
+                  // <h3 onClick={() => setChoice('default')}>cancel</h3>
+
+                    <form onSubmit={handleUpdate} className='flex flex-col bg-amber-700'>
+                      <label htmlFor="shop_name">Change Shop name</label>
+                      <input
+                        type="text"
+                        id="shop_name"
+                        value={shopData.shop_name}
+                        onChange={(e) => setShopData({ ...shopData, shop_name: e.target.value })}
+                        required
+                      />
+                      <label htmlFor="description">Description</label>
+                      <input
+                        type="text"
+                        id="description"
+                        value={shopData.description}
+                        onChange={(e) => setShopData({ ...shopData, description: e.target.value })}
+                        required
+                      />
+                      <label htmlFor="shop_image">Shop Image</label>
+                      <input type="file" id="shop_image" onChange={(e) => setShopData({ ...shopData, shop_image: e.target.files[0] })} />
+                      <label htmlFor="shop_bg_img">Shop Background Image</label>
+                      <input type="file" id="shop_bg_img" onChange={(e) => setShopData({ ...shopData, shop_bg_img: e.target.files[0] })} />
+                      <button type="submit">Update</button>
+                      <button type="button" onClick={() => setChoice('default')}>Cancel</button>
+                    </form>
+                  )}
+
+                </div>
+                </>
+              ) : (
+                <div>No shop data available</div>
+              )}
+            </div>
+            <div>
+              <div>Mid</div>
+              <div>Customers posts</div>
+            </div>
+            <div >
+              <div>Bottom</div>
+              <div>Messages</div>
+            </div>
+          </div>
       </div>
-      <div className='w-2/3'>
-        <div className='h-1/3'>
-          <div>Top</div>
-          <div>Shop info</div>
-        </div>
-        <div className='h-1/3'>
-          <div>Mid</div>
-          <div>Customers posts</div>
-        </div>
-        <div className='h-1/3'>
-          <div>Bottom</div>
-          <div>Messages</div>
-        </div>
-      </div>
+          <div className='md:w-2/3 w-full bg-gray-800'>
+            body
+          </div>
     </div>
   );
 }

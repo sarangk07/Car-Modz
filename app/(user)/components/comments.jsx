@@ -81,7 +81,7 @@ useEffect(() => {
         choice=='cmtCreate' ?
         <>
         <form action="" onSubmit={handleCommentSubmit}>
-            <input className='text-zinc-700' type="text" placeholder='type here.....' onChange={(e)=>setCMT(e.target.value)}/>
+            <input className='text-zinc-700  rounded-full focus:outline-none focus:ring-0 focus:border-b-cyan-400' type="text" placeholder='type here.....' onChange={(e)=>setCMT(e.target.value)}/>
             <button type='submit' className='pl-3 pb-3'>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
@@ -101,7 +101,7 @@ useEffect(() => {
             choice == 'cmtShow' ? 
             <div className='flex flex-col justify-betwee'>
                 <div className='flex mb-3'>
-                  <p className=' underline underline-offset-4'>showing comments</p>
+                  {/* <p className=' underline underline-offset-4'>showing comments</p> */}
                   <p onClick={()=>setChoice('default')} className='ml-3 cursor-pointer'>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
