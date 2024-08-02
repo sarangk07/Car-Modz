@@ -5,7 +5,7 @@ import Carousel from '@/app/components/carousal';
 
 import { useState,useEffect } from 'react';
 import { useSelector,useDispatch } from 'react-redux';
-import { fetchUserData,fetchAllUsers,followUser,unfollowUser } from '@/app/utils/fetchUser';
+import { fetchUserData,fetchAllUsers,followUser,unfollowUser, fetchAllShops } from '@/app/utils/fetchUser';
 import { useRouter } from 'next/navigation';
 import Logout from '@/app/components/Logout';
 import axios from 'axios';
@@ -28,6 +28,7 @@ function UserHome() {
 
   const user = useSelector((state) => state.user);
   const allusers = useSelector((state) => state.user.users);
+  const allshops = useSelector((state) => state.user.shops);
   console.log(user,"user infos");
   
   const dispatch = useDispatch();
@@ -45,6 +46,10 @@ function UserHome() {
       console.log('Starting fetchAllUsers');
       await fetchAllUsers(dispatch);
       console.log('Completed fetchAllUsers');
+
+      console.log('Starting fetchAllShops');
+      await fetchAllShops(dispatch);
+      console.log('Completed fetchAllShops');
       setLoading(false);
     };
 
@@ -141,21 +146,18 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 
             <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 mx-2'>
-              <p className='text-white font-semibold mb-2'>Suggestions</p>
-              <div className='flex items-center mb-2'>
-                  <img src="https://wolfmoto.in/wp-content/themes/wolf-motors/images/logo.png" alt="" className='bg-[#0f3460] w-10 rounded-xl h-10 mr-3'/>
-                <div>
-                  <p className='text-xs'>Wolf Performance</p>
-                  <p className='text-xs mt-1'>Rating</p>
-                </div>
-              </div>
+              <p className='text-white font-semibold mb-5'>Suggestions</p>
+              <div className='flex flex-col  mb-2'>
 
-              <div className='flex items-center'>
-                <img src="https://code6.racing/image/catalog/logo.png" alt="" className='bg-[#0f3460] w-10 rounded-xl h-10 mr-3'/>
-                <div>
-                  <p className='text-xs'>Code 6</p>
-                  <p className='text-xs mt-1'>Rating</p>
+              {allshops ? allshops.map((x) => (
+                <div key={x.id} className='mb-3'>
+                  <img src="" alt="" className='bg-[#0f3460] w-10 rounded-xl h-10 mr-3'/>
+
+                  <p className='text-xs'>{x.shop_name}</p>
+                  <p className='text-xs mt-1'>{x.description}</p>
                 </div>
+              )) : <></>}
+                  
               </div>
             </div>
 
@@ -235,6 +237,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
                 
                 *chating
                 *user view popup small 
+                *shop&user search
                 
               </p>
               

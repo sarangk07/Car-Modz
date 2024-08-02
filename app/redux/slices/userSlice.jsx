@@ -14,6 +14,7 @@ const initialState = {
   followers_count: 0,
   following_count: 0,
   users: [], 
+  shops: [],
 };
 
 const userSlice = createSlice({
@@ -39,6 +40,7 @@ const userSlice = createSlice({
     setUsers: (state, action) => {
       state.users = action.payload;
     },
+    
     clearUser: (state) => {
       state.id = '';
       state.username = '';
@@ -62,8 +64,11 @@ const userSlice = createSlice({
     updateFollowingCount: (state, action) => {
       state.following_count = action.payload;
     },
+    setShops: (state, action) => {
+      state.shops = action.payload;
+    },
   },
 });
 
-export const { setUser, setUsers, clearUser,updateFollowerCount ,updateFollowingCount} = userSlice.actions;
+export const { setUser, setUsers, clearUser,updateFollowerCount ,updateFollowingCount,setShops } = userSlice.actions;
 export default userSlice.reducer;

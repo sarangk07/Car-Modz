@@ -52,9 +52,9 @@ function ShopHome() {
   };
 
   return (
-    <div className='flex flex-col md:flex-row bg-slate-400 h-[1550px] w-full'>
-      <div className='flex flex-col md:flex md:flex-col md:w-1/3 w-full'>
-          <div className='flex flex-col md:flex md:flex-col bg-slate-800 mt-5 mb-5  p-3'>
+    <div className='flex flex-col md:flex-row bg-slate-900 h-[1550px] font-mono w-full'>
+      <div className='flex flex-col md:flex md:flex-col md:h-full md:w-1/3 w-full'>
+          <div className='flex flex-col md:h-fit md:flex md:flex-col md:rounded-xl bg-slate-800 md:m-2 rounded-md mt-5 mb-5  p-3'>
             <div>
               <h3>{user.username}</h3>
               <p>{user.fullname}</p>
@@ -65,30 +65,31 @@ function ShopHome() {
            
           </div>
 
-
-
-
-
-          <div className='bg-pink-900 mt-5 mb-5 p-3'>
-            <div>
+          <div className='bg-slate-800 md:rounded-xl md:h-3/5 md:m-2 mt-5 mb-5 p-3'>
+            <div className='md:h-fit mb-2 md:mt-2 md:rounded-lg md:p-1 rounded-md p-2 bg-slate-700'>
               {/* <div>Top</div> */}
-              <div>Shop info</div>
+              {/* <div>Shop info</div> */}
               {shop && Object.keys(shop).length > 0 ? (
                 <>
                 <div>
-                  <div>name: {shop.shop_name}</div>
-                  <div>description: {shop.description}</div>
-                  {/* <div>created at: {shop.created_at}</div> */}
-                  <div>{shop.is_verified ? 'Yes' : 'Shop Is Not Verified'}</div>
-                  <div>rating: {shop.rating || 'Not rated'}</div>
-                  <button onClick={() => setChoice('edit')}>Edit / Update Shop Info</button>
-
+                  <div className='relative '>
+                    <img src="" alt="" className='w-full h-20 bg-black absolute' />
+                    <img src="" alt="" className='w-16 rounded-3xl h-16 bg-white relative top-2 left-2'/>
+                  </div>
+                  <div className='relative mt-7'>
+                    <div className='font-bold'>{shop.shop_name}</div>
+                    <div className='text-xs'>{shop.description}</div>
+                    {/* <div>created at: {shop.created_at}</div> */}
+                    <div>{shop.is_verified ? 'Verified' : 'Shop Is Not Verified'}</div>
+                    <div>rating: {shop.rating || 'Not rated'}</div>
+                    <button onClick={() => setChoice('edit')} className='font-bold text-cyan-300'>Edit / Update Shop Info</button>
+                  </div>
                 </div>
                 <div className='flex flex-col'>
                   {choice === 'edit' && (
                   // <h3 onClick={() => setChoice('default')}>cancel</h3>
 
-                    <form onSubmit={handleUpdate} className='flex flex-col bg-amber-700'>
+                    <form onSubmit={handleUpdate} className='flex flex-col bg-zinc-700'>
                       <label htmlFor="shop_name">Change Shop name</label>
                       <input
                         type="text"
@@ -107,7 +108,7 @@ function ShopHome() {
                       />
                       <label htmlFor="shop_image">Shop Image</label>
                       <input type="file" id="shop_image" onChange={(e) => setShopData({ ...shopData, shop_image: e.target.files[0] })} />
-                      <label htmlFor="shop_bg_img">Shop Background Image</label>
+                      <label htmlFor="shop_bg_img">Shop Background Image [horizontal]</label>
                       <input type="file" id="shop_bg_img" onChange={(e) => setShopData({ ...shopData, shop_bg_img: e.target.files[0] })} />
                       <button type="submit">Update</button>
                       <button type="button" onClick={() => setChoice('default')}>Cancel</button>
@@ -120,17 +121,27 @@ function ShopHome() {
                 <div>No shop data available</div>
               )}
             </div>
-            <div>
+
+
+            <div className='mb-2 md:mt-2 rounded-md md:rounded-lg p-2 md:h-fit bg-slate-700'>
               <div>Mid</div>
               <div>Customers posts</div>
-            </div>
-            <div >
-              <div>Bottom</div>
+              <div>Products</div>
               <div>Messages</div>
             </div>
+
+
+            <div className='bg-slate-700 mt-2 rounded-md md:rounded-lg p-2 md:h-fit'>
+              <div>report</div>
+              <div></div>
+            </div>
           </div>
+
+
+
+
       </div>
-          <div className='md:w-2/3 w-full bg-gray-800'>
+          <div className='md:w-2/3 w-full md:m-2 md:rounded-xl md:p-3 bg-gray-800'>
             body
           </div>
     </div>

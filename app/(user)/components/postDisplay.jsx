@@ -28,6 +28,8 @@ const ContentWithMentions = ({ content }) => {
 
 function PostDisplay() {
     const user = useSelector((state) => state.user);
+    const allshops = useSelector((state) => state.user.shops);
+
     const [post, setPost] = useState(null);
     const [choice,setChoice] = useState('default')
     const [choice2,setChoice2] = useState('default')
@@ -79,12 +81,20 @@ function PostDisplay() {
   return (
     <>
       <div className='md:w-2/3 w-full h-full flex md:m-3  flex-col'>
-        <div className='md:hidden'>
+        <div className='md:hidden flex flex-col'>
         <p>shops</p>
-            <div className='flex'>
-            <img src="" alt="" className='bg-white rounded-xl w-10 h-10 mr-3'/>
-            <img src="" alt="" className='bg-white rounded-xl w-10 h-10'/>
-            </div>
+        <div className='flex'>
+        {allshops ? allshops.map((x) => (
+                <div key={x.id} className='mb-3 flex mr-3 '>
+                    
+                  <img src="" alt="" className='bg-[#0f3460] w-10 rounded-xl h-10 mr-3'/>
+                  <div className='flex flex-col'>
+                    <p className='text-xs'>{x.shop_name}</p>
+                    <p className='text-xs mt-1'>{x.description}</p>
+                  </div>
+                </div>
+              )) : <></>}
+        </div>
         </div>
             
         <PostCreate/>
