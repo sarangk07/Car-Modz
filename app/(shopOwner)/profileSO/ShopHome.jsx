@@ -11,6 +11,7 @@ function ShopHome() {
   const user = useSelector((state) => state.user);
   const shop = useSelector((state) => state.shop); 
   const dispatch = useDispatch();
+
   
   const router = useRouter();
   const [choice, setChoice] = useState('default');
@@ -24,6 +25,7 @@ function ShopHome() {
   useEffect(() => {
     const fetchShopData = async () => {
       const token = localStorage.getItem('token-access');
+
       try {
         const response = await axios.get('http://127.0.0.1:8000/api/shop', {
           headers: {
@@ -44,10 +46,49 @@ function ShopHome() {
   }, [dispatch]);
   
 
-  const handleUpdate = (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    
-    console.log('Update shop with:', shopData);
+    const formData = new FormData();
+    if (shopData.shop_name){
+      formData.append('shop_name', shopData.shop_name);
+    }
+    if (shopData.description){
+      formData.append('description', shopData.description);
+    }
+    if (shopData.shop_image) {
+      formData.append('shop_image', shopData.shop_image);
+    }
+    if (shopData.shop_bg_img) {
+      formData.append('shop_bg_img', shopData.shop_bg_img);
+    }
+
+    if (formData.entries().next().done) {
+      alert('No fields to update');
+      return;
+    }
+
+    try{
+      const token = localStorage.getItem('token-access');
+      if (!token) {
+        alert('no token found')
+        return;
+      }
+
+      const response = await axios.patch(`http://127.0.0.1:8000/api/shop/`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+
+      dispatch(setShop(response.data));
+      console.log('Update shop :', response.data);
+      setChoice('default');
+
+    }
+    catch(error){
+      console.log('Update error:', error);
+    }
     
   };
 
@@ -73,8 +114,8 @@ function ShopHome() {
                 <>
                 <div>
                   <div className='relative '>
-                    <img src="" alt="" className='w-full h-20 bg-black absolute' />
-                    <img src="" alt="" className='w-16 rounded-3xl h-16 bg-white relative top-2 left-2'/>
+                    <img src={shop.shop_bg_img} alt="" className='w-full h-20 bg-black absolute' />
+                    <img src={shop.shop_image} alt="" className='w-16 rounded-3xl h-16 bg-white relative top-2 left-2'/>
                   </div>
                   <div className='relative mt-7'>
                     <div className='font-bold'>{shop.shop_name}</div>
@@ -94,17 +135,19 @@ function ShopHome() {
                       <input
                         type="text"
                         id="shop_name"
+                        className='text-gray-700'
                         value={shopData.shop_name}
                         onChange={(e) => setShopData({ ...shopData, shop_name: e.target.value })}
-                        required
+                        
                       />
                       <label htmlFor="description">Description</label>
                       <input
                         type="text"
+                        className='text-gray-700'
                         id="description"
                         value={shopData.description}
                         onChange={(e) => setShopData({ ...shopData, description: e.target.value })}
-                        required
+                        
                       />
                       <label htmlFor="shop_image">Shop Image</label>
                       <input type="file" id="shop_image" onChange={(e) => setShopData({ ...shopData, shop_image: e.target.files[0] })} />

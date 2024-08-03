@@ -87,7 +87,7 @@ function PostDisplay() {
         {allshops ? allshops.map((x) => (
                 <div key={x.id} className='mb-3 flex mr-3 '>
                     
-                  <img src="" alt="" className='bg-[#0f3460] w-10 rounded-xl h-10 mr-3'/>
+                  <img src={x.shop_image} alt="" className='bg-[#0f3460] w-10 rounded-xl h-10 mr-3'/>
                   <div className='flex flex-col'>
                     <p className='text-xs'>{x.shop_name}</p>
                     <p className='text-xs mt-1'>{x.description}</p>
