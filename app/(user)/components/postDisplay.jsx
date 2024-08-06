@@ -6,19 +6,59 @@ import PostCreate from './PostCreate';
 import { useSelector } from 'react-redux';
 import Comments from './comments';
 import Like from './like';
+import { useRouter } from 'next/navigation';
+
+
 
 
 const ContentWithMentions = ({ content }) => {
-    const mentionRegex = /@(\w+)/g;
+    const route = useRouter()
+
+    const mentionRegex = /(@|\*)(\w+)/g;
     const parts = content.split(mentionRegex);
+    const allshops = useSelector((state) => state.user.shops);
+
+    const shopNameToIdMap = allshops.reduce((map, shop) => {
+        const formattedName = shop.shop_name.replace(/\s+/g, '').toLowerCase();
+        map[formattedName] = shop.id;
+        return map;
+      }, {});
+
+
+    const handleMentionClick = (mentionSymbol, mention) => {
+        if (mentionSymbol === '*') {
+          const shopId = shopNameToIdMap[mention.toLowerCase()];
+          
+          if (shopId) {
+            
+            route.push(`/shopView/${shopId}`)
+          } else {
+            console.log('Shop not found');
+          }
+          
+        }
+      };
   
     return (
       <p className='text-sm'>
         {parts.map((part, index) => {
-          if (index % 2 === 1) {
-            return <span key={index} className=" text-cyan-400 px-1 rounded cursor-pointer">@{part}</span>;
-          }
-          return part;
+            if (index % 3 === 1) {
+            
+            return null;
+            } else if (index % 3 === 2) {
+            
+            const mentionSymbol = parts[index - 1];
+            const className = mentionSymbol === '@' ? "text-cyan-400" : "text-green-400";
+            return <span
+            key={index}
+            className={`${className} px-1 rounded cursor-pointer`}
+            onClick={() => handleMentionClick(mentionSymbol, part)}
+          >
+            {mentionSymbol}{part}
+          </span>;
+            }
+            
+            return part;
         })}
       </p>
     );
@@ -27,14 +67,17 @@ const ContentWithMentions = ({ content }) => {
 
 
 function PostDisplay() {
+    const route = useRouter()
+
     const user = useSelector((state) => state.user);
     const allshops = useSelector((state) => state.user.shops);
 
-    const [post, setPost] = useState(null);
+    const [post, setPost] = useState([]);
     const [choice,setChoice] = useState('default')
     const [choice2,setChoice2] = useState('default')
     const [del,setDel] = useState('default')
     const token = localStorage.getItem('token-access');
+    const [shuffledPosts, setShuffledPosts] = useState([]);
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -54,6 +97,14 @@ function PostDisplay() {
         };
         fetchPosts();
     }, [del]);
+
+    useEffect(() => {
+        if (post.length > 0) {
+          // Shuffle posts
+          const shuffled = [...post].sort(() => 0.5 - Math.random());
+          setShuffledPosts(shuffled);
+        }
+      }, [post]);
 
 
     const handleDeletePost = async ({postId}) => {
@@ -87,7 +138,7 @@ function PostDisplay() {
         {allshops ? allshops.map((x) => (
                 <div key={x.id} className='mb-3 flex mr-3 '>
                     
-                  <img src={x.shop_image} alt="" className='bg-[#0f3460] w-10 rounded-xl h-10 mr-3'/>
+                  <img src={x.shop_image} alt="" className='bg-[#0f3460] w-10 rounded-xl h-10 mr-3' onClick={()=> route.push(`/shopView/${x.id}`)}/>
                   <div className='flex flex-col'>
                     <p className='text-xs'>{x.shop_name}</p>
                     <p className='text-xs mt-1'>{x.description}</p>
@@ -113,9 +164,9 @@ function PostDisplay() {
             <p className='cursor-pointer'>shops</p>
         </div>
         <div className='flex-1 overflow-y-auto mt-3'  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            {post && choice2 === 'user' && (
+            {shuffledPosts && choice2 === 'user' && (
                 <div className='mb-5 pr-5 pl-5'>
-                    {post.filter(x => x.author.id  === user.id).map(x => (
+                    {shuffledPosts.filter(x => x.author.id  === user.id).map(x => (
                         <div key={x.id} className='ml-5 mr-5 mb-10 object-cover'>
                                 <div className='rounded-xl border-t-4 border-blue-300 flex justify-between t mb-3 mt-0 pt-2 h-[10%]'>
                                 
@@ -155,14 +206,14 @@ function PostDisplay() {
                             </div>
                         </div>
                     ))}
-                    {post.filter(x => x.author.id  === user.id).length === 0 && <h1>not found</h1>}
+                    {shuffledPosts.filter(x => x.author.id  === user.id).length === 0 && <h1>not found</h1>}
                 </div>
             )}
 
-            {post && choice2 === 'default' && (
+            {shuffledPosts && choice2 === 'default' && (
                 <div className='mb-5 pr-5 pl-5'>
-                    {post.filter(x => x.author.id !== user.id).map(x => (
-                        <div key={x.id} className='ml-5 mr-5 mb-10 object-cover'>
+                    {shuffledPosts.filter(x => x.author.id !== user.id).map(x => (
+                        <div key={x.id} className='rounded-xl ml-5 mr-5 mb-10 object-cover bg-[#1c1c39]'>
                             <div className='rounded-xl border-t-4 border-blue-300 flex justify-between  mb-3 mt-0 pt-3 h-[10%]'>
                                 <div className='flex flex-col'>
                                     <h2>{x.title}</h2>
@@ -173,7 +224,7 @@ function PostDisplay() {
                                 </div>
                             </div>
                             <img src={x.image} alt="" className='relative w-full h-[90%] rounded-sm' />
-                            <div className='rounded-xl flex-col border-b-4 border-blue-300 flex  pb-3 mt-0 pt-2 h-[10%]'>
+                            <div className='rounded-xl flex-col border-b-4 border-blue-300 flex  pb-3  mt-0 pt-2 h-[10%]'>
                             <div className='flex items-stretch justify-between'>
                                 <div className='flex'>
                                 <Like postId={x.id}/>
@@ -192,7 +243,7 @@ function PostDisplay() {
                             </div>
                         </div>
                     ))}
-                    {post.filter(x => x.author.id !== user.id).length === 0 && <h1>not found</h1>}
+                    {shuffledPosts.filter(x => x.author.id !== user.id).length === 0 && <h1>not found</h1>}
                 </div>
             )}
             

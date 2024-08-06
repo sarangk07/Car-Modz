@@ -62,68 +62,8 @@ function UserHome() {
 
 
 
-
-
-
-//   const [fullname,setFullname] = useState('')
-//   // const [email,setEmail] = useState('')
-//   const [car,setCar] = useState('')
-//   const [username,setusername] = useState('')
-//   const [selectedFile, setSelectedFile] = useState(null);
-
-
-
-
-
-//   const handleEditProfile = async (e) => {
-//     e.preventDefault();
-//     const token = localStorage.getItem('token-access');
-  
-//     const formData = new FormData();
-  
-//     if (fullname) formData.append('fullname', fullname);
-//     if (car) formData.append('car', car);
-//     if (username) formData.append('username', username);
-//     if (selectedFile) formData.append('profile_pic', selectedFile);
-  
-//     if (formData.entries().next().done) {
-//       alert('No fields to update');
-//       return;
-//     }
-  
-//     try {
-//       const response = await axios.patch(
-//         'http://127.0.0.1:8000/api/user/update/',
-//         formData,
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//             'Content-Type': 'multipart/form-data',
-//           },
-//         }
-//       );
-//       console.log('Profile updated successfully:', response.data);
-//       setChoice('default');
-//       // Optionally, update the user state here
-//     } catch (error) {
-//       console.error('Error updating profile:', error.response ? error.response.data : error.message);
-//       alert('Failed to update profile. Please try again.');
-//     }
-//   };
-
-
-//   const handleChangePic = (event) => {
-//     setSelectedFile(event.target.files[0]);
-// };
-
 //for local img loading/displaying[for completion of uploaded img url] ......
 const BASE_URL = 'http://127.0.0.1:8000';
-
-
-
-
-
-
 
 
 
@@ -131,7 +71,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
     return <div>Loading...</div>;
   }
   return (
-    <div className='bg-[#1a1a2e] w-full text-[#f4ecee] h-[1550px] flex flex-col justify-stretch items-stretch'>
+    <div className='bg-[#1a1a2e] w-full text-[#f4ecee] h-[1550px] flex flex-col justify-stretch items-stretch font-sans'>
       <div className="h-fit bg-[#1a1a2e] border-b border-[#0f3460] shadow-md"></div>
       <div className="h-5/6 flex">
         <div className='flex-col bg-[#16213e] md:w-1/6 border-r border-[#0f3460] hidden md:flex'>
@@ -151,7 +91,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
               {allshops ? allshops.map((x) => (
                 <div key={x.id} className='mb-3'>
-                  <img src={x.shop_image} alt="" className=' w-10 rounded-xl h-10 mr-3'/>
+                  <img src={x.shop_image} alt="" className=' w-10 rounded-xl h-10 mr-3' onClick={()=> route.push(`/shopView/${x.id}`)}/>
 
                   <p className='text-xs'>{x.shop_name}</p>
                   <p className='text-xs mt-1'>{x.description}</p>
@@ -208,10 +148,11 @@ const BASE_URL = 'http://127.0.0.1:8000';
                 <div className='h-1/4 -top-28 relative w-full md:hidden'>
                   <div className='flex  justify-between items-start p-4 bg-[#16213e] rounded-xl m-2'>
                     <div className='-mb-3'>
-                      <h3 className="text-white font-semibold">{user.username}</h3>
+                      <h2 className="text-white font-bold">{user.fullname}</h2>
+                      <h3 className="text-white text-xs">{user.username}</h3>
                       <p className='text-xs'>{user.car}</p>
                       <p>{user.email}</p>
-                       {/* <button onClick={()=>setChoice('edit-profile')}>edit</button> */}
+                       
                        <Logout/>
                        <EditProfile/>
                     </div>
@@ -238,7 +179,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
                 *chating
                 *user view popup small 
                 *shop&user search
-                
+                *issue in shop owner log out , when login to new shop owner it shows lod shop owner data , so clear the old data in redux while logout
               </p>
               
               </div>
@@ -255,8 +196,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
           <ul className='flex space-x-4'>
             <li className="hover:text-white transition-colors duration-300">Report</li>
             <li className="hover:text-white transition-colors duration-300">Help Desk</li>
-            {/* <li className="hover:text-white transition-colors duration-300">Instagram</li>
-            <li className="hover:text-white transition-colors duration-300">Telegram</li> */}
+            
           </ul>
         </div>
       </div>
