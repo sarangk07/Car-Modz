@@ -7,6 +7,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/slices/userSlice';
+import { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 function Login() {
     const router = useRouter();
@@ -29,6 +31,7 @@ function Login() {
     };
 
     const login = async (username, password) => {
+        const loadingToast = toast.loading('Logging in...');
         try {
             const response = await axios.post('http://127.0.0.1:8000/api/token/', { username, password });
             if (response.status === 200) {
@@ -38,22 +41,30 @@ function Login() {
                 localStorage.setItem('username', user.username);
                 dispatch(setUser({ username, accessToken: access, refreshToken: refresh, userInfo: user }));
                 setCredentials({ username: '', password: '' });
+                toast.success("Sucess", { id: loadingToast })
                 router.push('home');
             } else {
+                toast.error("Login failed. Please try again.", { id: loadingToast })
+
                 console.error('Login failed. Please try again.');
             }
         } catch (error) {
             if (error.response) {
                 if (error.response.status === 400) {
+                    toast.error("Invalid username or password. Please try again.")
                     console.error('Invalid username or password. Please try again.');
                 } else if (error.response.status === 401) {
+                    toast.error("Unauthorized. Please check your credentials.")
                     console.error('Unauthorized. Please check your credentials.');
                 } else {
+                    toast.error("An error occurred during login.")
                     console.error('An error occurred during login.');
                 }
             } else if (error.request) {
+                toast.error('No response received: ', error.request)
                 console.error('No response received:', error.request);
             } else {
+                toast.error("Error setting up request: ",error.message)
                 console.error('Error setting up request:', error.message);
             }
         }
@@ -64,11 +75,19 @@ function Login() {
         if (credentials.username && credentials.password) {
             login(credentials.username, credentials.password);
         } else {
+            toast(
+                'Please fill in all fields',
+                {
+                  duration: 2000,
+                }
+              );
             console.error('Please fill in all fields');
         }
     };
 
     const register = async (registerCredentials) => {
+        const loadingToast = toast.loading('loading...');
+
         try {
             const payload = { ...registerCredentials };
             if (isShopOwner) {
@@ -79,12 +98,17 @@ function Login() {
             if (response.status === 201) {
                 console.log('Registration successful');
                 setRegisterCredentials({ username: '', fullname: '', email: '', car: '', password: '', confirmPassword: '' }); 
+
                 setPage('login');
+                toast.success("Created", { id: loadingToast })
+
             } else {
+                toast.error("Registration failed",{ id: loadingToast })
                 console.error('Registration failed');
             }
         } catch (error) {
-            console.error('Registration error:', error);
+            toast.error('Registration error:', error)
+            console.error('Registration error:', error.message);
         }
     };
 
@@ -94,12 +118,18 @@ function Login() {
         if (username && fullname && email && password && password === confirmPassword) {
             register({ username, fullname, email, car: isShopOwner ? '' : car, password });
         } else {
+            toast.error('Please fill in all fields correctly and ensure passwords match')
+
             console.error('Please fill in all fields correctly and ensure passwords match');
         }
     };
 
     return (
         <>
+        <Toaster
+            position="top-center"
+            reverseOrder={false}
+            />
             {page === 'login' ? (
                 <div className='flex flex-col items-center mt-20 w-screen h-full'>
                     <div className='flex flex-col items-center bg-slate-700 w-[650px] h-[500px]'>

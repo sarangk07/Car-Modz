@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { fetchAllShops } from '@/app/utils/fetchUser'
 import { useDispatch } from 'react-redux'
+import axios from 'axios'
 
 function ShopView(params) {
   const [shopid, setShopid] = useState(null);
@@ -12,6 +13,12 @@ function ShopView(params) {
   const allshops = useSelector((state) => state.user.shops);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
+ 
+
+
+
+
+  
 
 
   useEffect(() => {
@@ -47,6 +54,17 @@ function ShopView(params) {
           setShop(filteredShop);
       }
   }, [shopid, allshops]);
+
+
+
+
+
+
+
+
+
+
+
 
   if (isLoading) {
     return <p>Loading shops...</p>;

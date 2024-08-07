@@ -2,6 +2,9 @@
 
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
+
 
 function Like({ postId }) {
   const [btnState, setBtnState] = useState('default');
@@ -64,6 +67,22 @@ function Like({ postId }) {
       );
       setIsLiked(true);
       setBtnState('liked');
+
+      // toast.custom(
+      //   <div style={{ backgroundColor: 'transparent', padding: 0 }}>
+      //     <img src="./1PyX.gif" alt="like gif" style={{ backgroundColor: 'transparent' }} />
+      //   </div>,
+      //   {
+      //     duration: 1000,
+      //     style: {
+      //       background: 'transparent',
+      //       boxShadow: 'none',
+      //     },
+      //   }
+      // );
+      toast.success('')
+      
+      
       console.log(response.data,': like response');
     } catch (error) {
       console.error('Error liking post:', error.response?.data || error.message);
@@ -90,7 +109,14 @@ function Like({ postId }) {
   };
 
   return (
+    <>
+    <Toaster
+      
+      position="top-center"
+      reverseOrder={false}
+    />
     <div className='flex'>
+
       <button onClick={isLiked ? handleDislike : handleLike} className='mr-3'>
         {isLiked ? 
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6  text-pink-400">
@@ -109,6 +135,7 @@ function Like({ postId }) {
       {likes && likes.filter(like => like.post === postId).length}
       </p>
     </div>
+    </>
   );
 }
 

@@ -2,6 +2,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import toast from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
+
 
 const MentionInput = ({ value, onChange, allUsers, allShops }) => {
   const [mentionQuery, setMentionQuery] = useState('');
@@ -113,6 +116,8 @@ function PostCreate() {
     formData.append('author_type', user.is_shopOwner ? 'shop_owner' : 'user');
 
     try {
+      const loadingToast = toast.loading('Creating...');
+      
       const response = await axios.post('http://127.0.0.1:8000/api/posts/', formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -124,13 +129,20 @@ function PostCreate() {
       setTitle('');
       setContent('');
       setSelectedFile(null);
+      toast.success('post created!', { id: loadingToast })
     } catch (error) {
       console.error('Error creating post:', error);
+      toast.error('Error creating post', { id: loadingToast })
     }
   };
 
   return (
     <div>
+      <Toaster
+      
+      position="top-center"
+      reverseOrder={false}
+    />
       <button onClick={() => setChoice('create')}>Create Post</button>
       {choice === 'create' && (
         <form onSubmit={handleSubmit} className='flex flex-col bg-[#1e1e36] items-center rounded-md p-4'>

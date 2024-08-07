@@ -1,6 +1,9 @@
 
 import axios from 'axios';
 import { setUser,setUsers,updateFollowingCount,updateFollowerCount,setShops  } from '../redux/slices/userSlice';
+import toast from 'react-hot-toast';
+
+
 
 export const fetchUserData = async (dispatch) => {
   const username = localStorage.getItem('username');
@@ -99,8 +102,11 @@ export const followUser = async (userToFollow, dispatch) => {
     console.log(response.data);
     await fetchUserData(dispatch);  // Update user data
     await fetchAllUsers(dispatch);  // Update all users data
+    toast.success('followed!')
   } catch (e) {
     console.error(e.response ? e.response.data : e.message);
+    toast.error('somthig went wrong')
+
   }
 }
 
@@ -124,8 +130,10 @@ export const unfollowUser = async (userToUnfollow, dispatch) => {
     console.log(response.data); 
     await fetchUserData(dispatch);  
     await fetchAllUsers(dispatch); 
+    toast.success('unfollowed!')
   } catch (e) {
     console.error(e.response ? e.response.data : e.message);
+    toast.error('somthig went wrong')
   }
 }
 
