@@ -75,9 +75,22 @@ function PostDisplay() {
     const [post, setPost] = useState([]);
     const [choice,setChoice] = useState('default')
     const [choice2,setChoice2] = useState('default')
+    
     const [del,setDel] = useState('default')
     const token = localStorage.getItem('token-access');
     const [shuffledPosts, setShuffledPosts] = useState([]);
+
+    const [editingPostId, setEditingPostId] = useState(null);
+    const [editTitle, setEditTitle] = useState('');
+    const [editContent, setEditContent] = useState('');
+
+
+
+    const handleEditClick = (post) => {
+        setEditingPostId(post.id);
+        setEditTitle(post.title);
+        setEditContent(post.content);
+    };
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -100,7 +113,7 @@ function PostDisplay() {
 
     useEffect(() => {
         if (post.length > 0) {
-          // Shuffle posts
+          // Shuffle posts=-=-=-=-=-=-
           const shuffled = [...post].sort(() => 0.5 - Math.random());
           setShuffledPosts(shuffled);
         }
@@ -125,6 +138,33 @@ function PostDisplay() {
             alert('error: ',error.message)
         }
     }
+
+
+
+    const handleEdit = async (postId) => {
+        if (!postId) {
+            return alert('No post Found!');
+        }
+        const formData = new FormData();
+        formData.append('title', editTitle);
+        formData.append('content', editContent);
+        try {
+            const response = await axios.patch(`http://127.0.0.1:8000/api/posts/${postId}/`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log('edit response', response.data);
+            
+            setPost(prevPosts => prevPosts.map(post => post.id === postId ? response.data : post));
+            setEditingPostId(null);
+            setEditTitle('');
+            setEditContent('');
+        } catch (e) {
+            console.log('error ::::', e.response?.data || e.message);
+        }
+    };
 
 
 
@@ -186,10 +226,11 @@ function PostDisplay() {
                                 </div>
                                 
                                 <div>
-                                <button className='mr-5'>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+                                <button className='mr-5' onClick={() => handleEditClick(x)}>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-6">
+                                <path d="m2.695 14.762-1.262 3.155a.5.5 0 0 0 .65.65l3.155-1.262a4 4 0 0 0 1.343-.886L17.5 5.501a2.121 2.121 0 0 0-3-3L3.58 13.419a4 4 0 0 0-.885 1.343Z" />
                                 </svg>
+
 
                                 </button>
                                 <button onClick={() => handleDeletePost({ postId: x.id })}>
@@ -200,6 +241,35 @@ function PostDisplay() {
                                 </div>
                                 
                                 </div>
+                                {editingPostId === x.id ? (
+                                        <form onSubmit={(e) => {
+                                            e.preventDefault();
+                                            handleEdit(x.id);
+                                        }}
+                                        className='flex flex-col font-mono bg-[#0b2039] p-2 rounded-md'
+                                        >
+                                            <input 
+                                                placeholder='title' 
+                                                type="text" 
+                                                value={editTitle} 
+                                                onChange={(e) => setEditTitle(e.target.value)}
+                                                className='text-zinc-900 mb-2 rounded-md w-fit'
+                                            />
+                                            <input 
+                                                placeholder='content' 
+                                                type="text" 
+                                                value={editContent} 
+                                                className='text-zinc-900 mb-2 rounded-md'
+                                                onChange={(e) => setEditContent(e.target.value)}
+                                            />
+                                            <button type='submit'>Save</button>
+                                            <button onClick={() => setEditingPostId(null)}>Cancel</button>
+                                        </form>
+                                    ) : (
+                                        <>
+                                           
+                                        </>
+                                    )}
                                 <div className='flex'>
                                     <Comments postId={x.id}/>
                                 </div>

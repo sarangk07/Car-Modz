@@ -179,7 +179,6 @@ const BASE_URL = 'http://127.0.0.1:8000';
                 *chating
                 *user view popup small 
                 *shop&user search
-                *issue in shop owner log out , when login to new shop owner it shows lod shop owner data , so clear the old data in redux while logout
               </p>
               
               </div>

@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import { fetchAllShops } from '@/app/utils/fetchUser'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 
 function ShopView(params) {
   const [shopid, setShopid] = useState(null);
@@ -13,7 +14,7 @@ function ShopView(params) {
   const allshops = useSelector((state) => state.user.shops);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
- 
+  const router = useRouter()
 
 
 
@@ -60,12 +61,6 @@ function ShopView(params) {
 
 
 
-
-
-
-
-
-
   if (isLoading) {
     return <p>Loading shops...</p>;
   }
@@ -74,9 +69,10 @@ function ShopView(params) {
     return <p>Shop not found. Please check the shop ID.</p>;
   }
   return (
-    <div className='w-full h-screen flex bg-red-950'>
-      <div className='bg-orange-300 w-1/3 m-2 p-2 rounded-md'>
-        <div className='bg-slate-500 h-fit m-2'>
+    <div className='w-full h-screen flex md:flex-row flex-col bg-stone-800'>
+      <div className='bg-neutral-500 md:w-1/3 m-2 p-2 rounded-md'>
+      <p className='cursor-pointer' onClick={()=> router.push('/home')}>back</p>
+        <div className='bg-slate-800 rounded-lg h-fit m-2'>
           <div className='relative'>
             <img src={shop.shop_bg_img} alt="bg-img" className='relative h-40 w-full' />
             <img src={shop.shop_image} alt="profile-img" className='absolute rounded-xl top-5 left-10  w-32 h-32'/>
@@ -84,17 +80,17 @@ function ShopView(params) {
           <div className='p-3'>
             <p>{shop.shop_name}</p>
             <p>{shop.description}</p>
-            <p>message</p>
-            <p>rate shop</p>
+            <p>Message</p>
+            <p>Rate Shop</p>
           </div>
         </div>
-        <div className='bg-orange-700 m-2'>
-          <p>products</p>
-          <p>mentons</p>
+        <div className='bg-neutral-800 rounded-lg p-3 m-2'>
+          <p>Products</p>
+          <p>Posts</p>
 
         </div>
       </div>
-      <div className='bg-orange-300 w-2/3 m-2 p-2 rounded-md'>
+      <div className='bg-neutral-500 md:w-2/3 m-2 p-2 rounded-md'>
         body
       </div>
     </div>
