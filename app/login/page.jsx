@@ -31,7 +31,7 @@ function Login() {
     };
 
     const login = async (username, password) => {
-        const loadingToast = toast.loading('Logging in...');
+        // const loadingToastL = toast.loading('Logging in...');
         try {
             const response = await axios.post('http://127.0.0.1:8000/api/token/', { username, password });
             if (response.status === 200) {
@@ -41,10 +41,10 @@ function Login() {
                 localStorage.setItem('username', user.username);
                 dispatch(setUser({ username, accessToken: access, refreshToken: refresh, userInfo: user }));
                 setCredentials({ username: '', password: '' });
-                toast.success("Sucess", { id: loadingToast })
+                toast.success("Welcome...")
                 router.push('home');
             } else {
-                toast.error("Login failed. Please try again.", { id: loadingToast })
+                toast.error("Login failed. Please try again.")
 
                 console.error('Login failed. Please try again.');
             }

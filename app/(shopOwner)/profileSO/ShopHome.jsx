@@ -6,6 +6,7 @@ import Logout from '@/app/components/Logout';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
+import Products from './components/Products';
 
 function ShopHome() {
   const user = useSelector((state) => state.user);
@@ -260,13 +261,8 @@ function ShopHome() {
       
       {bodyChoice === 'default' ? (
         <div className='md:w-2/3 w-full md:m-2 md:rounded-xl md:p-3 bg-gray-800'>
-          <h1>Add a product</h1>
-          <div>
-            lists of products
-          </div>
-          <div>
-            most popular 
-          </div>
+          <Products shopId={shop.id}/>
+          
         </div>
 
 
@@ -291,9 +287,7 @@ function ShopHome() {
                   <h2>{x.title}</h2>
                   <p>{x.content}</p>
                 </div>
-                  
-                  
-                  
+              
               </div>
               <div className='flex justify-center'>
               <img src={x.image} alt="" className='relative w-[80vh] rounded-sm' />

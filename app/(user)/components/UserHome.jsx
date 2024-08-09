@@ -33,6 +33,15 @@ function UserHome() {
   
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true); 
+
+  const [filterShops, setfilterShops] = useState([]);
+
+  useEffect(() => {
+    if (allshops) {
+        const shuffledShops = [...allshops].sort(() => 0.5 - Math.random());
+        setfilterShops(shuffledShops.slice(0, 4));
+    }
+}, [allshops]);
   
 
 
@@ -72,7 +81,12 @@ const BASE_URL = 'http://127.0.0.1:8000';
   }
   return (
     <div className='bg-[#1a1a2e] w-full text-[#f4ecee] h-[1550px] flex flex-col justify-stretch items-stretch font-sans'>
-      <div className="h-fit bg-[#1a1a2e] border-b border-[#0f3460] shadow-md"></div>
+      <div className="h-fit sticky top-0  z-50 bg-[#1a1a2e] border-b border-[#0f3460] shadow-md flex justify-between ">
+        <div className='mr-5 size-16 md:size-20'>
+          <img src="./ModHevenLogo.png" alt=""   />
+        </div>
+        <div>search</div>
+      </div>
       <div className="h-5/6 flex">
         <div className='flex-col bg-[#16213e] md:w-1/6 border-r border-[#0f3460] hidden md:flex'>
 
@@ -89,7 +103,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
               <p className='text-white font-semibold mb-5'>Suggestions</p>
               <div className='flex flex-col  mb-2'>
 
-              {allshops ? allshops.map((x) => (
+              {filterShops ? filterShops.map((x) => (
                 <div key={x.id} className='mb-3'>
                   <img src={x.shop_image} alt="" className=' w-10 rounded-xl h-10 mr-3' onClick={()=> route.push(`/shopView/${x.id}`)}/>
 

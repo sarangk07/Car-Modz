@@ -84,6 +84,15 @@ function PostDisplay() {
     const [editTitle, setEditTitle] = useState('');
     const [editContent, setEditContent] = useState('');
 
+    const [filterShops, setfilterShops] = useState([]);
+
+    useEffect(() => {
+        if (allshops) {
+            const shuffledShops = [...allshops].sort(() => 0.5 - Math.random());
+            setfilterShops(shuffledShops.slice(0, 3));
+        }
+    }, [allshops]);
+
 
 
     const handleEditClick = (post) => {
@@ -173,9 +182,9 @@ function PostDisplay() {
     <>
       <div className='md:w-2/3 w-full h-full flex md:m-3  flex-col'>
         <div className='md:hidden flex flex-col'>
-        <p>shops</p>
-        <div className='flex'>
-        {allshops ? allshops.map((x) => (
+        <p>Suggested Shops</p>
+        <div className='flex mt-2'>
+        {filterShops ? filterShops.map((x) => (
                 <div key={x.id} className='mb-3 flex mr-3 '>
                     
                   <img src={x.shop_image} alt="" className='bg-[#0f3460] w-10 rounded-xl h-10 mr-3' onClick={()=> route.push(`/shopView/${x.id}`)}/>
@@ -283,7 +292,7 @@ function PostDisplay() {
             {shuffledPosts && choice2 === 'default' && (
                 <div className='mb-5 pr-5 pl-5'>
                     {shuffledPosts.filter(x => x.author.id !== user.id).map(x => (
-                        <div key={x.id} className='rounded-xl ml-5 mr-5 mb-10 object-cover bg-[#1c1c39]'>
+                        <div key={x.id} className='rounded-xl ml-5 mr-5 p-2 mb-10 object-cover bg-[#1c1c39]'>
                             <div className='rounded-xl border-t-4 border-blue-300 flex justify-between  mb-3 mt-0 pt-3 h-[10%]'>
                                 <div className='flex flex-col'>
                                     <h2>{x.title}</h2>
