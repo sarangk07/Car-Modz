@@ -80,7 +80,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
     return <div>Loading...</div>;
   }
   return (
-    <div className='bg-[#1a1a2e] w-full text-[#f4ecee] h-[1550px] flex flex-col justify-stretch items-stretch font-sans'>
+    <div className='bg-[#1a1a2e] w-full text-[#f4ecee] h-[1750px] flex flex-col justify-stretch items-stretch font-sans'>
       <div className="h-fit sticky top-0  z-50 bg-[#1a1a2e] border-b border-[#0f3460] shadow-md flex justify-between ">
         <div className='mr-5 size-16 md:size-20'>
           <img src="./ModHevenLogo.png" alt=""   />

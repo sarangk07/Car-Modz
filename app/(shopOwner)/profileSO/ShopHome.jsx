@@ -14,6 +14,7 @@ function ShopHome() {
   const dispatch = useDispatch();
   const [bodyChoice, setBodyChoice] = useState('default');
   const [choice, setChoice] = useState('default');
+  const [createpost, createpostChoice] = useState('default');
   const [posts,setPosts] = useState([]);
   const [shopData, setShopData] = useState({
     shop_name: '',
@@ -23,6 +24,61 @@ function ShopHome() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [hasShop, setHasShop] = useState(false);
+
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const [shopPosts, setShopPosts] = useState([]);
+  const [del,setDel] = useState('default')
+
+
+
+
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const handlePostSubmit = async (e) => {
+    
+    e.preventDefault();
+    const token = localStorage.getItem('token-access');
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    if (selectedFile) {
+      formData.append('image', selectedFile);
+    }
+    formData.append('author', user.id);
+    formData.append('author_type', user.is_shopOwner ? 'shop_owner' : 'user');
+
+    try {
+      // const loadingToast = toast.loading('Creating...');
+      
+      const response = await axios.post('http://127.0.0.1:8000/api/posts/', formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        }
+      });
+      console.log('Post created:', response.data);
+      createpostChoice('default');
+      setTitle('');
+      setContent('');
+      setSelectedFile(null);
+      toast.success('post created!')
+    } catch (error) {
+      console.error('Error creating post:', error);
+      toast.error('Error creating post')
+    }
+  };
+
+
+
+
+
 
   useEffect(() => {
     const fetchShopData = async () => {
@@ -84,6 +140,13 @@ function ShopHome() {
   
         console.log('filtered posts====================================', filteredPosts);
         setPosts(filteredPosts);
+
+        const shopFilteredPosts = response.data.filter((post) => {
+          return post.author.id === shop.user;
+        });
+  
+        console.log('shop posts====================================', shopFilteredPosts);
+        setShopPosts(shopFilteredPosts);
   
       } catch (e) {
         console.log(e, 'error');
@@ -93,9 +156,32 @@ function ShopHome() {
     if (shop.shop_name) {
       fetchPosts();
     }
-  }, [shop.shop_name]);
+  }, [shop.shop_name,shop.id,del]);
   
 
+
+
+
+  const handleDeletePost = async ({postId}) => {
+    if(!postId){
+        return alert('No post Found!')
+        }
+        const token = localStorage.getItem('token-access');
+
+        try{
+            const response = await axios.delete(`http://127.0.0.1:8000/api/posts/${postId}/`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            })
+            console.log('post delete response : ', response);
+            alert('post deleted!')
+            setDel(`deleted${postId}`)
+            
+        }catch(error){
+            alert('error: ',error.message)
+        }
+    }
 
 
 
@@ -245,9 +331,62 @@ function ShopHome() {
 
           
           <div className='mb-2 md:mt-2 rounded-md md:rounded-lg p-2 md:h-fit bg-slate-700'>
-            <div onClick={() => setBodyChoice('CustomersPost')} className='cursor-pointer'>Customers posts</div>
-            <div onClick={() => setBodyChoice('default')} className='cursor-pointer'>Products</div>
-            <div>Messages</div>
+            <div className='mb-2 cursor-pointer w-fit' onClick={() => createpostChoice('create')}>Create a post</div>
+            <div className='mb-2 cursor-pointer w-fit' onClick={()=> setBodyChoice('shopPost')}>My Posts</div>
+
+            <div onClick={() => setBodyChoice('CustomersPost')} className='mb-2 w-fit cursor-pointer'>Customers posts</div>
+
+              {
+                createpost == 'create' ?
+                <>
+                <form onSubmit={handlePostSubmit} className='flex flex-col bg-[#1e1e36] items-center rounded-md p-4'>
+                    <label htmlFor="title" className="mb-2">Title</label>
+                    <input
+                      type="text"
+                      id="title"
+                      className='text-gray-700 rounded-md mb-2 p-2 w-56 '
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      required
+                    />
+                    <label htmlFor="content" className="mb-2">Description</label>
+                    <textarea name="" id="" className='text-gray-700 rounded-md mb-2 p-2 w-56 '
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    required
+                    />
+                    
+                    <label htmlFor="image" className="mt-4 mb-2">Upload Image</label>
+                    <input
+                      type="file"
+                      id="image"
+                      className='text-gray-700 mb-2 text-xs bg-blue-300 rounded-full'
+                      onChange={handleFileChange}
+                    />
+                    {selectedFile && (
+                      <div className='flex flex-col items-center mt-4'>
+                        <h2>Preview:</h2>
+                        {selectedFile.type.startsWith('image/') ? (
+                          <img src={URL.createObjectURL(selectedFile)} alt="Preview" style={{ maxWidth: '30%' }} />
+                        ) : (
+                          <p>File type not supported for preview.</p>
+                        )}
+                      </div>
+                    )}
+                    <button type='submit' className='text-green-500' >POST</button>
+                    <button className='w-fit' onClick={() => createpostChoice('default')}>cancel</button>
+
+                  </form>
+                </>
+                :
+                <>
+                </>
+              }
+
+
+            <div onClick={() => setBodyChoice('default')} className='mb-2 cursor-pointer'>Products</div>
+            <div className='mb-2 cursor-pointer'>Messages</div>
+            <div className='mb-2 cursor-pointer'>Bookings</div>
           </div>
 
           
@@ -258,50 +397,55 @@ function ShopHome() {
         </div>
       </div>
 
-      
-      {bodyChoice === 'default' ? (
-        <div className='md:w-2/3 w-full md:m-2 md:rounded-xl md:p-3 bg-gray-800'>
-          <Products shopId={shop.id}/>
-          
-        </div>
-
-
-
-
-
-      ) : (
-
-
-
-
-
-
-        <div className='md:w-2/3 w-full md:m-2 overflow-y-auto md:rounded-xl md:p-3 bg-gray-800'  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-          <div >
-            {posts.length > 0 ? posts.map((x) => (
-              <div key={x.id} className='ml-5 mr-5 mb-10 object-cover  p-10' >
-              <div className='rounded-xl border-t-4 border-cyan-300  flex justify-between  mb-3 mt-0 pt-2 h-[10%]'>
-              
-                <div className='flex flex-col'>
-                  <h1>{x.author.fullname}</h1>
-                  <h2>{x.title}</h2>
-                  <p>{x.content}</p>
-                </div>
-              
-              </div>
-              <div className='flex justify-center'>
-              <img src={x.image} alt="" className='relative w-[80vh] rounded-sm' />
-
-              </div>
+    {bodyChoice === 'default' ? (
+      <div className='md:w-2/3 w-full md:m-2 md:rounded-xl md:p-3 bg-gray-800'>
+        <Products shopId={shop.id}/>
       </div>
+      ) : bodyChoice === 'shopPost' ? (
+        <div className='md:w-2/3 w-full md:m-2 overflow-y-auto md:rounded-xl md:p-3 bg-gray-800' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div>
+            {shopPosts.length > 0 ? shopPosts.map((x) => (
+              <div key={x.id} className='ml-5 mr-5 mb-10 object-cover p-10'>
+                <div className='rounded-xl border-t-4 border-cyan-300 flex justify-between mb-3 mt-0 pt-2 h-[10%]'>
+                  <div className='flex flex-col'>
+                    {/* <h1>{x.author.fullname}</h1> */}
+                    <h2>{x.title}</h2>
+                    <p>{x.content}</p>
+                  </div>
+                </div>
+                <div className='flex justify-center'>
+                  <img src={x.image} alt="" className='relative w-[80vh] rounded-sm' />
+                </div>
+                <button onClick={() => handleDeletePost({ postId: x.id })} >delete</button>
+              </div>
             )) : (
-              <>
-                <p>No posts available</p>
-              </>
+              <p>No posts available</p>
             )}
           </div>
         </div>
-
+      ) : bodyChoice === 'CustomersPost' ? (
+        <div className='md:w-2/3 w-full md:m-2 overflow-y-auto md:rounded-xl md:p-3 bg-gray-800' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div>
+            {posts.length > 0 ? posts.map((x) => (
+              <div key={x.id} className='ml-5 mr-5 mb-10 object-cover p-10'>
+                <div className='rounded-xl border-t-4 border-cyan-300 flex justify-between mb-3 mt-0 pt-2 h-[10%]'>
+                  <div className='flex flex-col'>
+                    <h1>{x.author.fullname}</h1>
+                    <h2>{x.title}</h2>
+                    <p>{x.content}</p>
+                  </div>
+                </div>
+                <div className='flex justify-center'>
+                  <img src={x.image} alt="" className='relative w-[80vh] rounded-sm' />
+                </div>
+              </div>
+            )) : (
+              <p>No posts available</p>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div>Nothing Found......</div>
       )}
     </div>
     </>
