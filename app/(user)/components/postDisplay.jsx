@@ -18,6 +18,8 @@ const ContentWithMentions = ({ content }) => {
     const parts = content.split(mentionRegex);
     const allshops = useSelector((state) => state.user.shops);
 
+    
+    
     const shopNameToIdMap = allshops.reduce((map, shop) => {
         const formattedName = shop.shop_name.replace(/\s+/g, '').toLowerCase();
         map[formattedName] = shop.id;
@@ -93,6 +95,7 @@ function PostDisplay() {
         }
     }, [allshops]);
 
+console.log('postsss',shuffledPosts);
 
 
     const handleEditClick = (post) => {
@@ -182,19 +185,24 @@ function PostDisplay() {
     <>
       <div className='md:w-2/3 w-full h-full flex md:m-3  flex-col'>
         <div className='md:hidden flex flex-col'>
-        <p>Suggested Shops</p>
-        <div className='flex mt-2'>
+            <div className='flex justify-between mb-3'>
+                <p> Suggestions</p>
+            </div>
+        
+        <div className='flex mt-2 w-full overflow-auto ' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {filterShops ? filterShops.map((x) => (
-                <div key={x.id} className='mb-3 flex mr-3 '>
+                <div key={x.id} className='mb-3 mr-10 flex w-64'>
                     
-                  <img src={x.shop_image} alt="" className='bg-[#0f3460] w-10 rounded-xl h-10 mr-3' onClick={()=> route.push(`/shopView/${x.id}`)}/>
-                  <div className='flex flex-col'>
+                  <img src={x.shop_image} alt="" className='bg-stone-800 cursor-pointer w-10 rounded-xl h-10 mr-3' onClick={()=> route.push(`/shopView/${x.id}`)}/>
+                  <div className='flex flex-col mr-5'>
                     <p className='text-xs'>{x.shop_name}</p>
-                    <p className='text-xs mt-1'>{x.description}</p>
+                    <p className='text-xs mt-1 mr-5'>{x.description}</p>
                   </div>
                 </div>
               )) : <></>}
         </div>
+        <p className='flex justify-center mb-4'> <input placeholder='Shops,Users,Posts...' type="search" name="" id=""  className='pl-1 rounded-sm mr-3 bg-stone-200 text-black' /> <span className='border-2 p-1 rounded-md'>search</span></p>
+
         </div>
             
         <PostCreate/>
@@ -209,15 +217,18 @@ function PostDisplay() {
                 :
             <> </>
             }
-
-            <p className='cursor-pointer'>shops</p>
+            <p onClick={()=>setChoice2('shops')} className='cursor-pointer'>shops</p>
         </div>
+
         <div className='flex-1 overflow-y-auto mt-3'  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+
+
+{/* user */}
             {shuffledPosts && choice2 === 'user' && (
                 <div className='mb-5 pr-5 pl-5'>
                     {shuffledPosts.filter(x => x.author.id  === user.id).map(x => (
                         <div key={x.id} className='ml-5 mr-5 mb-10 object-cover'>
-                                <div className='rounded-xl border-t-4 border-blue-300 flex justify-between t mb-3 mt-0 pt-2 h-[10%]'>
+                                <div className='rounded-xl border-t-4 border-[#1d1d1d] flex justify-between t mb-3 mt-0 pt-2 h-[10%]'>
                                 
                                 <div className='flex flex-col'>
                                 <h2>{x.title}</h2>
@@ -228,7 +239,7 @@ function PostDisplay() {
                                 
                             </div>
                             <img src={x.image} alt="" className='relative w-full h-[90%] rounded-sm' />
-                            <div className='rounded-xl flex-col border-b-4 border-blue-300 flex pb-3 mt-0 pt-3 h-[10%]'>
+                            <div className='rounded-xl flex-col border-b-4 border-[#1d1d1d] flex pb-3 mt-0 pt-3 h-[10%]'>
                             <div className='flex items-stretch justify-between'>
                                 <div className='flex'>
                                 <Like postId={x.id}/>
@@ -245,6 +256,138 @@ function PostDisplay() {
                                 <button onClick={() => handleDeletePost({ postId: x.id })}>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="text-red-600 size-6">
                                     <path fillRule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clipRule="evenodd" />
+                                </svg>
+                                </button>
+                                </div>
+                                
+                                </div>
+                                {editingPostId === x.id ? (
+                                        <form onSubmit={(e) => {
+                                            e.preventDefault();
+                                            handleEdit(x.id);
+                                        }}
+                                        className='flex flex-col font-mono bg-stone-800 p-2 rounded-md'
+                                        >
+                                            <input 
+                                                placeholder='title' 
+                                                type="text" 
+                                                value={editTitle} 
+                                                onChange={(e) => setEditTitle(e.target.value)}
+                                                className='text-zinc-900 mb-2 rounded-md w-fit'
+                                            />
+                                            <input 
+                                                placeholder='content' 
+                                                type="text" 
+                                                value={editContent} 
+                                                className='text-zinc-900 mb-2 rounded-md'
+                                                onChange={(e) => setEditContent(e.target.value)}
+                                            />
+                                            <button type='submit'>Save</button>
+                                            <button onClick={() => setEditingPostId(null)}>Cancel</button>
+                                        </form>
+                                    ) : (
+                                        <>
+                                           
+                                        </>
+                                    )}
+                                <div className='flex'>
+                                    <Comments postId={x.id}/>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {shuffledPosts.filter(x => x.author.id  === user.id).length === 0 && <h1>not found</h1>}
+                </div>
+            )}
+
+
+{/* default */}
+            {shuffledPosts && choice2 === 'default' && (
+                <div className='mb-5 pr-5 pl-5'>
+                    {shuffledPosts.filter(x => x.author.id !== user.id).map(x => (
+                        <div key={x.id} className='rounded-xl ml-5 mr-5 p-2 mb-10 object-cover bg-stone-800'>
+                            <div className='rounded-xl border-t-4 border-[#1d1d1d] flex justify-between  mb-3 mt-0 pt-3 h-[10%]'>
+                                <div className='flex flex-col'>
+                                    <h2>{x.title}</h2>
+                                    <ContentWithMentions content={x.content} />
+                                </div>
+                                <div className='flex flex-col'>
+                                    {x.author.is_shopOwner ? 
+                                    <>
+                                    <p className='font-mono font-bold text-emerald-400'>{x.author.username}</p>
+                                    </>
+                                    :
+                                    <>
+                                    <p>{x.author.fullname}</p>
+                                    </>}
+                                    
+                                </div>
+                            </div>
+                            <img src={x.image} alt="" className='relative w-full h-[90%] rounded-sm' />
+                            <div className='rounded-xl flex-col border-b-4 border-[#1d1d1d] flex  pb-3  mt-0 pt-2 h-[10%]'>
+                            <div className='flex items-stretch justify-between'>
+                                <div className='flex'>
+                                <Like postId={x.id}/>
+                                </div>
+                                
+                                <button>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+                                </svg>
+                                </button>
+                                    
+                                </div>
+                                <div className='flex'>
+                                    <Comments postId={x.id}/>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {shuffledPosts.filter(x => x.author.id !== user.id).length === 0 && <h1>not found</h1>}
+                </div>
+            )}
+
+
+
+
+{/* shops */}
+
+            {shuffledPosts && choice2 === 'shops' && (
+                <div className='mb-5 pr-5 pl-5'>
+                    {shuffledPosts.filter(x => allshops.some(shop => shop.user === x.author.id)).map(x => (
+                        <div key={x.id} className='ml-5 mr-5 mb-10 object-cover'>
+                                <div className='rounded-xl border-t-4 border-[#1d1d1d] flex justify-between t mb-3 mt-0 pt-2 h-[10%]'>
+                                
+                                <div className='flex flex-col'>
+                                <h2>{x.title}</h2>
+                                <ContentWithMentions content={x.content} />
+                                </div>
+                                <div className='flex flex-col'>
+                                    {x.author.is_shopOwner ? 
+                                    <>
+                                    <p className='font-mono font-bold text-emerald-400'>{x.author.username}</p>
+                                    </>
+                                    :
+                                    <>
+                                    <p>{x.author.fullname}</p>
+                                    </>}
+                                    
+                                </div>
+                                
+                                
+                                
+                            </div>
+                            <img src={x.image} alt="" className='relative w-full h-[90%] rounded-sm' />
+                            <div className='rounded-xl flex-col border-b-4 border-[#1d1d1d] flex pb-3 mt-0 pt-3 h-[10%]'>
+                            <div className='flex items-stretch justify-between'>
+                                <div className='flex'>
+                                <Like postId={x.id}/>
+                                </div>
+                                
+                                <div>
+                                <button>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
                                 </svg>
                                 </button>
                                 </div>
@@ -285,47 +428,10 @@ function PostDisplay() {
                             </div>
                         </div>
                     ))}
-                    {shuffledPosts.filter(x => x.author.id  === user.id).length === 0 && <h1>not found</h1>}
+                    {/* {shuffledPosts.filter(x => x.author.id === allshops.some(shop => shop.user === x.author.id)).length === 0 && <h1>not found</h1>} */}
                 </div>
             )}
 
-            {shuffledPosts && choice2 === 'default' && (
-                <div className='mb-5 pr-5 pl-5'>
-                    {shuffledPosts.filter(x => x.author.id !== user.id).map(x => (
-                        <div key={x.id} className='rounded-xl ml-5 mr-5 p-2 mb-10 object-cover bg-[#1c1c39]'>
-                            <div className='rounded-xl border-t-4 border-blue-300 flex justify-between  mb-3 mt-0 pt-3 h-[10%]'>
-                                <div className='flex flex-col'>
-                                    <h2>{x.title}</h2>
-                                    <ContentWithMentions content={x.content} />
-                                </div>
-                                <div className='flex flex-col'>
-                                    <p>{x.author.fullname}</p>
-                                </div>
-                            </div>
-                            <img src={x.image} alt="" className='relative w-full h-[90%] rounded-sm' />
-                            <div className='rounded-xl flex-col border-b-4 border-blue-300 flex  pb-3  mt-0 pt-2 h-[10%]'>
-                            <div className='flex items-stretch justify-between'>
-                                <div className='flex'>
-                                <Like postId={x.id}/>
-                                </div>
-                                
-                                <button>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
-                                </svg>
-                                </button>
-                                    
-                                </div>
-                                <div className='flex'>
-                                    <Comments postId={x.id}/>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                    {shuffledPosts.filter(x => x.author.id !== user.id).length === 0 && <h1>not found</h1>}
-                </div>
-            )}
-            
         </div>
         </div>
     </>

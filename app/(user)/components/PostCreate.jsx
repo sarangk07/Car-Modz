@@ -145,7 +145,7 @@ function PostCreate() {
     />
       <button onClick={() => setChoice('create')}>Create Post</button>
       {choice === 'create' && (
-        <form onSubmit={handleSubmit} className='flex flex-col bg-[#1e1e36] items-center rounded-md p-4'>
+        <form onSubmit={handleSubmit} className='flex flex-col bg-stone-700 items-center rounded-md p-4'>
           <label htmlFor="title" className="mb-2">Title</label>
           <input
             type="text"

@@ -77,18 +77,21 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className='flex flex-col justify-center items-center'>
+      <img src="./loading.gif" alt="" className='w-fit'/>
+      <p className='text-md font-mono animate-pulse'>loading...</p>
+    </div>;
   }
   return (
-    <div className='bg-[#1a1a2e] w-full text-[#f4ecee] h-[1750px] flex flex-col justify-stretch items-stretch font-sans'>
-      <div className="h-fit sticky top-0  z-50 bg-[#1a1a2e] border-b border-[#0f3460] shadow-md flex justify-between ">
+    <div className='font-mono bg-stone-500 w-full text-[#f4ecee] h-[1750px] flex flex-col justify-stretch items-stretch '>
+      <div className="h-fit sticky top-0  z-50 bg-stone-800 border-b-4 border-[#1d1d1d] shadow-md flex justify-between ">
         <div className='mr-5 size-16 md:size-20'>
           <img src="./ModHevenLogo.png" alt=""   />
         </div>
-        <div>search</div>
+        {/* <div>search</div> */}
       </div>
       <div className="h-5/6 flex">
-        <div className='flex-col bg-[#16213e] md:w-1/6 border-r border-[#0f3460] hidden md:flex'>
+        <div className='flex-col bg-stone-800 md:w-1/6   border-r-4 border-[#1d1d1d] hidden md:flex'>
 
 {/* user profile details---------------- */}
 
@@ -99,13 +102,13 @@ const BASE_URL = 'http://127.0.0.1:8000';
 {/* shop suggestions---------------- */}
 
 
-            <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 mx-2'>
+            <div className='bg-stone-900 rounded-xl p-5 shadow-lg mb-4 mx-2'>
               <p className='text-white font-semibold mb-5'>Suggestions</p>
               <div className='flex flex-col  mb-2'>
 
               {filterShops ? filterShops.map((x) => (
-                <div key={x.id} className='mb-3'>
-                  <img src={x.shop_image} alt="" className=' w-10 rounded-xl h-10 mr-3' onClick={()=> route.push(`/shopView/${x.id}`)}/>
+                <div key={x.id} className='mb-3 '>
+                  <img src={x.shop_image} alt="" className='cursor-pointer w-10 rounded-xl h-10 mr-3' onClick={()=> route.push(`/shopView/${x.id}`)}/>
 
                   <p className='text-xs'>{x.shop_name}</p>
                   <p className='text-xs mt-1'>{x.description}</p>
@@ -119,10 +122,10 @@ const BASE_URL = 'http://127.0.0.1:8000';
 {/* similar car owner suggestions---------------- */}
 
 
-            <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mx-2'>
+            <div className='bg-stone-900 rounded-xl p-5 shadow-lg mx-2'>
               <p className='text-white font-semibold mb-2'>Similar cars owners</p>
               {allusers.filter((x) => x.car === user.car && x.id !== user.id).map((x) => (
-                <div key={x.id} className='flex justify-between items-center mb-2 bg-[#16213e] rounded-lg p-2'>
+                <div key={x.id} className='flex justify-between items-center mb-2 border-[#1d1d1d] rounded-lg p-2'>
                   <div className='flex items-center'>
                     <img src={x.profile_pic ? `${BASE_URL}${x.profile_pic}` : './profile.png'} alt="" className=' w-8 rounded-xl h-8 mr-2' />
                     <p className='text-sm'>{x.fullname}</p>
@@ -139,7 +142,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
 {/* suggested users---------------- */}
 
 
-            <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mx-2 mt-3 overflow-scroll' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <div className='bg-stone-900 rounded-xl p-5 shadow-lg mx-2 mt-3 overflow-scroll' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               <p className='text-white font-semibold mb-2'>Suggestons</p>
               <SuggestedUsers/>
             </div>
@@ -150,7 +153,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 
         <div className='md:w-5/6 w-full'>
-            <div className="header h-1/3 w-full bg-[#1a1a2e] border-b border-[#0f3460]">
+            <div className="header h-1/3 w-full bg-stone-800 border-b-2 border-[#1d1d1d]">
                 <div className='h-3/4 m:h-full w-full'>
                   <Carousel images={images}/>
                 </div>
@@ -160,12 +163,12 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 
                 <div className='h-1/4 -top-28 relative w-full md:hidden'>
-                  <div className='flex  justify-between items-start p-4 bg-[#16213e] rounded-xl m-2'>
+                  <div className='flex  justify-between items-start p-4 bg-stone-900 rounded-xl m-2'>
                     <div className='-mb-3'>
                       <h2 className="text-white font-bold">{user.fullname}</h2>
-                      <h3 className="text-white text-xs">{user.username}</h3>
+                      <h3 className="text-white text-xs">username : {user.username}</h3>
                       <p className='text-xs'>{user.car}</p>
-                      <p>{user.email}</p>
+                      <p>username : {user.email}</p>
                        
                        <Logout/>
                        <EditProfile/>
@@ -184,16 +187,16 @@ const BASE_URL = 'http://127.0.0.1:8000';
                 </div>
             </div>
 
-            <div className="flex  h-2/3 w-full bg-[#1a1a2e] p-4">
+            <div className="flex  h-2/3 w-full bg-stone-800 p-4">
               {/* <p className="text-white font-semibold mb-4">Body</p> */}
-              <div className='md:w-1/3 hidden md:flex border-r border-[#0f3460]'>chats
+              <div className='md:w-1/3 hidden md:flex border-r-2 border-[#1d1d1d]'>chats
               
-              <p>pendings......
+              {/* <p>pendings......
                 
                 *chating
                 *user view popup small 
                 *shop&user search
-              </p>
+              </p> */}
               
               </div>
 
@@ -202,8 +205,8 @@ const BASE_URL = 'http://127.0.0.1:8000';
             </div>
         </div>
       </div>
-      <div className="footer h-1/6 bg-[#16213e] border-t border-[#0f3460]">
-        <div className='flex justify-center h-fit bg-[#0f3460] text-white p-2'>ModHeven</div>
+      <div className="footer h-1/6 bg-stone-900 border-t border-[#1d1d1d]">
+        <div className='flex justify-center h-fit bg-stone-950 text-white p-2'>ModHeven</div>
         <div className='flex flex-col items-center justify-center h-fit mt-4'>
           <p className="text-white mb-2">Contact Us</p>
           <ul className='flex space-x-4'>

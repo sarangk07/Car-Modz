@@ -30,7 +30,7 @@ function SuggestedUsers() {
     return (
         <>
             {suggestedUsers.map((userItem) => (
-                <div key={userItem.id} className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 w-full md:w-full lg:w-full'>
+                <div key={userItem.id} className='bg-stone-900 rounded-xl p-5 shadow-lg mb-4 w-full md:w-full lg:w-full'>
                     <div className='flex'>
                         <img src={userItem.profile_pic ? `${BASE_URL}${userItem.profile_pic}` : './profile.png'} alt="" className='bg-transparent w-8 rounded-xl h-8 mr-3' />
                         <div>

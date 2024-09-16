@@ -80,7 +80,7 @@ function EditProfile() {
     
     <>
    
-      <div className='md:bg-[#1a1a2e] rounded-xl md:p-5 shadow-lg md:mb-4  md:mt-4 md:mx-2'>
+      <div className='md:bg-stone-900  rounded-xl md:p-5 shadow-lg md:mb-4  md:mt-4 md:mx-2'>
         <div className='hidden md:flex w-full md:justify-center'>
           <div className='w-3/3'>
             <div className='flex justify-end'>
@@ -103,10 +103,10 @@ function EditProfile() {
         </div>
         <div className='md:flex md:justify-around md:mt-2 hidden '>
           <Logout/>
-          <a href="" className="hover:text-white transition-colors duration-300">more</a>
+          <button  className="hover:text-white transition-colors duration-300 " disabled>more</button>
         </div>
 
-        <button className="text-sm" onClick={() => setOpen(true)}>
+        <button className="text-sm bg-transparent" onClick={() => setOpen(true)}>
           Edit Profile
         </button>
 
@@ -114,7 +114,7 @@ function EditProfile() {
             modal: 'editProfileModal',
             overlay: 'editProfileOverlay'
           }}>
-          <div className='bg-[#1a1a2e] rounded-xl p-5 shadow-lg mb-4 mt-4 mx-2'>
+          <div className='bg-stone-800 rounded-xl p-5 shadow-lg mb-4 mt-4 mx-2'>
             <h4 className='text-center text-white'>Edit Your Profile</h4>
             <form action="" onSubmit={handleEditProfile} className='flex flex-col items-center mt-5'>
               <label htmlFor="profilePic" className='text-white'>Upload / change DP</label>

@@ -123,14 +123,15 @@ const filteredProducts = products
           <div className='p-3'>
             <p className='cursor-default font-extrabold'>{shop.shop_name}</p>
             <p className='cursor-default font-light'>{shop.description}</p>
-            <p className='cursor-pointer'>Message</p>
-            <p className='cursor-default'>Rate Shop</p>
-            <p className='cursor-default text-gray-800'>Report Shop</p>
+            
           </div>
         </div>
         <div className='bg-neutral-800 rounded-lg p-3 m-2'>
           <p className='cursor-pointer' onClick={()=> setChoice('default')}>Products</p>
-          <p className='cursor-pointer' onClick={()=> setChoice('posts')}>Posts</p>
+          {/* <p className='cursor-pointer' onClick={()=> setChoice('posts')}>Posts</p> */}
+          <p className='cursor-pointer'>Message</p>
+          <p className='cursor-default'>Rate Shop</p>
+          <p className='cursor-default text-gray-800'>Report Shop</p>
 
         </div>
       </div>
@@ -168,7 +169,16 @@ const filteredProducts = products
                         <p>Price: {product.price}</p>
                         <p>Stock: {product.stock}</p>
                         <p>Status: {product.status}</p>
-                        <button className='mt-2 mb-2 text-left text-green-400 w-fit'>BOOK</button>
+                        {product.status == 'inactive' ? 
+                      <>
+                      <button className='mt-2 mb-2 text-left text-red-400 w-fit ' disabled>Out of Stock</button>
+                      </>
+                      :
+                      <>
+                      <button className='mt-2 mb-2 text-left text-green-400 w-fit'>BOOK</button>
+                      </>  
+                      }
+                        
                       </div>
                     </div>
                   ))

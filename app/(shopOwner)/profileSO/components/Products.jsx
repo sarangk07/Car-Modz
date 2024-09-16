@@ -131,6 +131,28 @@ function Products({ shopId }) {
     setChoice('addProduct') 
   }
 
+
+
+
+  const handleDelete = async (productId) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this product?')
+    if (!confirmDelete) return
+  
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/products/${productId}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      window.alert('Product deleted successfully!')
+      fetchProducts()  // Refresh the product list after deletion
+    } catch (error) {
+      console.error('Error deleting product:', error)
+      window.alert('Failed to delete product.')
+    }
+  }
+  
+
   // Filter products--------------------------------------------
   const filteredProducts = products
     .filter(product => product.owner === shopId)
@@ -248,7 +270,11 @@ function Products({ shopId }) {
                   <p>Price: {product.price}</p>
                   <p>Stock: {product.stock}</p>
                   <p>Status: {product.status}</p>
+                  <div className='flex justify-between'>
                   <button className='text-green-600' onClick={() => handleEdit(product)}>Edit</button>
+                  <button className='text-red-600' onClick={() => handleDelete(product.id)}>Delete</button>
+
+                  </div>
                 </div>
               </div>
             ))

@@ -131,67 +131,99 @@ function Login() {
             reverseOrder={false}
             />
             {page === 'login' ? (
-                <div className='flex flex-col items-center mt-20 w-screen h-full'>
-                    <div className='flex flex-col items-center bg-slate-700 w-[650px] h-[500px]'>
+                <div className='flex flex-col items-center mt-20 w-full h-full overflow-x-hidden'>
+                    
+                    <div 
+                        className="z-10 flex flex-col items-center overflow-hidden w-[90%] max-w-[650px] h-[500px]"
+                        style={{
+                            backgroundImage: "url('./login.jpg')",
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        }}
+                        >
+                    
+                    <div className='backdrop-blur-sm backdrop-grayscale backdrop-brightness-75 absolute right-[5rem] md:right-[31rem] w-[200px]  md:w-[325px] h-[510px]'/>
+                    <div className='backdrop-blur-sm backdrop-grayscale backdrop-brightness-75 absolute left-[5rem] md:left-[31rem] w-[200px] md:w-[325px] h-[510px]'/>
+                    
+                    <form onSubmit={handleSubmit} className='z-10 text-white flex flex-col h-full items-center font-mono justify-around'>
                         <h1>LOGIN</h1>
-                        <form onSubmit={handleSubmit} className='flex flex-col h-full items-center justify-around'>
-                            <div className='flex flex-col'>
-                                <label htmlFor="username" className='mb-5'>Username</label>
-                                <input
-                                    name="username"
-                                    onChange={handleChange}
-                                    type="text"
-                                    className='bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
-                                    placeholder='Enter username'
-                                    required
-                                />
-                            </div>
-                            <div className='flex flex-col'>
-                                <label htmlFor="password" className='mb-5'>Password</label>
-                                <input
-                                    name="password"
-                                    onChange={handleChange}
-                                    type="password"
-                                    className='bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
-                                    placeholder='Enter password'
-                                    required
-                                />
-                            </div>
-                            <div className='flex flex-col'>
-                                <button type='submit' className='pb-5'>Enter</button>
-                                <p>Forgot password?</p>
-                                <p onClick={() => setPage('register')} className='cursor-pointer'>register</p>
-                            </div>
-                        </form>
-                    </div>
+                        <div className='flex flex-col'>
+                            
+                            <label htmlFor="username" className='mb-5'>Username</label>
+                            <input
+                                name="username"
+                                onChange={handleChange}
+                                type="text"
+                                className='bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
+                                placeholder='Enter username'
+                                required
+                            />
+                        </div>
+                        <div className='flex flex-col'>
+                            <label htmlFor="password" className='mb-5'>Password</label>
+                            <input
+                                name="password"
+                                onChange={handleChange}
+                                type="password"
+                                className='bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
+                                placeholder='Enter password'
+                                required
+                            />
+                        </div>
+                        <div className='flex flex-col'>
+                            <button type='submit' className='mb-5 p-3 flex justify-center  '>Enter</button>
+                            <p>Forgot password?</p>
+                            <p onClick={() => setPage('register')} className='cursor-pointer'>register</p>
+                        </div>
+                    </form>
                 </div>
+            </div>
+            
             ) : (
-                <div className='flex flex-col items-center mt-20 w-screen h-full'>
-                    <div className='flex flex-col items-center bg-slate-700 w-[650px] h-[500px]'>
-                        <h1>REGISTER</h1>
-                        <form onSubmit={handleSubmitR} className='flex flex-col h-full items-center justify-around'>
+                <div className='  flex flex-col items-center mt-20 w-screen h-full'>
+                    <div 
+                        className="z-10 text-sm md:text-md flex flex-col items-center overflow-hidden w-[90%] max-w-[650px] h-[500px]"
+                        style={{
+                            backgroundImage: "url('./register.jpg')",
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        }}
+                        >
+                    
+                    <div className='backdrop-blur-sm backdrop-grayscale backdrop-brightness-75 absolute right-[5rem] md:right-[28rem] w-[200px] md:w-[325px] h-[510px]'/>
+                    <div className='backdrop-blur-sm backdrop-grayscale backdrop-brightness-75 absolute left-[5rem] md:left-[30rem] w-[200px] md:w-[325px] h-[510px]'/>
+
+                        
+                        
+                        <form onSubmit={handleSubmitR} className='flex z-10 flex-col h-full items-center font-mono justify-around'>
+                            <h1 className='mb-4'>REGISTER</h1>
+                           <div className='md:flex md:ml-3'>
+                           
                             <div className='flex flex-col'>
                                 <label htmlFor="username" className='mb-5'>Username</label>
                                 <input
                                     name="username"
                                     onChange={handleChangeR}
                                     type="text"
-                                    className=' bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
+                                    className=' bg-transparent mr-3  border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
                                     placeholder="fixed , can't change"
                                     required
                                 />
                             </div>
                             <div className='flex flex-col'>
-                                <label htmlFor="fullname" className='mb-5'>Fullname</label>
+                                <label htmlFor="fullname" className='mb-5 md:text-right'>Fullname</label>
                                 <input
                                     name="fullname"
                                     onChange={handleChangeR}
                                     type="text"
-                                    className='bg-transparent border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
+                                    className='bg-transparent md:text-right border-b-2 border-b-slate-800 focus:outline-none focus:ring-0 focus:border-b-slate-800 m-0'
                                     placeholder='Enter fullname'
                                     required
                                 />
                             </div>
+                            </div>
+
+
                             <div>
                                 <label htmlFor="isShopOwner">Shop Owner?</label>
                                 <input type="checkbox" name="isShopOwner" id="isShopOwner" checked={isShopOwner} onChange={handleCheckboxChange} />
@@ -241,9 +273,10 @@ function Login() {
                                 />
                             </div>
                             <div className='flex flex-col'>
-                                <button type='submit' className='pb-5'>Enter</button>
-                                <p>Forgot password?</p>
+                                <button type='submit' className='mb-2 mt-2'>Enter</button>
+                                <div className='flex'>
                                 <p onClick={() => setPage('login')} className='cursor-pointer'>Have account, login</p>
+                                </div>
                             </div>
                         </form>
                     </div>
