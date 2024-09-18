@@ -3,12 +3,13 @@
 'use client'
 
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/slices/userSlice';
 import { Toaster } from 'react-hot-toast';
 import toast from 'react-hot-toast';
+
 
 function Login() {
     const router = useRouter();
@@ -17,6 +18,19 @@ function Login() {
     const [registerCredentials, setRegisterCredentials] = useState({ username: '', fullname: '', email: '', car: '', password: '', confirmPassword: '' });
     const [page, setPage] = useState('login');
     const [isShopOwner, setIsShopOwner] = useState(false);
+    
+    const [token, setToken] = useState(null);
+
+    useEffect(()=>{
+        setRegisterCredentials({ username: '', fullname: '', email: '', car: '', password: '', confirmPassword: '' })
+        setCredentials({ username: '', password: '' })
+        
+    },[page])
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token-access');
+        setToken(storedToken);
+    }, []);
 
     const handleChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -29,6 +43,8 @@ function Login() {
     const handleCheckboxChange = () => {
         setIsShopOwner(!isShopOwner);
     };
+
+
 
     const login = async (username, password) => {
         // const loadingToastL = toast.loading('Logging in...');
@@ -123,6 +139,17 @@ function Login() {
             console.error('Please fill in all fields correctly and ensure passwords match');
         }
     };
+
+
+
+
+
+
+
+
+    if(token != null){
+        return router.push('/home')
+    }
 
     return (
         <>

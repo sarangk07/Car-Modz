@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { setUser,setUsers,updateFollowingCount,updateFollowerCount,setShops  } from '../redux/slices/userSlice';
+import { setUser,setUsers,updateFollowingCount,updateFollowerCount,setShops,setGroups  } from '../redux/slices/userSlice';
 import toast from 'react-hot-toast';
 
 
@@ -145,7 +145,7 @@ export const fetchAllShops = async (dispatch) =>{
   const authToken = localStorage.getItem('token-access');
   
   if (!authToken) {
-    console.error('Auth token not found in localStorage');
+    console.error('Auth token not found');
     return null;
   }
 
@@ -164,5 +164,32 @@ export const fetchAllShops = async (dispatch) =>{
   }
 };
 
+
+
+
+
+//Fetch all Groups
+export const fetchGroups = async (dispatch) =>{
+  const authToken = localStorage.getItem('token-access');
+  
+  if (!authToken) {
+    console.error('Auth token not found');
+    return null;
+  }
+
+  try {
+    const response = await axios.get('http://127.0.0.1:8000/api/groups/', {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    console.log('Response from fetchAllGroups:', response.data); 
+    dispatch(setGroups(response.data));
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching all Groups:', error);
+    return null;
+  }
+};
 
 

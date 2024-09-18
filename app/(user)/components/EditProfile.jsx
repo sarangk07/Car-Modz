@@ -9,6 +9,7 @@ import { setUser } from '@/app/redux/slices/userSlice';
 import Logout from '@/app/components/Logout';
 import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
+import Group from './Group';
 
 
 
@@ -105,10 +106,14 @@ function EditProfile() {
           <Logout/>
           <button  className="hover:text-white transition-colors duration-300 " disabled>more</button>
         </div>
-
+        <div className='flex flex-col  items-start'>
         <button className="text-sm bg-transparent" onClick={() => setOpen(true)}>
           Edit Profile
         </button>
+
+        <Group/>
+        </div>
+        
 
         <Modal open={open} onClose={() => setOpen(false)} center classNames={{ 
             modal: 'editProfileModal',

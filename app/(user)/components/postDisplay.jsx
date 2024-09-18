@@ -91,7 +91,7 @@ function PostDisplay() {
     useEffect(() => {
         if (allshops) {
             const shuffledShops = [...allshops].sort(() => 0.5 - Math.random());
-            setfilterShops(shuffledShops.slice(0, 3));
+            setfilterShops(shuffledShops.slice(0, 4));
         }
     }, [allshops]);
 
@@ -191,12 +191,12 @@ console.log('postsss',shuffledPosts);
         
         <div className='flex mt-2 w-full overflow-auto ' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {filterShops ? filterShops.map((x) => (
-                <div key={x.id} className='mb-3 mr-10 flex w-64'>
+                <div key={x.id} className='mb-5 mr-20 flex w-64 '>
                     
                   <img src={x.shop_image} alt="" className='bg-stone-800 cursor-pointer w-10 rounded-xl h-10 mr-3' onClick={()=> route.push(`/shopView/${x.id}`)}/>
-                  <div className='flex flex-col mr-5'>
-                    <p className='text-xs'>{x.shop_name}</p>
-                    <p className='text-xs mt-1 mr-5'>{x.description}</p>
+                  <div className='flex flex-col mr-5 '>
+                    <p className='text-xs font-bold'>{x.shop_name}</p>
+                    {/* <p className='text-xs mt-1 mr-5 '>{x.description}</p> */}
                   </div>
                 </div>
               )) : <></>}
@@ -225,7 +225,7 @@ console.log('postsss',shuffledPosts);
 
 {/* user */}
             {shuffledPosts && choice2 === 'user' && (
-                <div className='mb-5 pr-5 pl-5'>
+                <div className='mb-5 pr-1 pl-1 md:pr-6 md:pl-6'>
                     {shuffledPosts.filter(x => x.author.id  === user.id).map(x => (
                         <div key={x.id} className='ml-5 mr-5 mb-10 object-cover'>
                                 <div className='rounded-xl border-t-4 border-[#1d1d1d] flex justify-between t mb-3 mt-0 pt-2 h-[10%]'>
@@ -303,7 +303,7 @@ console.log('postsss',shuffledPosts);
 
 {/* default */}
             {shuffledPosts && choice2 === 'default' && (
-                <div className='mb-5 pr-5 pl-5'>
+                <div className='mb-5  pr-1 pl-1 md:pr-6 md:pl-6'>
                     {shuffledPosts.filter(x => x.author.id !== user.id).map(x => (
                         <div key={x.id} className='rounded-xl ml-5 mr-5 p-2 mb-10 object-cover bg-stone-800'>
                             <div className='rounded-xl border-t-4 border-[#1d1d1d] flex justify-between  mb-3 mt-0 pt-3 h-[10%]'>
@@ -323,7 +323,7 @@ console.log('postsss',shuffledPosts);
                                     
                                 </div>
                             </div>
-                            <img src={x.image} alt="" className='relative w-full h-[90%] rounded-sm' />
+                            <img src={x.image} alt="" className='relative w-fit h-[90%] rounded-sm' />
                             <div className='rounded-xl flex-col border-b-4 border-[#1d1d1d] flex  pb-3  mt-0 pt-2 h-[10%]'>
                             <div className='flex items-stretch justify-between'>
                                 <div className='flex'>
@@ -353,7 +353,7 @@ console.log('postsss',shuffledPosts);
 {/* shops */}
 
             {shuffledPosts && choice2 === 'shops' && (
-                <div className='mb-5 pr-5 pl-5'>
+                <div className='mb-5 pr-1 pl-1 md:pr-6 md:pl-6'>
                     {shuffledPosts.filter(x => allshops.some(shop => shop.user === x.author.id)).map(x => (
                         <div key={x.id} className='ml-5 mr-5 mb-10 object-cover'>
                                 <div className='rounded-xl border-t-4 border-[#1d1d1d] flex justify-between t mb-3 mt-0 pt-2 h-[10%]'>

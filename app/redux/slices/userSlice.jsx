@@ -15,6 +15,7 @@ const initialState = {
   following_count: 0,
   users: [], 
   shops: [],
+  groups: [],
 };
 
 const userSlice = createSlice({
@@ -67,8 +68,11 @@ const userSlice = createSlice({
     setShops: (state, action) => {
       state.shops = action.payload;
     },
+    setGroups: (state, action) => {
+      state.groups = action.payload;
+    },
   },
 });
 
-export const { setUser, setUsers, clearUser,updateFollowerCount ,updateFollowingCount,setShops } = userSlice.actions;
+export const { setUser, setUsers,setGroups, clearUser,updateFollowerCount ,updateFollowingCount,setShops } = userSlice.actions;
 export default userSlice.reducer;

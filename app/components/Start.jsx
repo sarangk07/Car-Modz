@@ -7,7 +7,7 @@ function Start() {
     const route = useRouter()
   return (
     <>
-     <button className="mt-5 backdrop-blur-sm font-mono p-5 font-extrabold border" onClick={()=> route.push('./login')}>Start</button> 
+      <button className="mt-5 backdrop-blur-sm font-mono hover:bg-black hover:text-white p-5 font-extrabold border border-black" onClick={()=> route.push('./login')}>START</button> 
     </>
   )
 }

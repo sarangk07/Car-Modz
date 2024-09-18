@@ -112,7 +112,7 @@ const filteredProducts = products
     return <p>Shop not found. Please check the shop ID.</p>;
   }
   return (
-    <div className='w-full h-screen flex md:flex-row flex-col bg-stone-800'>
+    <div className='w-full h-[120vh] md:h-screen flex md:flex-row flex-col bg-stone-800'>
       <div className='bg-neutral-500 md:w-1/3 m-2 p-2 rounded-md'>
       <p className='cursor-pointer' onClick={()=> router.push('/home')}>back</p>
         <div className='bg-green-600 text-gray-200 font-mono font-bold rounded-lg h-fit m-2'>
@@ -126,12 +126,12 @@ const filteredProducts = products
             
           </div>
         </div>
-        <div className='bg-neutral-800 rounded-lg p-3 m-2'>
+        <div className='bg-neutral-800 rounded-lg p-3 m-2 pb-5'>
           <p className='cursor-pointer' onClick={()=> setChoice('default')}>Products</p>
           {/* <p className='cursor-pointer' onClick={()=> setChoice('posts')}>Posts</p> */}
-          <p className='cursor-pointer'>Message</p>
-          <p className='cursor-default'>Rate Shop</p>
-          <p className='cursor-default text-gray-800'>Report Shop</p>
+          <p className='cursor-pointer'>Message us</p>
+          <p className='cursor-default'>Rate us</p>
+          <p className='cursor-default text-red-300'>Report</p>
 
         </div>
       </div>

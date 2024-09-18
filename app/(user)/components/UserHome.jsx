@@ -8,8 +8,10 @@ import { useSelector,useDispatch } from 'react-redux';
 import { fetchUserData,fetchAllUsers,followUser,unfollowUser, fetchAllShops } from '@/app/utils/fetchUser';
 import { useRouter } from 'next/navigation';
 import Logout from '@/app/components/Logout';
-import axios from 'axios';
-import { clearUser } from '@/app/redux/slices/userSlice';
+// import Group from './Group';
+import Groups from './Groups';
+// import axios from 'axios';
+// import { clearUser } from '@/app/redux/slices/userSlice';
 import PostDisplay from './postDisplay';
 
 import SuggestedUsers from './suggestedUser';
@@ -21,9 +23,11 @@ import EditProfile from './EditProfile';
 function UserHome() {
   const route = useRouter()
   const images = [
-    'https://i.pinimg.com/originals/bf/72/f9/bf72f91268216b97ef0f8976e8314432.jpg',
-    'https://i.pinimg.com/originals/14/c5/91/14c5913ac14df4378a20cda4c7c7eb26.jpg',
-    'https://i.pinimg.com/originals/1a/1e/22/1a1e220a07b5a89ef92732a03a153889.jpg',
+    'https://i.pinimg.com/1200x/49/0c/48/490c48a401fb61f872cb9b58ccd99e0a.jpg',
+    'https://i.pinimg.com/1200x/7d/4c/45/7d4c45385441714214be0e6cee0abc61.jpg',
+    'https://i.pinimg.com/1200x/32/cd/6c/32cd6ccb9c3a93f5995d6527ea990c41.jpg',
+    
+    'https://i.pinimg.com/1200x/63/83/ec/6383ec074d5d8ebab8de0da7ee013f04.jpg',
   ];
 
   const user = useSelector((state) => state.user);
@@ -83,14 +87,22 @@ const BASE_URL = 'http://127.0.0.1:8000';
     </div>;
   }
   return (
-    <div className='font-mono bg-stone-500 w-full text-[#f4ecee] h-[1750px] flex flex-col justify-stretch items-stretch '>
-      <div className="h-fit sticky top-0  z-50 bg-stone-800 border-b-4 border-[#1d1d1d] shadow-md flex justify-between ">
-        <div className='mr-5 size-16 md:size-20'>
-          <img src="./ModHevenLogo.png" alt=""   />
+
+    // MAINDIV
+    <div className='font-mono bg-stone-500 w-full text-[#f4ecee] h-[1750px] flex flex-col justify-stretch items-stretch cursor-default'>
+
+
+{/* SUBONE`` */}
+      <div className="h-[5%]   z-50 bg-stone-800 border-b-4 border-[#1d1d1d] shadow-md flex justify-between ">
+        <div className='mr-5l size-16 md:size-20'>
+          <p className="font-mono flex flex-co ml-5 mt-2 mb-2  font-extrabold text-2xl">𝕄<span className="text-red-500">🅞</span>𝔻𝔼 𝔸ℝ𝔼ℕ𝔸</p>
         </div>
         {/* <div>search</div> */}
       </div>
-      <div className="h-5/6 flex">
+
+
+{/* SUBTWO */}
+      <div className="h-[93%] flex">
         <div className='flex-col bg-stone-800 md:w-1/6   border-r-4 border-[#1d1d1d] hidden md:flex'>
 
 {/* user profile details---------------- */}
@@ -153,7 +165,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 
         <div className='md:w-5/6 w-full'>
-            <div className="header h-1/3 w-full bg-stone-800 border-b-2 border-[#1d1d1d]">
+            <div className="header h-[25%] w-full bg-stone-800 border-b-2 border-[#1d1d1d]">
                 <div className='h-3/4 m:h-full w-full'>
                   <Carousel images={images}/>
                 </div>
@@ -168,10 +180,12 @@ const BASE_URL = 'http://127.0.0.1:8000';
                       <h2 className="text-white font-bold">{user.fullname}</h2>
                       <h3 className="text-white text-xs">username : {user.username}</h3>
                       <p className='text-xs'>{user.car}</p>
-                      <p>username : {user.email}</p>
+                      <p>email : {user.email}</p>
                        
                        <Logout/>
                        <EditProfile/>
+                       
+                       <p>more...</p>
                     </div>
                     <div className="flex flex-col justify-between mt-2">
                     <img src={user.profile_pic ? `${BASE_URL}${user.profile_pic}` :'./profile.png'} alt="" className=' w-20 rounded-xl h-24'/>
@@ -187,9 +201,11 @@ const BASE_URL = 'http://127.0.0.1:8000';
                 </div>
             </div>
 
-            <div className="flex  h-2/3 w-full bg-stone-800 p-4">
+            <div className="flex  h-[75%] w-full bg-stone-800 p-4">
               {/* <p className="text-white font-semibold mb-4">Body</p> */}
-              <div className='md:w-1/3 hidden md:flex border-r-2 border-[#1d1d1d]'>chats
+              <div className='md:w-1/3 hidden md:flex  border-r-2 border-[#1d1d1d]'>
+                
+                <Groups/>
               
               {/* <p>pendings......
                 
@@ -205,17 +221,16 @@ const BASE_URL = 'http://127.0.0.1:8000';
             </div>
         </div>
       </div>
-      <div className="footer h-1/6 bg-stone-900 border-t border-[#1d1d1d]">
-        <div className='flex justify-center h-fit bg-stone-950 text-white p-2'>ModHeven</div>
-        <div className='flex flex-col items-center justify-center h-fit mt-4'>
-          <p className="text-white mb-2">Contact Us</p>
-          <ul className='flex space-x-4'>
-            <li className="hover:text-white transition-colors duration-300">Report</li>
-            <li className="hover:text-white transition-colors duration-300">Help Desk</li>
-            
-          </ul>
-        </div>
+
+
+
+
+{/* SUBTHREE */}
+      <div className="footer h-[2%] bg-stone-900 border-t border-[#1d1d1d]">
+        <div className='flex justify-center h-fit bg-stone-950 text-white p-2'>Mode Arena 2024</div>
       </div>
+
+
     </div>
   ) 
 }
