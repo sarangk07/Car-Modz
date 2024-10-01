@@ -3,17 +3,19 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { fetchAllShops } from '@/app/utils/fetchUser'
+import { fetchAllShops,fetchAShopInfo } from '@/app/utils/fetchUser'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import { RotateLoader } from 'react-spinners'
+
 
 
 function ShopView(params) {
 
   const [shopid, setShopid] = useState(null);
   const [shop, setShop] = useState(null);
-  const allshops = useSelector((state) => state.user.shops);
+  // const allshops = useSelector((state) => state.user.shops);
   const [choice,setChoice] = useState('default');
   const [sort1, setSort1] = useState('default')
 
@@ -48,29 +50,29 @@ function ShopView(params) {
 
 
 
-  useEffect(() => {
-      setShopid(params.params.shopid);
+  // useEffect(() => {
+  //     setShopid(params.params.shopid);
       
 
-  }, [params.params.shopid]);
+  // }, [params.params.shopid]);
   
 
 
 
   
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      await fetchAllShops(dispatch);
-      console.log('Completed fetchAllShops');
-      setIsLoading(false);
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       setIsLoading(true);
+//       await fetchAllShops(dispatch);
+//       console.log('Completed fetchAllShops');
+//       setIsLoading(false);
      
-    };
+//     };
 
-    fetchData();
+//     fetchData();
 
     
-}, [dispatch]);
+// }, [dispatch]);
 
 
 
@@ -88,16 +90,41 @@ const filteredProducts = products
 
 
 
-  useEffect(() => {
-      if (shopid !== null) {
-          console.log('allshops============', allshops);
-          console.log('shopid===========', shopid);
+  // useEffect(() => {
+  //     if (shopid !== null) {
+  //         console.log('allshops============', allshops);
+  //         console.log('shopid===========', shopid);
 
-          const filteredShop = allshops.find((x) => x.id === parseInt(shopid));
-          console.log('filteredShop=================', filteredShop);
-          setShop(filteredShop);
-      }
-  }, [shopid, allshops]);
+  //         const filteredShop = allshops.find((x) => x.id === parseInt(shopid));
+  //         console.log('filteredShop=================', filteredShop);
+  //         setShop(filteredShop);
+  //     }
+  // }, [shopid, allshops]);
+
+
+  useEffect(() => {
+    if (params?.params.shopid) {
+      setShopid(params.params.shopid);
+
+      const fetchUserInfo = async () => {
+        try {
+          setIsLoading(true);
+          const response = await fetchAShopInfo(params.params.shopid); 
+          setShop(response);
+          setIsLoading(false);
+        } catch (error) {
+          console.error("Failed to fetch user info", error);
+        }
+      };
+
+      fetchUserInfo();
+    } else {
+      setShopid(null);
+      setShop(null); 
+    }
+  }, [params.params.shopid]);
+
+console.log('shop infooooooooooooooooooooooo',shop);
 
 
 
@@ -105,7 +132,10 @@ const filteredProducts = products
 
 
   if (isLoading) {
-    return <p>Loading shops...</p>;
+    return <div className='flex flex-col w-full h-screen justify-center items-center'>
+   
+    <RotateLoader color='#35ebc5'/>
+    </div>;
   }
 
   if (!shop) {
@@ -113,12 +143,27 @@ const filteredProducts = products
   }
   return (
     <div className='w-full h-[120vh] md:h-screen flex md:flex-row flex-col bg-stone-800'>
-      <div className='bg-neutral-500 md:w-1/3 m-2 p-2 rounded-md'>
+      <div className='bg-neutral-700 md:w-1/3 m-2 p-2 rounded-md'>
       <p className='cursor-pointer' onClick={()=> router.push('/home')}>back</p>
-        <div className='bg-green-600 text-gray-200 font-mono font-bold rounded-lg h-fit m-2'>
+        <div className='bg-neutral-900 text-gray-200 font-mono font-bold rounded-lg h-fit m-2'>
           <div className='relative'>
-            <img src={shop.shop_bg_img} alt="bg-img" className='relative h-40 w-full' />
-            <img src={shop.shop_image} alt="profile-img" className='absolute rounded-xl top-5 left-10  w-32 h-32 border-2 border-green-400'/>
+            {shop && (
+              <>
+                
+                <img
+                  src={`http://127.0.0.1:8000${shop.shop_bg_img}`} 
+                  alt="bg-img"
+                  className='relative h-40 w-full'
+                />
+                
+                <img
+                  src={`http://127.0.0.1:8000${shop.shop_image}`} 
+                  alt="profile-img"
+                  className='absolute rounded-xl top-5 left-10 w-32 h-32 border-2 border-green-400'
+                />
+              </>
+            )}
+            
           </div>
           <div className='p-3'>
             <p className='cursor-default font-extrabold'>{shop.shop_name}</p>
@@ -135,7 +180,7 @@ const filteredProducts = products
 
         </div>
       </div>
-      <div className='bg-neutral-500 md:w-2/3 m-2 p-2 rounded-md'>
+      <div className='bg-neutral-700 md:w-2/3 m-2 p-2 rounded-md'>
         
         {
           choice == 'posts' ?

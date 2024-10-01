@@ -7,6 +7,8 @@ import { useSelector } from 'react-redux';
 import Comments from './comments';
 import Like from './like';
 import { useRouter } from 'next/navigation';
+import AllSuggestions from './mobilescreenSuggestions';
+
 
 
 
@@ -69,7 +71,7 @@ const ContentWithMentions = ({ content }) => {
 
 
 function PostDisplay() {
-    const route = useRouter()
+    const router = useRouter()
 
     const user = useSelector((state) => state.user);
     const allshops = useSelector((state) => state.user.shops);
@@ -86,14 +88,14 @@ function PostDisplay() {
     const [editTitle, setEditTitle] = useState('');
     const [editContent, setEditContent] = useState('');
 
-    const [filterShops, setfilterShops] = useState([]);
+    // const [filterShops, setfilterShops] = useState([]);
 
-    useEffect(() => {
-        if (allshops) {
-            const shuffledShops = [...allshops].sort(() => 0.5 - Math.random());
-            setfilterShops(shuffledShops.slice(0, 4));
-        }
-    }, [allshops]);
+    // useEffect(() => {
+    //     if (allshops) {
+    //         const shuffledShops = [...allshops].sort(() => 0.5 - Math.random());
+    //         setfilterShops(shuffledShops.slice(0, 4));
+    //     }
+    // }, [allshops]);
 
 console.log('postsss',shuffledPosts);
 
@@ -184,26 +186,7 @@ console.log('postsss',shuffledPosts);
   return (
     <>
       <div className='md:w-2/3 w-full h-full flex md:m-3  flex-col'>
-        <div className='md:hidden flex flex-col'>
-            <div className='flex justify-between mb-3'>
-                <p> Suggestions</p>
-            </div>
-        
-        <div className='flex mt-2 w-full overflow-auto ' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        {filterShops ? filterShops.map((x) => (
-                <div key={x.id} className='mb-5 mr-20 flex w-64 '>
-                    
-                  <img src={x.shop_image} alt="" className='bg-stone-800 cursor-pointer w-10 rounded-xl h-10 mr-3' onClick={()=> route.push(`/shopView/${x.id}`)}/>
-                  <div className='flex flex-col mr-5 '>
-                    <p className='text-xs font-bold'>{x.shop_name}</p>
-                    {/* <p className='text-xs mt-1 mr-5 '>{x.description}</p> */}
-                  </div>
-                </div>
-              )) : <></>}
-        </div>
-        <p className='flex justify-center mb-4'> <input placeholder='Shops,Users,Posts...' type="search" name="" id=""  className='pl-1 rounded-sm mr-3 bg-stone-200 text-black' /> <span className='border-2 p-1 rounded-md'>search</span></p>
-
-        </div>
+        <AllSuggestions/>
             
         <PostCreate/>
         <div className='flex justify-between mt-3 mb-2'>
@@ -305,20 +288,20 @@ console.log('postsss',shuffledPosts);
             {shuffledPosts && choice2 === 'default' && (
                 <div className='mb-5  pr-1 pl-1 md:pr-6 md:pl-6'>
                     {shuffledPosts.filter(x => x.author.id !== user.id).map(x => (
-                        <div key={x.id} className='rounded-xl ml-5 mr-5 p-2 mb-10 object-cover bg-stone-800'>
+                        <div key={x.id} className='rounded-xl md:mx-5 mx-0  mb-10 object-cover bg-stone-800'>
                             <div className='rounded-xl border-t-4 border-[#1d1d1d] flex justify-between  mb-3 mt-0 pt-3 h-[10%]'>
                                 <div className='flex flex-col'>
                                     <h2>{x.title}</h2>
                                     <ContentWithMentions content={x.content} />
                                 </div>
-                                <div className='flex flex-col'>
+                                <div className='flex flex-col cursor-pointer'>
                                     {x.author.is_shopOwner ? 
                                     <>
-                                    <p className='font-mono font-bold text-emerald-400'>{x.author.username}</p>
+                                        <p className='font-mono font-bold text-emerald-400'  >{x.author.username}</p>
                                     </>
                                     :
                                     <>
-                                    <p>{x.author.fullname}</p>
+                                        <p onClick={()=> router.push(`/userView/${x.author.id}`)}>{x.author.fullname}</p>
                                     </>}
                                     
                                 </div>
@@ -369,7 +352,7 @@ console.log('postsss',shuffledPosts);
                                     </>
                                     :
                                     <>
-                                    <p>{x.author.fullname}</p>
+                                    <p >{x.author.fullname}</p>
                                     </>}
                                     
                                 </div>

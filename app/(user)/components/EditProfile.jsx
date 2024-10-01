@@ -119,10 +119,10 @@ function EditProfile() {
             modal: 'editProfileModal',
             overlay: 'editProfileOverlay'
           }}>
-          <div className='bg-stone-800 rounded-xl p-5 shadow-lg mb-4 mt-4 mx-2'>
+          <div className='bg-stone-800 font-mono rounded-xl p-5 shadow-lg mb-4 mt-4 mx-2'>
             <h4 className='text-center text-white'>Edit Your Profile</h4>
             <form action="" onSubmit={handleEditProfile} className='flex flex-col items-center mt-5'>
-              <label htmlFor="profilePic" className='text-white'>Upload / change DP</label>
+              <label htmlFor="profilePic" className='text-white'>Profile Pic</label>
               <input type="file" className='w-4/5 mb-2 text-zinc-600' name='profilePic' onChange={handleChangePic}/>
               <input type="text" className='w-4/5 mb-2 text-zinc-600' name='fullname' placeholder='fullname' value={fullname} onChange={(e) => setFullname(e.target.value)}/>
               <input type="text" className='w-4/5 mb-2 text-zinc-600' name='car' placeholder='change car' value={car} onChange={(e) => setCar(e.target.value)}/>

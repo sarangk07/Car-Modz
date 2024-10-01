@@ -7,6 +7,9 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
 import Products from './components/Products';
+import { RotateLoader } from 'react-spinners';
+
+
 
 function ShopHome() {
   const user = useSelector((state) => state.user);
@@ -253,7 +256,9 @@ function ShopHome() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className='flex flex-col w-full h-screen justify-center items-center'>
+    <RotateLoader color='#35ebc5'/>
+  </div>;
   }
 
   return (

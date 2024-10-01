@@ -5,10 +5,15 @@
 import axios from 'axios';
 import React, { useState,useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
+
 import { setUser } from '../redux/slices/userSlice';
 import { Toaster } from 'react-hot-toast';
 import toast from 'react-hot-toast';
+
+
+
+//ONE ISSUE IS THERE , WHEN THE TOKEN IS EXPIRED , IT NOT REMOVED FROM LOCAL STORAGE.
 
 
 function Login() {
@@ -18,8 +23,9 @@ function Login() {
     const [registerCredentials, setRegisterCredentials] = useState({ username: '', fullname: '', email: '', car: '', password: '', confirmPassword: '' });
     const [page, setPage] = useState('login');
     const [isShopOwner, setIsShopOwner] = useState(false);
+    const user = useSelector((state) => state.user);
     
-    const [token, setToken] = useState(null);
+   
 
     useEffect(()=>{
         setRegisterCredentials({ username: '', fullname: '', email: '', car: '', password: '', confirmPassword: '' })
@@ -27,10 +33,7 @@ function Login() {
         
     },[page])
 
-    useEffect(() => {
-        const storedToken = localStorage.getItem('token-access');
-        setToken(storedToken);
-    }, []);
+   
 
     const handleChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -77,10 +80,10 @@ function Login() {
                     console.error('An error occurred during login.');
                 }
             } else if (error.request) {
-                toast.error('No response received: ', error.request)
+                toast.error('Server not responding ', error.request)
                 console.error('No response received:', error.request);
             } else {
-                toast.error("Error setting up request: ",error.message)
+                toast.error("Error setting up request,try again ",error.message)
                 console.error('Error setting up request:', error.message);
             }
         }
@@ -147,7 +150,7 @@ function Login() {
 
 
 
-    if(token != null){
+    if(user&&user.username){
         return router.push('/home')
     }
 

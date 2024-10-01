@@ -10,12 +10,15 @@ import { useRouter } from 'next/navigation';
 import Logout from '@/app/components/Logout';
 // import Group from './Group';
 import Groups from './Groups';
+import Image from 'next/image';
 // import axios from 'axios';
 // import { clearUser } from '@/app/redux/slices/userSlice';
 import PostDisplay from './postDisplay';
 
 import SuggestedUsers from './suggestedUser';
 import EditProfile from './EditProfile';
+import Search1 from './Search1';
+import { RotateLoader } from 'react-spinners';
 
 
 
@@ -34,6 +37,8 @@ function UserHome() {
   const allusers = useSelector((state) => state.user.users);
   const allshops = useSelector((state) => state.user.shops);
   console.log(user,"user infos");
+
+  const [gmChoice,setGMChoice] = useState('group');
   
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true); 
@@ -81,9 +86,12 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 
   if (loading) {
-    return <div className='flex flex-col justify-center items-center'>
-      <img src="./loading.gif" alt="" className='w-fit'/>
-      <p className='text-md font-mono animate-pulse'>loading...</p>
+    return <div className='flex flex-col w-full h-screen justify-center items-center'>
+      {/* <Image width={0} height={0} src="/loading.gif" alt="" className='w-fit'></Image>
+      {/* <img src="./loading.gif" alt="" className='w-fit'/> */}
+      {/* <p className='text-md font-mono animate-pulse'>loading...</p> */}
+
+      <RotateLoader color='#35ebc5'/>
     </div>;
   }
   return (
@@ -112,7 +120,9 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 
 {/* shop suggestions---------------- */}
-
+            <div className='bg-stone-900 rounded-lg p-2 shadow-lg mb-4 mx-2'>
+            <Search1/>
+            </div>
 
             <div className='bg-stone-900 rounded-xl p-5 shadow-lg mb-4 mx-2'>
               <p className='text-white font-semibold mb-5'>Suggestions</p>
@@ -203,16 +213,24 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
             <div className="flex  h-[75%] w-full bg-stone-800 p-4">
               {/* <p className="text-white font-semibold mb-4">Body</p> */}
-              <div className='md:w-1/3 hidden md:flex  border-r-2 border-[#1d1d1d]'>
+              <div className='md:w-1/3 hidden md:flex flex-col  border-r-2 border-[#1d1d1d]'>
+                <div className='flex justify-around mb-4 cursor-pointer'>
+                  <p onClick={()=>setGMChoice('group')}>Group</p>
+                  <p onClick={()=>setGMChoice('message')}>Messages</p>
+                </div>
+                <div >
+                  {gmChoice == 'group' ?
+                  <>
+                    <Groups/>
+                  </>
+                  :
+                    
+                  <>
+                    <p>messages</p>
+                  </>}
                 
-                <Groups/>
-              
-              {/* <p>pendings......
+                </div>
                 
-                *chating
-                *user view popup small 
-                *shop&user search
-              </p> */}
               
               </div>
 

@@ -75,6 +75,53 @@ export const fetchAllUsers = async (dispatch) =>{
 };
 
 
+// API call to get a user info based on id
+export const fetchAUserInfo = async (userid) => {
+  const authToken = localStorage.getItem('token-access');
+  if (!authToken) {
+    console.error('Auth token not found in localStorage');
+    return null;
+  }
+
+  try {
+    const response = await axios.get(`http://127.0.0.1:8000/api/user-info/id/${userid}/`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    console.log('Response from one user details:', response.data);
+    return response.data; 
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    return null;
+  }
+};
+
+
+
+
+
+// API call to get a user info based on id
+export const fetchAShopInfo = async (shopid) => {
+  const authToken = localStorage.getItem('token-access');
+  if (!authToken) {
+    console.error('Auth token not found in localStorage');
+    return null;
+  }
+
+  try {
+    const response = await axios.get(`http://127.0.0.1:8000/api/shop/${shopid}/`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    console.log('Response from one user details:', response.data);
+    return response.data; 
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    return null;
+  }
+};
 
 
 
@@ -191,5 +238,69 @@ export const fetchGroups = async (dispatch) =>{
     return null;
   }
 };
+
+
+
+
+
+
+// Join a group
+export const handleJoinGP = async (groupId, dispatch) => {
+  const authToken = localStorage.getItem('token-access');
+
+  if (!authToken) {
+    console.error('Auth token not found');
+    return null;
+  }
+
+  try {
+    const response = await axios.post(
+      `http://127.0.0.1:8000/api/groups/${groupId}/join/`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    console.log(response.data);
+    
+    await fetchGroups(dispatch);  
+    toast.success('Joined the group!');
+  } catch (error) {
+    console.error('Error joining group:', error);
+    toast.error('Failed to join the group.');
+  }
+};
+
+// Leave a group
+export const handleLeaveGP = async (groupId, dispatch) => {
+  const authToken = localStorage.getItem('token-access');
+
+  if (!authToken) {
+    console.error('Auth token not found');
+    return null;
+  }
+
+  try {
+    const response = await axios.post(
+      `http://127.0.0.1:8000/api/groups/${groupId}/leave/`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    console.log(response.data);
+    
+    await fetchGroups(dispatch);  
+    toast.success('Left the group!');
+  } catch (error) {
+    console.error('Error leaving group:', error);
+    toast.error('Failed to leave the group.');
+  }
+};
+
 
 
