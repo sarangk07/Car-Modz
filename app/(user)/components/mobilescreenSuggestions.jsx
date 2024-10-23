@@ -39,12 +39,12 @@ function AllSuggestions() {
   return (
     <div className='md:hidden flex flex-col'>
             <div className='flex justify-between mb-3'>
-                <p> Suggestions</p>
+                <p className='text-cyan-400 text-lg'> Suggestions</p>
             </div>
         
         <div className='flex flex-col mt-2 w-full overflow-auto ' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         
-        <p>Shops</p>
+        <p className='text-cyan-400'>Shops</p>
         <div className='flex mt-2'>
         {filterShops ? filterShops.map((x) => (
                 <div key={x.id} className='mb-5  mr-20 flex w-64 '>
@@ -59,7 +59,7 @@ function AllSuggestions() {
         </div>
         </div>
         <div className='flex flex-col mt-2 mb-3 w-full overflow-auto ' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        <p>Groups</p>
+        <p className='text-cyan-400'>Groups</p>
         <div className='flex mt-2'>
         {filterGroups ? filterGroups.map((x) => (
                 <div key={x.id} className='mb-5 mr-20 flex w-64 '>

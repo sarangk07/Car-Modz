@@ -69,8 +69,8 @@ function EditGroup({ groupid }) {
   };
 
   return (
-    <div className="text-zinc-900 bg-violet-700 rounded-md">
-      <form action="" onSubmit={handleEdit} className='text-zinc-900 p-3 flex flex-col'>
+    <div className="text-zinc-900 flex  justify-center items-center  bg-violet-700 rounded-md">
+      <form action="" onSubmit={handleEdit} className='text-zinc-900 font-mono p-3 flex flex-col'>
         <input 
           className='text-zinc-900' 
           type="text" 

@@ -190,17 +190,17 @@ console.log('postsss',shuffledPosts);
             
         <PostCreate/>
         <div className='flex justify-between mt-3 mb-2'>
-            <p className='cursor-pointer' onClick={()=>setChoice('users')}>users</p>
+            <p className='cursor-pointer text-cyan-400 text-lg' onClick={()=>setChoice('users')}>Users</p>
             {
             choice == 'users' ? 
                 <>
-                    <p onClick={()=>setChoice2('user')} className='cursor-pointer'>own</p>
-                    <p onClick={()=>setChoice2('default')} className='cursor-pointer'>dicover</p>
+                    <p onClick={()=>setChoice2('user')} className='cursor-pointer text-cyan-400 text-lg'>Own</p>
+                    <p onClick={()=>setChoice2('default')} className='cursor-pointer text-cyan-400 text-lg'>Dicover</p>
                 </> 
                 :
             <> </>
             }
-            <p onClick={()=>setChoice2('shops')} className='cursor-pointer'>shops</p>
+            <p onClick={()=>setChoice2('shops')} className='cursor-pointer text-cyan-400 text-lg'>Shops</p>
         </div>
 
         <div className='flex-1 overflow-y-auto mt-3'  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>

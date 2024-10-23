@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useEffect, useState ,useCallback} from 'react';
 import React from 'react';
 import axios from 'axios';
 import DeleteAcc from './deleteAcc';
@@ -26,6 +26,41 @@ function EditProfile() {
   const [imageModalOpen, setImageModalOpen] = useState(false);
 
   const BASE_URL = 'http://127.0.0.1:8000';
+
+  const [greeting, setGreeting] = useState('');
+  
+
+  const updateTimeBasedContent = useCallback(() => {
+    const hours = new Date().getHours();
+    let newGreeting;
+    let newTheme;
+
+    if (hours < 12) {
+      newGreeting = 'Good Morning';
+      
+    } else if (hours < 18) {
+      newGreeting = 'Good Afternoon';
+      
+    } else {
+      newGreeting = 'Good Evening';
+      
+    }
+
+    setGreeting(newGreeting);
+    
+  }, []);
+
+  useEffect(() => {
+    updateTimeBasedContent();
+    const timer = setInterval(updateTimeBasedContent, 60000); 
+
+    return () => clearInterval(timer);
+  }, [updateTimeBasedContent]);
+  
+  
+
+
+
 
   const handleEditProfile = async (e) => {
     e.preventDefault();
@@ -81,13 +116,13 @@ function EditProfile() {
     
     <>
    
-      <div className='md:bg-stone-900  rounded-xl md:p-5 shadow-lg md:mb-4  md:mt-4 md:mx-2'>
+      <div className='md:bg-cyan-700   rounded-xl md:p-5 shadow-lg border-b-4 border-r-4 border-cyan-900 md:mb-4  md:mt-4 md:mx-2'>
         <div className='hidden md:flex w-full md:justify-center'>
           <div className='w-3/3'>
             <div className='flex justify-end'>
               <img onClick={handleImageClick} src={user.profile_pic ? `${BASE_URL}${user.profile_pic}` :'./profile.png'} alt="" className='bg-transparent border border-opacity-50 border-l-cyan-300 border-x-4 border-y-2  border-r-cyan-300 border-t-cyan-500 w-20 rounded-full h-20'/>
             </div>
-            <h3 className="text-white font-semibold">{user.fullname}</h3>
+            <h3 className="text-white font-semibold"><span>{greeting}</span> {user.fullname}</h3>
             <p className='text-xs'>{user.car}</p>
             <p>{user.email}</p>
             <div className="flex justify-between mt-2">

@@ -3,7 +3,7 @@
 import React from 'react'
 import Carousel from '@/app/components/carousal';
 
-import { useState,useEffect } from 'react';
+import { useState,useEffect,useCallback } from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import { fetchUserData,fetchAllUsers,followUser,unfollowUser, fetchAllShops } from '@/app/utils/fetchUser';
 import { useRouter } from 'next/navigation';
@@ -25,6 +25,8 @@ import { RotateLoader } from 'react-spinners';
 
 function UserHome() {
   const route = useRouter()
+
+  //advertisements
   const images = [
     'https://i.pinimg.com/1200x/49/0c/48/490c48a401fb61f872cb9b58ccd99e0a.jpg',
     'https://i.pinimg.com/1200x/7d/4c/45/7d4c45385441714214be0e6cee0abc61.jpg',
@@ -80,6 +82,32 @@ function UserHome() {
 
 
 
+
+
+const [greeting, setGreeting] = useState('');
+const updateTimeBasedContent = useCallback(() => {
+  const hours = new Date().getHours();
+  let newGreeting;
+  if (hours < 12) {
+    newGreeting = 'Good Morning';
+  } else if (hours < 18) {
+    newGreeting = 'Good Afternoon';
+  } else {
+    newGreeting = 'Good Evening';
+  }
+  setGreeting(newGreeting);
+}, []);
+useEffect(() => {
+  updateTimeBasedContent();
+  const timer = setInterval(updateTimeBasedContent, 60000); 
+
+  return () => clearInterval(timer);
+}, [updateTimeBasedContent]);
+
+
+
+
+
 //for local img loading/displaying[for completion of uploaded img url] ......
 const BASE_URL = 'http://127.0.0.1:8000';
 
@@ -101,9 +129,9 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 
 {/* SUBONE`` */}
-      <div className="h-[5%]   z-50 bg-stone-800 border-b-4 border-[#1d1d1d] shadow-md flex justify-between ">
+      <div className="h-[5%]   z-50 bg-stone-900 border-b-4 border-[#1d1d1d] shadow-md flex justify-between ">
         <div className='mr-5l size-16 md:size-20'>
-          <p className="font-mono flex flex-co ml-5 mt-2 mb-2  font-extrabold text-2xl">𝕄<span className="text-red-500">🅞</span>𝔻𝔼 𝔸ℝ𝔼ℕ𝔸</p>
+          <p className="flex flex-co ml-5 mt-2 mb-2  font-extrabold text-2xl">𝕄<span className="text-red-500">🅞</span>𝔻𝔼 𝔸ℝ𝔼ℕ𝔸</p>
         </div>
         {/* <div>search</div> */}
       </div>
@@ -120,12 +148,12 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 
 {/* shop suggestions---------------- */}
-            <div className='bg-stone-900 rounded-lg p-2 shadow-lg mb-4 mx-2'>
+            <div className='bg-cyan-700 rounded-t-lg p-2 shadow-lg mb-4 mx-2'>
             <Search1/>
             </div>
 
             <div className='bg-stone-900 rounded-xl p-5 shadow-lg mb-4 mx-2'>
-              <p className='text-white font-semibold mb-5'>Suggestions</p>
+              <p className='text-cyan-400 font-semibold text-lg mb-5'>Suggestions</p>
               <div className='flex flex-col  mb-2'>
 
               {filterShops ? filterShops.map((x) => (
@@ -145,7 +173,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 
             <div className='bg-stone-900 rounded-xl p-5 shadow-lg mx-2'>
-              <p className='text-white font-semibold mb-2'>Similar cars owners</p>
+              <p className='text-cyan-400 text-lg font-semibold mb-2'>Similar cars owners</p>
               {allusers.filter((x) => x.car === user.car && x.id !== user.id).map((x) => (
                 <div key={x.id} className='flex justify-between items-center mb-2 border-[#1d1d1d] rounded-lg p-2'>
                   <div className='flex items-center'>
@@ -165,7 +193,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 
             <div className='bg-stone-900 rounded-xl p-5 shadow-lg mx-2 mt-3 overflow-scroll' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              <p className='text-white font-semibold mb-2'>Suggestons</p>
+              <p className='text-cyan-400 text-lg font-semibold mb-2'>Suggestons</p>
               <SuggestedUsers/>
             </div>
         </div>
@@ -185,9 +213,10 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 
                 <div className='h-1/4 -top-28 relative w-full md:hidden'>
-                  <div className='flex  justify-between items-start p-4 bg-stone-900 rounded-xl m-2'>
-                    <div className='-mb-3'>
-                      <h2 className="text-white font-bold">{user.fullname}</h2>
+                
+                  <div className='flex  justify-between items-start p-4 bg-cyan-800 rounded-t-xl m-2 border-b-4 border-r-4 border-cyan-900'>
+                    <div className='-mb-3 border-0'>
+                      <h2 className="text-white font-bold">{greeting} {user.fullname}</h2>
                       <h3 className="text-white text-xs">username : {user.username}</h3>
                       <p className='text-xs'>{user.car}</p>
                       <p>email : {user.email}</p>
@@ -209,14 +238,15 @@ const BASE_URL = 'http://127.0.0.1:8000';
                   </div>
                   </div>
                 </div>
+                
             </div>
 
             <div className="flex  h-[75%] w-full bg-stone-800 p-4">
               {/* <p className="text-white font-semibold mb-4">Body</p> */}
               <div className='md:w-1/3 hidden md:flex flex-col  border-r-2 border-[#1d1d1d]'>
                 <div className='flex justify-around mb-4 cursor-pointer'>
-                  <p onClick={()=>setGMChoice('group')}>Group</p>
-                  <p onClick={()=>setGMChoice('message')}>Messages</p>
+                  <p className='text-cyan-400 text-lg' onClick={()=>setGMChoice('group')}>Group</p>
+                  <p className='text-cyan-400 text-lg' onClick={()=>setGMChoice('message')}>Messages</p>
                 </div>
                 <div >
                   {gmChoice == 'group' ?
@@ -226,7 +256,9 @@ const BASE_URL = 'http://127.0.0.1:8000';
                   :
                     
                   <>
-                    <p>messages</p>
+                    <p>
+                      Messages
+                    </p>
                   </>}
                 
                 </div>

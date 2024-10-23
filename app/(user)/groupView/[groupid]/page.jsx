@@ -81,15 +81,18 @@ function GroupView({ params }) {
     };
 
     return (
-        <div className='w-full flex flex-col md:flex-row md:h-screen h-[200vh]'>
-            <div className='bg-violet-900 flex flex-col md:h-screen md:w-1/5 h-2/6 z-20'>
-            <button onClick={()=> router.push('/home')} className='flex justify-start p-2'>back</button>
+        <div className='w-full flex flex-col md:flex-row md:h-screen h-[200vh] font-mono'>
+            <div className='bg-violet-900 object-contain flex flex-col md:h-screen md:w-1/5 h-[20%] z-20'>
+            <button onClick={()=> router.push('/home')} className='absolute p-2'>back</button>
                 {gpDetails ? (
-                    <>
+
+                    <div className='flex flex-col'>
                         {/* Mobile */}
                         <div className='m-3 flex rounded-3xl md:justify-center justify-end h-1/5'>
-                            <img className='rounded-3xl md:max-w-4xl md:max-h-48 max-w-52 max-h-36' src={gpDetails.group_image} alt="" />
+                            <img className='rounded-3xl md:max-w-4xl md:max-h-48 max-w-52 max-h-52' src={gpDetails.group_image} alt="" />
                         </div>
+
+
                         <div className='p-3 h-4/5 md:mt-5 text-sm md:text-lg font-mono'>
                             <p>{gpDetails.name}</p>
                             <p>{gpDetails.description}</p>
@@ -112,7 +115,7 @@ function GroupView({ params }) {
                                         </>:
                                         <>
                                         <p>delete group</p>
-                                        <p>remove member</p>
+                                        <p>remove a member</p>
                                         <p className='cursor-pointer' onClick={()=>setEdit(true)}>edit</p>
 
                                         </>}
@@ -127,13 +130,13 @@ function GroupView({ params }) {
                                 </>
                             )}
                         </div>
-                    </>
+                    </div>
                 ) : (
                     <>Loading group details...</>
                 )}
             </div>
 
-            <div className='p-3 bg-black md:h-screen md:w-4/5 h-4/6'>
+            <div className='p-3 bg-black md:h-screen md:w-4/5 h-[80%]'>
                 
             </div>
         </div>
