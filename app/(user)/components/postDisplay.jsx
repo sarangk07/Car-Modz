@@ -44,7 +44,7 @@ const ContentWithMentions = ({ content }) => {
       };
   
     return (
-      <p className='text-sm'>
+      <p className='text-xs'>
         {parts.map((part, index) => {
             if (index % 3 === 1) {
             

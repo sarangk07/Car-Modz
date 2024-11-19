@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 export const fetchUserData = async (dispatch) => {
   const username = localStorage.getItem('username');
   const authToken = localStorage.getItem('token-access');
-  console.log(username,authToken);
+  // console.log(username,authToken);
 
   if (!username || !authToken) {
     console.error('Username or auth token not found in localStorage');

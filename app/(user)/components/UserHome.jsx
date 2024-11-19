@@ -216,10 +216,10 @@ const BASE_URL = 'http://127.0.0.1:8000';
                 
                   <div className='flex  justify-between items-start p-4 bg-cyan-800 rounded-t-xl m-2 border-b-4 border-r-4 border-cyan-900'>
                     <div className='-mb-3 border-0'>
-                      <h2 className="text-white font-bold">{greeting} {user.fullname}</h2>
+                      <h2 className="text-white text-lg font-bold">{greeting} {user.fullname}</h2>
+                      <p>{user.email}</p>
                       <h3 className="text-white text-xs">username : {user.username}</h3>
-                      <p className='text-xs'>{user.car}</p>
-                      <p>email : {user.email}</p>
+                      <p className='text-xs'>Vehicle : {user.car}</p>
                        
                        <Logout/>
                        <EditProfile/>
@@ -254,7 +254,6 @@ const BASE_URL = 'http://127.0.0.1:8000';
                     <Groups/>
                   </>
                   :
-                    
                   <>
                     <p>
                       Messages

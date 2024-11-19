@@ -119,19 +119,19 @@ function UserView({ params }) {
   return (
     <div className='w-full flex flex-col font-mono md:flex-row h-screen bg-slate-200'>
       {/* User details */}
-      <div className='h-[35%] md:h-screen bg-black md:w-1/5'>
-        <p className='cursor-pointer' onClick={()=> router.push('/home')}>back</p>
+      <div className='h-[35%] md:h-screen bg-zinc-900 md:w-1/5'>
+        <p className='cursor-pointer mb-1' onClick={()=> router.push('/home')}>{`<`}</p>
 
         <div className='md:hidden flex justify-between'>
-          <div className='flex flex-col'>
+          <div className='flex flex-col rounded-lg mb-3 bg-zinc-800'>
             
             {userinfo ? (
-              <img src={userinfo.profile_pic ? `${BASE_URL}${userinfo.profile_pic}` : '/./profile.png'} alt="User pic" className='rounded-md p-3 w-40 h-40' />
+              <img className='rounded-lg mx-2 w-40 h-40'  src={userinfo.profile_pic ? `${BASE_URL}${userinfo.profile_pic}` : '/./profile.png'} alt="User pic"  />
             ) : (
               <img src='/./profile.png' alt="Default profile pic" className='rounded-md p-3 w-40 h-40' />
             )}
 
-            <div className='flex text-xs pl-3 pt-3 justify-between'>
+            <div className='flex text-xs mb-4 pl-3 pt-3 justify-between'>
               <div>
                 <p>followers</p>
                 <p>{userinfo?.followers?.length || 0}</p>
@@ -204,12 +204,12 @@ function UserView({ params }) {
       </div>
 
       {/* Post, content details */}
-      <div className='h-[65%] md:h-screen bg-red-800 md:w-4/5 overflow-auto' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <div className='h-[65%] md:h-screen bg-zinc-800 md:w-4/5 overflow-auto' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         <div className='pt-3'>
           
           <div className='mb-5 relative w-fit pr-1 pl-1 md:pr-6 md:pl-6 '>
                     {post.map(x => (
-                        <div key={x.id} className='rounded-xl ml-5 mr-5 p-2 mb-10 object-cover bg-stone-800'>
+                        <div key={x.id} className='rounded-xl ml-5 mr-5 p-2 mb-10 object-cover bg-zinc-900'>
                             <div className='rounded-xl border-t-4 border-[#1d1d1d] flex justify-between  mb-3 mt-0 pt-3 h-[10%]'>
                                 <div className='flex flex-col'>
                                     <h2>{x.title}</h2>

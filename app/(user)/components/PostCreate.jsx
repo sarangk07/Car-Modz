@@ -143,7 +143,7 @@ function PostCreate() {
       position="top-center"
       reverseOrder={false}
     />
-      <button onClick={() => setChoice('create')}>Create Post</button>
+      <button onClick={() => setChoice('create')} className='border-2 p-1 rounded-md border-cyan-400 hover:border-cyan-100 hover:bg-black text-teal-100'>Create Post</button>
       {choice === 'create' && (
         <form onSubmit={handleSubmit} className='flex flex-col bg-stone-700 items-center rounded-md p-4'>
           <label htmlFor="title" className="mb-2">Title</label>
@@ -156,8 +156,8 @@ function PostCreate() {
             required
           />
           <label htmlFor="content" className="mb-2">Description</label>
-          <p className='text-xs mb-2'>Want to mention a user? Type '@' followed by their username.</p>
-          <p className='text-xs mb-2'>Want to mention a Shop? Type '*' followed by Shopname.</p>
+          <p className='text-xs mb-2'>Want to mention a user? Type '<span className='text-cyan-300'>@</span>' followed by their username.</p>
+          <p className='text-xs mb-2'>Want to mention a Shop? Type '<span className='text-cyan-300'>*</span>' followed by Shopname.</p>
 
           <MentionInput
             value={content}
