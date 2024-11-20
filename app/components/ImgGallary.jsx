@@ -59,8 +59,8 @@ const ImageGallery = () => {
       </section>
 
       
-        <p className="absolute cursor-default text-zinc-300 z-30 top-16 font-mono md:text-9xl font-extrabold text-4xl">
-          𝕄<span className="text-zinc-700">🅞</span>𝔻𝔼 𝔸ℝ𝔼ℕ𝔸
+        <p className="absolute cursor-default text-gradient text-zinc-300 z-30 top-16 font-sour md:text-9xl font-extrabold text-4xl">
+          Mode Arena
         </p>
         <p className='absolute bottom-10'>
             <Start/>

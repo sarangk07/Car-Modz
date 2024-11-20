@@ -7,6 +7,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sour : ["Sour Gummy", 'sans-serif'],
+        Kanit : ["Kanit", 'sans-serif'],
+        roboto: ['Roboto', 'sans-serif'], 
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

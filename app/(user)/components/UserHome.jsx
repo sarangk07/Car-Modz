@@ -28,11 +28,11 @@ function UserHome() {
 
   //advertisements
   const images = [
-    'https://i.pinimg.com/1200x/49/0c/48/490c48a401fb61f872cb9b58ccd99e0a.jpg',
-    'https://i.pinimg.com/1200x/7d/4c/45/7d4c45385441714214be0e6cee0abc61.jpg',
-    'https://i.pinimg.com/1200x/32/cd/6c/32cd6ccb9c3a93f5995d6527ea990c41.jpg',
+    'https://i.pinimg.com/1200x/3c/43/42/3c4342a9c6bfa19849a771018ae3eed2.jpg',
+    'https://i.pinimg.com/1200x/97/0b/2e/970b2ec2d750b42e2a54a0875338551f.jpg',
+    'https://i.pinimg.com/1200x/45/38/47/453847b532a83f9384ebcef558321d5c.jpg',
     
-    'https://i.pinimg.com/1200x/63/83/ec/6383ec074d5d8ebab8de0da7ee013f04.jpg',
+    'https://i.pinimg.com/1200x/51/68/72/5168724e48399a683dab97554fd7ad02.jpg',
   ];
 
   const user = useSelector((state) => state.user);
@@ -125,13 +125,13 @@ const BASE_URL = 'http://127.0.0.1:8000';
   return (
 
     // MAINDIV
-    <div className='font-mono bg-stone-500 w-full text-[#f4ecee] h-[1750px] flex flex-col justify-stretch items-stretch cursor-default'>
+    <div className='font-Kanit bg-stone-500 w-full text-[#f4ecee] h-[1750px] flex flex-col justify-stretch items-stretch cursor-default'>
 
 
 {/* SUBONE`` */}
       <div className="h-[5%]   z-50 bg-stone-900 border-b-4 border-[#1d1d1d] shadow-md flex justify-between ">
         <div className='mr-5l size-16 md:size-20'>
-          <p className="flex flex-co ml-5 mt-2 mb-2  font-extrabold text-2xl">𝕄<span className="text-red-500">🅞</span>𝔻𝔼 𝔸ℝ𝔼ℕ𝔸</p>
+          <p className="flex flex-co ml-5 mt-2 mb-2 font-sour font-extrabold text-2xl">M<span className="text-red-500">o</span>de Arena</p>
         </div>
         {/* <div>search</div> */}
       </div>
