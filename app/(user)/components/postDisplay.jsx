@@ -1,13 +1,16 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPosts, deletePost, editPost} from '@/app/redux/slices/postsSlice';
 import PostCreate from './PostCreate';
-import { useSelector } from 'react-redux';
 import Comments from './comments';
 import Like from './like';
 import { useRouter } from 'next/navigation';
 import AllSuggestions from './mobilescreenSuggestions';
+// import { fetchLikes,fetchComments } from '@/app/redux/slices/socialSlice';
+import Image from 'next/image';
 
 
 
@@ -71,116 +74,152 @@ const ContentWithMentions = ({ content }) => {
 
 
 function PostDisplay() {
-    const router = useRouter()
-
+    const router = useRouter();
+    const dispatch = useDispatch();
+    
     const user = useSelector((state) => state.user);
     const allshops = useSelector((state) => state.user.shops);
+    const { items: posts, shuffledPosts, status, error } = useSelector((state) => state.posts);
 
-    const [post, setPost] = useState([]);
-    const [choice,setChoice] = useState('default')
-    const [choice2,setChoice2] = useState('default')
-    
-    const [del,setDel] = useState('default')
-    const token = localStorage.getItem('token-access');
-    const [shuffledPosts, setShuffledPosts] = useState([]);
-
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postsPerPage, setPostsPerPage] = useState(5); 
+ 
+    const [choice, setChoice] = useState('default');
+    const [choice2, setChoice2] = useState('default');
     const [editingPostId, setEditingPostId] = useState(null);
     const [editTitle, setEditTitle] = useState('');
     const [editContent, setEditContent] = useState('');
-
-    // const [filterShops, setfilterShops] = useState([]);
-
+  
+    
+    useEffect(() => {
+      if (status === 'idle') {
+        dispatch(fetchPosts());
+      }
+    }, [status, dispatch]);
     // useEffect(() => {
-    //     if (allshops) {
-    //         const shuffledShops = [...allshops].sort(() => 0.5 - Math.random());
-    //         setfilterShops(shuffledShops.slice(0, 4));
-    //     }
-    // }, [allshops]);
-
-console.log('postsss',shuffledPosts);
-
-
+    //     dispatch(fetchLikes());
+    //     dispatch(fetchComments());
+    //   }, [dispatch]);
+  
     const handleEditClick = (post) => {
-        setEditingPostId(post.id);
-        setEditTitle(post.title);
-        setEditContent(post.content);
+      setEditingPostId(post.id);
+      setEditTitle(post.title);
+      setEditContent(post.content);
+    };
+  
+    const handleDeletePost = async (postId) => {
+      if (!postId) {
+        return alert('No post Found!');
+      }
+      try {
+        await dispatch(deletePost(postId)).unwrap();
+        alert('Post deleted!');
+      } catch (error) {
+        alert(`Error: ${error.message}`);
+      }
+    };
+  
+    const handleEdit = async (postId) => {
+      if (!postId) {
+        return alert('No post Found!');
+      }
+      const formData = new FormData();
+      formData.append('title', editTitle);
+      formData.append('content', editContent);
+      
+      try {
+        await dispatch(editPost({ postId, formData })).unwrap();
+        setEditingPostId(null);
+        setEditTitle('');
+        setEditContent('');
+      } catch (error) {
+        console.error('Error editing post:', error);
+      }
+    };
+  
+    if (status === 'loading') {
+      return <div>Loading...</div>;
+    }
+  
+    if (status === 'failed') {
+      return <div>Error: {error}</div>;
+    }
+  
+    
+    const getFilteredPosts = () => {
+      switch (choice2) {
+        case 'user':
+          return shuffledPosts.filter(x => x.author.id === user.id);
+        case 'default':
+          return shuffledPosts.filter(x => x.author.id !== user.id);
+        case 'shops':
+          return shuffledPosts.filter(x => allshops.some(shop => shop.user === x.author.id));
+        default:
+          return shuffledPosts;
+      }
+    };
+  
+    const filteredPosts = getFilteredPosts();
+
+    // Pagination---------------
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+
+    // Change page---
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    //total pages---
+    const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+
+    
+    const renderPagination = () => {
+      const pageNumbers = [];
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+
+      return (
+        <div className='flex mb-4 justify-center items-center space-x-2 mt-4'>
+          <button 
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className='px-4 p py-1 bg-cyan-400 text-white rounded disabled:opacity-50'
+          >
+            ◀
+          </button>
+          {pageNumbers.map(number => (
+            <button
+              key={number}
+              onClick={() => paginate(number)}
+              className={`px-3 py-2 rounded ${
+                currentPage === number 
+                  ? 'bg-cyan-500 border text-white' 
+                  : 'bg-transparent border text-cyan-100'
+              }`}
+            >
+              {number}
+            </button>
+          ))}
+          <button 
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className='px-4 py-1 bg-cyan-400 text-white rounded disabled:opacity-50'
+          >
+            ▶
+          </button>
+        </div>
+      );
     };
 
-    useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                
-                const response = await axios.get('http://127.0.0.1:8000/api/posts/', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
-                console.log('posts', response.data);
-                setPost(response.data); 
-                
-            } catch (e) {
-                console.log(e, 'error');
-            }
-        };
-        fetchPosts();
-    }, [del]);
-
-    useEffect(() => {
-        if (post.length > 0) {
-          // Shuffle posts=-=-=-=-=-=-
-          const shuffled = [...post].sort(() => 0.5 - Math.random());
-          setShuffledPosts(shuffled);
-        }
-      }, [post]);
-
-
-    const handleDeletePost = async ({postId}) => {
-        if(!postId){
-            return alert('No post Found!')
-        }
-        try{
-            const response = await axios.delete(`http://127.0.0.1:8000/api/posts/${postId}/`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            })
-            console.log('post delete response : ', response);
-            alert('post deleted!')
-            setDel(`deleted${postId}`)
-            
-        }catch(error){
-            alert('error: ',error.message)
-        }
+    if (status === 'loading') {
+      return <div>Loading...</div>;
     }
 
-
-
-    const handleEdit = async (postId) => {
-        if (!postId) {
-            return alert('No post Found!');
-        }
-        const formData = new FormData();
-        formData.append('title', editTitle);
-        formData.append('content', editContent);
-        try {
-            const response = await axios.patch(`http://127.0.0.1:8000/api/posts/${postId}/`, formData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            console.log('edit response', response.data);
-            
-            setPost(prevPosts => prevPosts.map(post => post.id === postId ? response.data : post));
-            setEditingPostId(null);
-            setEditTitle('');
-            setEditContent('');
-        } catch (e) {
-            console.log('error ::::', e.response?.data || e.message);
-        }
-    };
-
-
+    if (status === 'failed') {
+      return <div>Error: {error}</div>;
+    }
 
 
   return (
@@ -209,7 +248,7 @@ console.log('postsss',shuffledPosts);
 {/* user */}
             {shuffledPosts && choice2 === 'user' && (
                 <div className='mb-5 pr-1 pl-1 md:pr-6 md:pl-6'>
-                    {shuffledPosts.filter(x => x.author.id  === user.id).map(x => (
+                    {currentPosts.map(x => (
                         <div key={x.id} className='ml-5 mr-5 mb-10 object-cover'>
                                 <div className='rounded-xl border-t-4 border-[#1d1d1d] flex justify-between t mb-3 mt-0 pt-2 h-[10%]'>
                                 
@@ -217,11 +256,9 @@ console.log('postsss',shuffledPosts);
                                 <h2>{x.title}</h2>
                                 <ContentWithMentions content={x.content} />
                                 </div>
-                                
-                                
-                                
+     
                             </div>
-                            <img src={x.image} alt="" className='relative w-full h-[90%] rounded-sm' />
+                            <Image width={0} height={0} src={x.image} alt="" objectFit='cover' layout="responsive"  className='relative w-full h-[90%] rounded-sm' />
                             <div className='rounded-xl flex-col border-b-4 border-[#1d1d1d] flex pb-3 mt-0 pt-3 h-[10%]'>
                             <div className='flex items-stretch justify-between'>
                                 <div className='flex'>
@@ -279,7 +316,7 @@ console.log('postsss',shuffledPosts);
                             </div>
                         </div>
                     ))}
-                    {shuffledPosts.filter(x => x.author.id  === user.id).length === 0 && <h1>not found</h1>}
+                    {currentPosts.length === 0 && <h1>not found</h1>}
                 </div>
             )}
 
@@ -287,7 +324,7 @@ console.log('postsss',shuffledPosts);
 {/* default */}
             {shuffledPosts && choice2 === 'default' && (
                 <div className='mb-5  pr-1 pl-1 md:pr-6 md:pl-6'>
-                    {shuffledPosts.filter(x => x.author.id !== user.id).map(x => (
+                    {currentPosts.map(x => (
                         <div key={x.id} className='rounded-xl md:mx-5 mx-0  mb-10 object-cover bg-stone-800'>
                             <div className='rounded-xl border-t-4 border-[#1d1d1d] flex justify-between  mb-3 mt-0 pt-3 h-[10%]'>
                                 <div className='flex flex-col'>
@@ -306,7 +343,7 @@ console.log('postsss',shuffledPosts);
                                     
                                 </div>
                             </div>
-                            <img src={x.image} alt="" className='relative w-fit h-[90%] rounded-sm' />
+                            <Image width={0} height={0} src={x.image} alt="" objectFit='cover' layout="responsive" className='relative w-fit h-[90%] rounded-sm' />
                             <div className='rounded-xl flex-col border-b-4 border-[#1d1d1d] flex  pb-3  mt-0 pt-2 h-[10%]'>
                             <div className='flex items-stretch justify-between'>
                                 <div className='flex'>
@@ -326,7 +363,7 @@ console.log('postsss',shuffledPosts);
                             </div>
                         </div>
                     ))}
-                    {shuffledPosts.filter(x => x.author.id !== user.id).length === 0 && <h1>not found</h1>}
+                    {currentPosts.length === 0 && <h1>not found</h1>}
                 </div>
             )}
 
@@ -337,7 +374,7 @@ console.log('postsss',shuffledPosts);
 
             {shuffledPosts && choice2 === 'shops' && (
                 <div className='mb-5 pr-1 pl-1 md:pr-6 md:pl-6'>
-                    {shuffledPosts.filter(x => allshops.some(shop => shop.user === x.author.id)).map(x => (
+                    {currentPosts.map(x => (
                         <div key={x.id} className='ml-5 mr-5 mb-10 object-cover'>
                                 <div className='rounded-xl border-t-4 border-[#1d1d1d] flex justify-between t mb-3 mt-0 pt-2 h-[10%]'>
                                 
@@ -356,11 +393,9 @@ console.log('postsss',shuffledPosts);
                                     </>}
                                     
                                 </div>
-                                
-                                
-                                
+              
                             </div>
-                            <img src={x.image} alt="" className='relative w-full h-[90%] rounded-sm' />
+                            <Image width={0} height={0} src={x.image} alt="" objectFit='cover' layout="responsive" className='relative w-full h-[90%] rounded-sm' />
                             <div className='rounded-xl flex-col border-b-4 border-[#1d1d1d] flex pb-3 mt-0 pt-3 h-[10%]'>
                             <div className='flex items-stretch justify-between'>
                                 <div className='flex'>
@@ -411,10 +446,10 @@ console.log('postsss',shuffledPosts);
                             </div>
                         </div>
                     ))}
-                    {/* {shuffledPosts.filter(x => x.author.id === allshops.some(shop => shop.user === x.author.id)).length === 0 && <h1>not found</h1>} */}
+                    {/* {currentPosts.filter(x => x.author.id === allshops.some(shop => shop.user === x.author.id)).length === 0 && <h1>not found</h1>} */}
                 </div>
             )}
-
+        {renderPagination()}
         </div>
         </div>
     </>

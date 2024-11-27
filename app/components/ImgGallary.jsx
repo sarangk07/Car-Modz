@@ -6,23 +6,23 @@ import Start from './Start';
 const ImageGallery = () => {
   const images = [
     {
-      src: 'https://i.pinimg.com/736x/ae/36/9a/ae369a3ea509bba244b73bb2d5233ff1.jpg',
+      src: '/landingImg/li1.jpg',
       alt: 'Gallery Image 1',
     },
     {
-      src: 'https://i.pinimg.com/474x/8c/70/01/8c7001f45703e518ced25a72be8697c5.jpg',
+      src: '/landingImg/li2.jpg',
       alt: 'Gallery Image 2',
     },
     {
-      src: 'https://i.pinimg.com/236x/30/b6/29/30b629fcfb3b2f0269db1ba1b3aaf591.jpg',
+      src: '/landingImg/li3.jpg',
       alt: 'Gallery Image 3',
     },
     {
-      src: 'https://i.pinimg.com/236x/65/53/9f/65539ff421f7bc14b5cba49c5232870a.jpg',
+      src: '/landingImg/li4.jpg',
       alt: 'Gallery Image 4',
     },
     {
-      src: 'https://i.pinimg.com/236x/be/87/97/be8797872fb254cf6903178150a59411.jpg',
+      src: '/landingImg/li5.jpg',
       alt: 'Gallery Image 5',
     },
   ];

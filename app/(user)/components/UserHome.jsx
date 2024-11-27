@@ -129,9 +129,9 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 
 {/* SUBONE`` */}
-      <div className="h-[5%]   z-50 bg-stone-900 border-b-4 border-[#1d1d1d] shadow-md flex justify-between ">
+      <div className="h-[5%]   z-50 bg-gradient-to-t from-cyan-800  to-stone-900 border-b-4 border-[#1d1d1d] shadow-md flex justify-between ">
         <div className='mr-5l size-16 md:size-20'>
-          <p className="flex flex-co ml-5 mt-2 mb-2 font-sour font-extrabold text-2xl">M<span className="text-red-500">o</span>de Arena</p>
+          <p className="flex flex-co ml-5 mt-2 mb-2 font-sour font-extrabold text-2xl">M<span className="text-cyan-500">o</span>de Arena</p>
         </div>
         {/* <div>search</div> */}
       </div>
@@ -149,7 +149,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 {/* shop suggestions---------------- */}
             <div className='bg-cyan-700 rounded-t-lg p-2 shadow-lg mb-4 mx-2'>
-            <Search1/>
+            <Search1 uniqueIdentifier="desktop"/>
             </div>
 
             <div className='bg-stone-900 rounded-xl p-5 shadow-lg mb-4 mx-2'>

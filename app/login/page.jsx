@@ -6,7 +6,7 @@ import axios from 'axios';
 import React, { useState,useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch,useSelector } from 'react-redux';
-
+import { BeatLoader } from 'react-spinners';
 import { setUser } from '../redux/slices/userSlice';
 import { Toaster } from 'react-hot-toast';
 import toast from 'react-hot-toast';
@@ -24,6 +24,7 @@ function Login() {
     const [page, setPage] = useState('login');
     const [isShopOwner, setIsShopOwner] = useState(false);
     const user = useSelector((state) => state.user);
+    const [loading,setLoading] = useState(false)
     
    
 
@@ -51,9 +52,13 @@ function Login() {
 
     const login = async (username, password) => {
         // const loadingToastL = toast.loading('Logging in...');
+        setLoading(true)
         try {
+            
             const response = await axios.post('http://127.0.0.1:8000/api/token/', { username, password });
             if (response.status === 200) {
+               
+
                 const { access, refresh, user } = response.data;
                 localStorage.setItem('token-access', access);
                 localStorage.setItem('token-refresh', refresh);
@@ -63,10 +68,14 @@ function Login() {
                 toast.success("Welcome...")
                 router.push('home');
             } else {
+                
+
                 toast.error("Login failed. Please try again.")
 
                 console.error('Login failed. Please try again.');
             }
+           
+
         } catch (error) {
             if (error.response) {
                 if (error.response.status === 400) {
@@ -87,6 +96,7 @@ function Login() {
                 console.error('Error setting up request:', error.message);
             }
         }
+        setLoading(false)
     };
 
     const handleSubmit = (e) => {
@@ -105,7 +115,8 @@ function Login() {
     };
 
     const register = async (registerCredentials) => {
-        const loadingToast = toast.loading('loading...');
+        // const loadingToast = toast.loading('loading...');
+        setLoading(true)
 
         try {
             const payload = { ...registerCredentials };
@@ -114,6 +125,8 @@ function Login() {
             }
 
             const response = await axios.post('http://127.0.0.1:8000/api/register/', payload);
+            
+            
             if (response.status === 201) {
                 console.log('Registration successful');
                 setRegisterCredentials({ username: '', fullname: '', email: '', car: '', password: '', confirmPassword: '' }); 
@@ -129,6 +142,7 @@ function Login() {
             toast.error('Registration error:', error)
             console.error('Registration error:', error.message);
         }
+        setLoading(false)
     };
 
     const handleSubmitR = (e) => {
@@ -142,11 +156,6 @@ function Login() {
             console.error('Please fill in all fields correctly and ensure passwords match');
         }
     };
-
-
-
-
-
 
 
 
@@ -172,8 +181,8 @@ function Login() {
                         }}
                         >
                     
-                    <div className='backdrop-blur-sm backdrop-grayscale backdrop-brightness-75 absolute right-[5rem] md:right-[31rem] w-[200px]  md:w-[325px] h-[510px]'/>
-                    <div className='backdrop-blur-sm backdrop-grayscale backdrop-brightness-75 absolute left-[5rem] md:left-[31rem] w-[200px] md:w-[325px] h-[510px]'/>
+                    <div className={`${loading ? 'backdrop-blur-none' : '' } backdrop-blur-sm backdrop-grayscale backdrop-brightness-75 absolute right-[5rem] md:right-[31rem] w-[200px]  md:w-[325px] h-[510px]`}/>
+                    <div className={`${loading ? 'backdrop-blur-none' : '' } backdrop-blur-sm backdrop-grayscale backdrop-brightness-75 absolute left-[5rem] md:left-[31rem] w-[200px] md:w-[325px] h-[510px]`}/>
                     
                     <form onSubmit={handleSubmit} className='z-10 text-white flex flex-col h-full items-center font-mono justify-around'>
                         <h1>LOGIN</h1>
@@ -200,8 +209,19 @@ function Login() {
                                 required
                             />
                         </div>
-                        <div className='flex flex-col'>
-                            <button type='submit' className='mb-5 p-3 flex justify-center  '>Enter</button>
+                        <div className='flex flex-col '>
+                            <div className='p-5 flex  justify-center'>
+                                {loading ? 
+                                <>
+                                <div>
+                                    <BeatLoader color='#4ade80'/>
+                                </div>
+                                </> 
+                                :
+                                <>
+                                <button type='submit' className='m-0 px-2 border flex rounded-md justify-center  '>Enter</button>
+                                </>}
+                            </div>
                             <p>Forgot password?</p>
                             <p onClick={() => setPage('register')} className='cursor-pointer'>register</p>
                         </div>
@@ -303,7 +323,16 @@ function Login() {
                                 />
                             </div>
                             <div className='flex flex-col'>
-                                <button type='submit' className='mb-2 mt-2'>Enter</button>
+                                {loading ? 
+                                <>
+                                <div className='flex justify-center '>
+                                    <BeatLoader color='#ec4899'/>
+                                </div>
+                                </> 
+                                :
+                                <>
+                                <button type='submit' className='m-0 px-2 border flex rounded-md justify-center  '>Enter</button>
+                                </>}
                                 <div className='flex'>
                                 <p onClick={() => setPage('login')} className='cursor-pointer'>Have account, login</p>
                                 </div>

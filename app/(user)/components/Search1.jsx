@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 
 
-function Search1() {
+function Search1({ uniqueIdentifier = '' }) {
     const [svalue, setSvalue] = useState('');  
     const [filteredResults, setFilteredResults] = useState([]);
     const [open,setOpen] = useState(false)
@@ -46,15 +46,15 @@ function Search1() {
       }, [svalue, allshops, allgroups, allusers]);
 
   return (
-    <>
-    <div className='flex justify-center mb-4'>
-         <input onChange={handleChange}  placeholder='Shops,Users,Groups...' type="search" name="" id=""  className='pl-1 rounded-sm  bg-stone-200 text-black' />   
+    <div className='flex flex-col justify-center'>
+    <div className='flex flex-col justify-center items-center mb-4'>
+         <input onChange={handleChange}  placeholder='Shops,Users,Groups...' type="search" name="" id={`S-U-G-Search-${uniqueIdentifier}`}  className='pl-1 flex w-full rounded-sm  bg-stone-200 text-black' />   
     </div>
     {
         open === true ?
         <div className='bg-stone-700 p-2 rounded-md'>
             <div className='flex justify-end cursor-pointer'>
-                <p onClick={()=>setOpen(false)}>close</p>
+              <p onClick={()=>setOpen(false)}>close</p>
             </div>
             <div>
             {filteredResults.length > 0 ? (
@@ -88,7 +88,7 @@ function Search1() {
         :
         <></>
     }
-    </>
+    </div>
   )
 }
 

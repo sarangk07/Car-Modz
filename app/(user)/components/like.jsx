@@ -3,7 +3,7 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { Toaster } from 'react-hot-toast';
+
 
 
 function Like({ postId }) {
@@ -68,18 +68,7 @@ function Like({ postId }) {
       setIsLiked(true);
       setBtnState('liked');
 
-      // toast.custom(
-      //   <div style={{ backgroundColor: 'transparent', padding: 0 }}>
-      //     <img src="./1PyX.gif" alt="like gif" style={{ backgroundColor: 'transparent' }} />
-      //   </div>,
-      //   {
-      //     duration: 1000,
-      //     style: {
-      //       background: 'transparent',
-      //       boxShadow: 'none',
-      //     },
-      //   }
-      // );
+     
       toast.success('')
       
       
@@ -110,11 +99,7 @@ function Like({ postId }) {
 
   return (
     <>
-    <Toaster
-      
-      position="top-center"
-      reverseOrder={false}
-    />
+   
     <div className='flex'>
 
       <button onClick={isLiked ? handleDislike : handleLike} className='mr-3'>

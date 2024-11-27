@@ -73,7 +73,7 @@ function AllSuggestions() {
               )) : <></>}
         </div>
         </div>
-        <Search1/>
+        <Search1 uniqueIdentifier="mobile"/>
     </div>
   )
 }
