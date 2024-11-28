@@ -181,8 +181,8 @@ function Login() {
                         }}
                         >
                     
-                    <div className={`${loading ? 'backdrop-blur-none' : '' } backdrop-blur-sm backdrop-grayscale backdrop-brightness-75 absolute right-[5rem] md:right-[31rem] w-[200px]  md:w-[325px] h-[510px]`}/>
-                    <div className={`${loading ? 'backdrop-blur-none' : '' } backdrop-blur-sm backdrop-grayscale backdrop-brightness-75 absolute left-[5rem] md:left-[31rem] w-[200px] md:w-[325px] h-[510px]`}/>
+                    <div className={` backdrop-blur-sm backdrop-grayscale backdrop-brightness-75 absolute right-[5rem] md:right-[31rem] w-[200px]  md:w-[325px] h-[510px]`}/>
+                    <div className={` backdrop-blur-sm backdrop-grayscale backdrop-brightness-75 absolute left-[5rem] md:left-[31rem] w-[200px] md:w-[325px] h-[510px]`}/>
                     
                     <form onSubmit={handleSubmit} className='z-10 text-white flex flex-col h-full items-center font-mono justify-around'>
                         <h1>LOGIN</h1>

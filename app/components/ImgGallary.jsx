@@ -60,7 +60,7 @@ const ImageGallery = () => {
 
       
         <p className="absolute cursor-default text-gradient text-zinc-300 z-30 top-16 font-sour md:text-9xl font-extrabold text-4xl">
-          Mode Arena
+        Torque Tribe
         </p>
         <p className='absolute bottom-10'>
             <Start/>
