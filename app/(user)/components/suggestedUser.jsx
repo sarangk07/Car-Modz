@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUserData, fetchAllUsers, followUser, unfollowUser } from '@/app/utils/fetchUser';
 import { useRouter } from 'next/navigation';
+import { getUserProfileImage } from '@/app/components/imageUtils';
 
 const BASE_URL = 'http://127.0.0.1:8000';
 
@@ -34,7 +35,7 @@ function SuggestedUsers() {
             {suggestedUsers.map((userItem) => (
                 <div key={userItem.id} className='bg-stone-900 rounded-xl p-5 shadow-lg mb-4 w-full md:w-full lg:w-full'>
                     <div className='flex'>
-                        <img src={userItem.profile_pic ? `${BASE_URL}${userItem.profile_pic}` : './profile.png'} alt="" className='bg-transparent cursor-pointer w-8 rounded-xl h-8 mr-3' onClick={()=> router.push(`/userView/${userItem.id}`)} />
+                        <img src={getUserProfileImage(userItem.profile_pic)} alt="" className='bg-transparent cursor-pointer w-8 rounded-xl h-8 mr-3' onClick={()=> router.push(`/userView/${userItem.id}`)} />
                         <div>
                             <h3 className='text-white font-semibold'>{userItem.fullname}</h3>
                             <p className='text-xs'>{userItem.car}</p>

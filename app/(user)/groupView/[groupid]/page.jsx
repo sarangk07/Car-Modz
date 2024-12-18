@@ -81,65 +81,59 @@ function GroupView({ params }) {
     };
 
     return (
-        <div className='w-full flex flex-col md:flex-row md:h-screen h-[200vh] font-mono'>
-            <div className='bg-violet-900 object-contain flex flex-col md:h-screen md:w-1/5 h-[20%] z-20'>
-            <button onClick={()=> router.push('/home')} className='absolute p-2'>back</button>
-                {gpDetails ? (
+        <div className='flex flex-col md:flex-row md:h-screen h-auto w-full font-mono'>
+    <div className='bg-zinc-800 flex flex-col h-auto md:h-full md:w-1/5 relative p-4'>
+        <button onClick={() => router.push('/home')} className='absolute top-4 left-4 p-2 bg-gray-700 rounded hover:bg-gray-600 transition-all'>Back</button>
+        
+        {gpDetails ? (
+            <div className='flex flex-col items-center md:items-start'>
+                {/* Image Section */}
+                <div className='m-2 flex justify-center rounded-3xl h-1/5'>
+                    <img className='rounded-3xl w-full max-w-xs md:max-w-md max-h-32 object-cover' src={gpDetails.group_image} alt="" />
+                </div>
 
-                    <div className='flex flex-col'>
-                        {/* Mobile */}
-                        <div className='m-3 flex rounded-3xl md:justify-center justify-end h-1/5'>
-                            <img className='rounded-3xl md:max-w-4xl md:max-h-48 max-w-52 max-h-52' src={gpDetails.group_image} alt="" />
-                        </div>
+                {/* Details Section */}
+                <div className='p-2 text-sm md:text-lg font-mono space-y-1'>
+                    <p className='font-bold'>{gpDetails.name}</p>
+                    <p>{gpDetails.description}</p>
+                    <p>Owner: {gpDetails.owner}</p>
+                    <p>Members: {gpDetails.members.length + 1}</p>
 
-
-                        <div className='p-3 h-4/5 md:mt-5 text-sm md:text-lg font-mono'>
-                            <p>{gpDetails.name}</p>
-                            <p>{gpDetails.description}</p>
-                            <p>Owner: {gpDetails.owner}</p>
-                            <p>Members: {gpDetails.members.length + 1}</p>
-                            {isMember ? (
-                                <p onClick={handleLeave} className="font-extrabold text-md cursor-pointer text-red-600">
-                                    Leave
-                                </p>
-                            ) : (
+                    {isMember ? (
+                        <p onClick={handleLeave} className="font-extrabold text-md cursor-pointer text-red-600">Leave</p>
+                    ) : (
+                        <>
+                            {currentUser?.username === gpDetails.owner ? (
                                 <>
-                                    {currentUser?.username === gpDetails.owner ? (
-                                        <> 
-                                        
-                                        {edit == true ? 
+                                    {edit ? (
                                         <>
-                                        <p className='cursor-pointer' onClick={()=>setEdit(false)}>back</p>
-                                        <EditGroup groupid={gpDetails.id}/>
-
-                                        </>:
-                                        <>
-                                        <p>delete group</p>
-                                        <p>remove a member</p>
-                                        <p className='cursor-pointer' onClick={()=>setEdit(true)}>edit</p>
-
-                                        </>}
-                                        
-                                        
-                                         </>
+                                            <p className='cursor-pointer' onClick={() => setEdit(false)}>Back</p>
+                                            <EditGroup groupid={gpDetails.id} />
+                                        </>
                                     ) : (
-                                        <p onClick={handleJoin} className="font-extrabold text-md cursor-pointer text-green-600">
-                                            Join
-                                        </p>
+                                        <>
+                                            <p className='cursor-pointer'>Delete Group</p>
+                                            <p className='cursor-pointer'>Remove a Member</p>
+                                            <p className='cursor-pointer' onClick={() => setEdit(true)}>Edit</p>
+                                        </>
                                     )}
                                 </>
+                            ) : (
+                                <p onClick={handleJoin} className="font-extrabold text-md cursor-pointer text-green-600">Join</p>
                             )}
-                        </div>
-                    </div>
-                ) : (
-                    <>Loading group details...</>
-                )}
+                        </>
+                    )}
+                </div>
             </div>
+        ) : (
+            <>Loading group details...</>
+        )}
+    </div>
 
-            <div className='p-3 bg-black md:h-screen md:w-4/5 h-[80%]'>
-                
-            </div>
-        </div>
+    <div className='bg-black p-3 md:h-full md:w-4/5 h-auto'>
+ 
+    </div>
+</div>
     );
 }
 

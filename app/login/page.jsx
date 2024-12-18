@@ -158,10 +158,13 @@ function Login() {
     };
 
 
-
-    if(user&&user.username){
-        return router.push('/home')
-    }
+    useEffect(() => {
+        const token = localStorage.getItem('token-access');
+        if (token) {
+            router.push('/home');
+        }
+    }, [router]);
+    
 
     return (
         <>

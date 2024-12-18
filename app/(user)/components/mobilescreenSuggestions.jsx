@@ -42,10 +42,10 @@ function AllSuggestions() {
                 <p className='text-cyan-400 text-lg'> Suggestions</p>
             </div>
         
-        <div className='flex border-b border-cyan-300 flex-col mt-2 w-full overflow-auto ' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div className='flex border-b border-cyan-300 flex-col mt-2 w-full  ' >
         
         <p className='text-cyan-400 font-bold'>Shops</p>
-        <div className='flex mt-2'>
+        <div className='flex mt-2 overflow-auto' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {filterShops ? filterShops.map((x) => (
                 <div key={x.id} className='mb-5  mr-20 flex w-64 '>
                     
@@ -58,9 +58,9 @@ function AllSuggestions() {
               )) : <></>}
         </div>
         </div>
-        <div className='flex border-b border-cyan-300 flex-col mt-2 mb-3 w-full overflow-auto ' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div className='flex border-b border-cyan-300 flex-col mt-2 mb-3 w-full ' >
         <p className='text-cyan-400 font-bold'>Groups</p>
-        <div className='flex mt-2'>
+        <div className='flex mt-2 overflow-auto ' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {filterGroups ? filterGroups.map((x) => (
                 <div key={x.id} className='mb-5 mr-20 flex w-64 '>
                     

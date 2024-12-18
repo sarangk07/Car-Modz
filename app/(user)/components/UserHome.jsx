@@ -2,7 +2,6 @@
 
 import React from 'react'
 import Carousel from '@/app/components/carousal';
-
 import { useState,useEffect,useCallback } from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import { fetchUserData,fetchAllUsers,followUser,unfollowUser, fetchAllShops } from '@/app/utils/fetchUser';
@@ -11,8 +10,6 @@ import Logout from '@/app/components/Logout';
 // import Group from './Group';
 import Groups from './Groups';
 import Image from 'next/image';
-// import axios from 'axios';
-// import { clearUser } from '@/app/redux/slices/userSlice';
 import PostDisplay from './postDisplay';
 
 import SuggestedUsers from './suggestedUser';
@@ -20,6 +17,8 @@ import EditProfile from './EditProfile';
 import Search1 from './Search1';
 import { RotateLoader } from 'react-spinners';
 
+
+import { getUserProfileImage } from '@/app/components/imageUtils';
 
 
 
@@ -38,7 +37,7 @@ function UserHome() {
   const user = useSelector((state) => state.user);
   const allusers = useSelector((state) => state.user.users);
   const allshops = useSelector((state) => state.user.shops);
-  console.log(user,"user infos");
+ 
 
   const [gmChoice,setGMChoice] = useState('group');
   
@@ -57,8 +56,9 @@ function UserHome() {
 
 
 
-  useEffect(() => {
-    const fetchData = async () => {
+useEffect(() => {
+  const fetchData = async () => {
+    try {
       console.log('Starting fetchUserData');
       await fetchUserData(dispatch);
       console.log('Completed fetchUserData');
@@ -70,15 +70,24 @@ function UserHome() {
       console.log('Starting fetchAllShops');
       await fetchAllShops(dispatch);
       console.log('Completed fetchAllShops');
+      
       setLoading(false);
-    };
-
-    fetchData();
-
-    if (!user.username && !loading) {
+    } catch (error) {
+      console.error('Fetch data error:', error);
+      // Redirect to login if there's an error fetching data
       route.push('/login');
+      setLoading(false);
     }
-}, [dispatch, user.username, loading, route]);
+  };
+
+  // // Check if user is not authenticated
+  // if (!user.username) {
+  //   route.push('/login');
+  //   return;
+  // }
+
+  fetchData();
+}, [dispatch, user.username, route]);
 
 
 
@@ -103,13 +112,6 @@ useEffect(() => {
 
   return () => clearInterval(timer);
 }, [updateTimeBasedContent]);
-
-
-
-
-
-//for local img loading/displaying[for completion of uploaded img url] ......
-const BASE_URL = 'http://127.0.0.1:8000';
 
 
 
@@ -144,8 +146,6 @@ const BASE_URL = 'http://127.0.0.1:8000';
 {/* user profile details---------------- */}
 
 <EditProfile/>
-           
-
 
 {/* shop suggestions---------------- */}
             <div className='bg-cyan-700 rounded-t-lg p-2 shadow-lg mb-4 mx-2'>
@@ -158,8 +158,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
               {filterShops ? filterShops.map((x) => (
                 <div key={x.id} className='mb-3 '>
-                  <img src={x.shop_image} alt="" className='cursor-pointer w-10 rounded-xl h-10 mr-3' onClick={()=> route.push(`/shopView/${x.id}`)}/>
-
+                  <Image width={100} height={100} src={x.shop_image} alt={x.shop_name} className='cursor-pointer w-10 rounded-xl h-10 mr-3' onClick={()=> route.push(`/shopView/${x.id}`)}/>
                   <p className='text-xs'>{x.shop_name}</p>
                   <p className='text-xs mt-1'>{x.description}</p>
                 </div>
@@ -177,11 +176,15 @@ const BASE_URL = 'http://127.0.0.1:8000';
               {allusers.filter((x) => x.car === user.car && x.id !== user.id).map((x) => (
                 <div key={x.id} className='flex justify-between items-center mb-2 border-[#1d1d1d] rounded-lg p-2'>
                   <div className='flex items-center'>
-                    <img src={x.profile_pic ? `${BASE_URL}${x.profile_pic}` : './profile.png'} alt="" className=' w-8 rounded-xl h-8 mr-2' />
-                    <p className='text-sm'>{x.fullname}</p>
+                  <Image 
+                    width={100} 
+                    height={100} 
+                    src={getUserProfileImage(x.profile_pic)} 
+                    alt={x.fullname} 
+                    className='w-8 rounded-xl h-8 mr-2' 
+                  />
                   </div>
                   <div>
-                    
                     <p className='text-xs mt-1 hover:text-white transition-colors duration-300 cursor-pointer border border-cyan-200'>Message</p>
                   </div>
                 </div>
@@ -220,26 +223,30 @@ const BASE_URL = 'http://127.0.0.1:8000';
                       <p>{user.email}</p>
                       <h3 className="text-white text-xs">username : {user.username}</h3>
                       <p className='text-xs'>Vehicle : {user.car}</p>
-                       
                        <Logout/>
                        <EditProfile/>
-                       
                        <p>more...</p>
                     </div>
                     <div className="flex flex-col justify-between mt-2">
-                    <img src={user.profile_pic ? `${BASE_URL}${user.profile_pic}` :'./profile.png'} alt="" className=' w-20 rounded-xl h-24'/>
+                    <img 
+                      width={100} 
+                      height={100} 
+                      src={getUserProfileImage(user.profile_pic)} 
+                      alt={user.fullname} 
+                      className='w-20 rounded-xl h-24'
+                    />
 
                     <p className="text-sm">
-                      <span className="font-bold">{user && user.followers ? user.followers.length : 0}</span> followers
+                      <span className="font-bold text-cyan-400">{user && user.followers ? user.followers.length : 0}</span> followers
                     </p>
                     <p className="text-sm">
-                      <span className="font-bold">{user && user.following ? user.following.length : 0}</span> following
+                      <span className="font-bold text-cyan-400">{user && user.following ? user.following.length : 0}</span> following
                     </p>
                   </div>
                   </div>
-                </div>
-                
+                </div>   
             </div>
+
 
             <div className="flex  h-[75%] w-full bg-stone-800 p-4">
               {/* <p className="text-white font-semibold mb-4">Body</p> */}

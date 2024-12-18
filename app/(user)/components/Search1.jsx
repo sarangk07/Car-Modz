@@ -52,36 +52,52 @@ function Search1({ uniqueIdentifier = '' }) {
     </div>
     {
         open === true ?
-        <div className='bg-stone-700 p-2 rounded-md'>
+        <div className='bg-stone-700 p-2 mb-3 rounded-md'>
             <div className='flex justify-end cursor-pointer'>
               <p onClick={()=>setOpen(false)}>close</p>
             </div>
             <div>
+              
             {filteredResults.length > 0 ? (
-                filteredResults.map((result, index) => (
-                    <div key={index}>
-                        <div className='flex'>
-                            <p>{result.name || result.fullname || result.shop_name}</p>
-                                
-                            {result.name ?
-                            <span className='ml-3 text-emerald-300 cursor-pointer'>join</span>:
-                            result.fullname ?
-                            <>
-                            <span className='ml-3 text-cyan-300 cursor-pointer' onClick={()=> route.push(`/userView/${result.id}`)}>view</span>
-                            </>:
-                            result.shop_name ?
-                            <>
-                            <span className='ml-3 text-cyan-300 cursor-pointer' onClick={()=> route.push(`/shopView/${result.id}`)}>view</span>
-                            </>
-                            :
-                            <></>
-                            }
-                        </div>
-                    </div>
-            ))
-            ) : (
-            <p>Nothing found</p>
-            )}
+              filteredResults.map((result, index) => {
+                  // Safely extract name/fullname/shop_name with fallback
+                  const displayName = result.name || result.fullname || result.shop_name || 'Unnamed';
+                  
+                  return (
+                      <div key={index}>
+                          <div className='flex items-center'>
+                              {/* Safely render name */}
+                              <p>{displayName}</p>
+                              
+                              {/* Use type checking instead of chained ternary */}
+                              {result.name && (
+                                  <span className='ml-3 text-emerald-300 cursor-pointer'>join</span>
+                              )}
+                              
+                              {result.fullname && (
+                                  <span 
+                                      className='ml-3 text-cyan-300 cursor-pointer' 
+                                      onClick={() => route.push(`/userView/${result.id}`)}
+                                  >
+                                      view
+                                  </span>
+                              )}
+                              
+                              {result.shop_name && (
+                                  <span 
+                                      className='ml-3 text-cyan-300 cursor-pointer' 
+                                      onClick={() => route.push(`/shopView/${result.id}`)}
+                                  >
+                                      view
+                                  </span>
+                              )}
+                          </div>
+                      </div>
+                  );
+              })
+          ) : (
+              <p>Nothing found</p>
+          )}
                
             </div>
         </div>

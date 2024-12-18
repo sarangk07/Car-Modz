@@ -12,9 +12,10 @@ function Logout() {
         localStorage.removeItem('token-refresh')
         localStorage.removeItem('username')
 
-        route.push('/login')
+       
 
         dispatch(clearUser())
+        route.push('/login')
     }
 
   return (

@@ -3,14 +3,13 @@
 import { useEffect, useState ,useCallback} from 'react';
 import React from 'react';
 import axios from 'axios';
-import DeleteAcc from './deleteAcc';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '@/app/redux/slices/userSlice';
 import Logout from '@/app/components/Logout';
 import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import Group from './Group';
-
+import { getUserProfileImage } from '@/app/components/imageUtils';
 
 
 
@@ -120,17 +119,17 @@ function EditProfile() {
         <div className='hidden md:flex w-full md:justify-center'>
           <div className='w-3/3'>
             <div className='flex justify-end'>
-              <img onClick={handleImageClick} src={user.profile_pic ? `${BASE_URL}${user.profile_pic}` :'./profile.png'} alt="" className='bg-transparent border border-opacity-50 border-l-cyan-300 border-x-4 border-y-2  border-r-cyan-300 border-t-cyan-500 w-20 rounded-full h-20'/>
+              <img onClick={handleImageClick} src={getUserProfileImage(user.profile_pic)} alt="" className='bg-transparent border border-opacity-50 border-l-cyan-300 border-x-4 border-y-2  border-r-cyan-300 border-t-cyan-500 w-20 rounded-full h-20'/>
             </div>
             <h3 className="text-white font-semibold"><span>{greeting}</span> {user.fullname}</h3>
             <p className='text-xs'>{user.car}</p>
             <p>{user.email}</p>
             <div className="flex justify-between mt-2">
               <p className="text-sm">
-                <span className="font-bold">{user && user.followers ? user.followers.length : 0}</span> followers
+                <span className="font-bold text-cyan-400">{user && user.followers ? user.followers.length : 0}</span> followers
               </p>
               <p className="text-sm">
-                <span className="font-bold">{user && user.following ? user.following.length : 0}</span> following
+                <span className="font-bold text-cyan-400">{user && user.following ? user.following.length : 0}</span> following
               </p>
             </div>
           </div>
@@ -154,13 +153,13 @@ function EditProfile() {
             modal: 'editProfileModal',
             overlay: 'editProfileOverlay'
           }}>
-          <div className='bg-stone-800 font-mono rounded-xl p-5 shadow-lg mb-4 mt-4 mx-2'>
-            <h4 className='text-center text-white'>Edit Your Profile</h4>
+          <div className='bg-stone-800  font-mono rounded-xl p-5 shadow-lg mb-4 mt-4 mx-2'>
+            <h4 className='text-center  text-white'>Edit Your Profile</h4>
             <form action="" onSubmit={handleEditProfile} className='flex flex-col items-center mt-5'>
               <label htmlFor="profilePic" className='text-white'>Profile Pic</label>
-              <input type="file" className='w-4/5 mb-2 text-zinc-600' name='profilePic' onChange={handleChangePic}/>
-              <input type="text" className='w-4/5 mb-2 text-zinc-600' name='fullname' placeholder='fullname' value={fullname} onChange={(e) => setFullname(e.target.value)}/>
-              <input type="text" className='w-4/5 mb-2 text-zinc-600' name='car' placeholder='change car' value={car} onChange={(e) => setCar(e.target.value)}/>
+              <input type="file" className='w-4/5 mb-2 text-zinc-200 border rounded-sm bg-cyan-500' name='profilePic' onChange={handleChangePic}/>
+              <input type="text" className='w-4/5 mb-2 text-zinc-600 rounded-sm' name='fullname' placeholder='fullname' value={fullname} onChange={(e) => setFullname(e.target.value)}/>
+              <input type="text" className='w-4/5 mb-2 text-zinc-600 rounded-sm' name='car' placeholder='change car' value={car} onChange={(e) => setCar(e.target.value)}/>
               <button type='submit' className='bg-blue-500 text-white p-2 rounded'>Update</button>
               {/* <button type='button' className='bg-gray-500 text-white p-2 rounded mt-2' onClick={() => setOpen(false)}>Cancel</button> */}
             </form>
@@ -182,7 +181,7 @@ function EditProfile() {
               <img 
                 src={user.profile_pic ? `${BASE_URL}${user.profile_pic}` : './profile.png'} 
                 alt="Profile" 
-                className="profileImage"
+                className="profileImage "
               />
             </div>
         </Modal>
@@ -224,6 +223,7 @@ function EditProfile() {
           width: auto;
           height: auto;
           object-fit: contain;
+          
         }
 
 
