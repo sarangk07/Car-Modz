@@ -30,8 +30,8 @@ const ImageGallery = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   return (
-    <div className="relative flex flex-col justify-center items-center w-full h-screen overflow-hidden">
-      <section className="container mx-auto py-4 px-4 sm:px-6 md:px-8 h-full flex items-center">
+    <div className="relative flex flex-col justify-center items-center w-screen h-full overflow-hidden">
+      <section className="container mx-auto  px-4 sm:px-6 md:px-8 h-screen flex items-center">
         <div className="flex gap-2 w-full mx-auto max-w-5xl h-[420px]">
           {images.map((image, index) => (
             <figure
@@ -59,10 +59,10 @@ const ImageGallery = () => {
       </section>
 
       
-        <p className="absolute cursor-default text-gradient text-zinc-300 z-30 top-16 font-sour md:text-9xl font-extrabold text-4xl">
+        <p className="absolute cursor-default text-gradient text-zinc-300 z-30 top-48 lg:top-16 font-sour md:text-9xl font-extrabold text-5xl">
         Torque Tribe
         </p>
-        <p className='absolute bottom-10'>
+        <p className=' absolute bottom-20 lg:bottom-10'>
             <Start/>
         </p>
       

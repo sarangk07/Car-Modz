@@ -176,7 +176,7 @@ function Login() {
                 <div className='flex flex-col items-center mt-20 w-full h-full overflow-x-hidden'>
                     
                     <div 
-                        className="z-10 flex flex-col items-center overflow-hidden w-[90%] max-w-[650px] h-[500px]"
+                        className="z-10 flex rounded-tl-3xl rounded-br-3xl flex-col items-center overflow-hidden w-[90%] max-w-[650px] h-[500px]"
                         style={{
                             backgroundImage: "url('./login.jpg')",
                             backgroundSize: 'cover',
@@ -235,7 +235,7 @@ function Login() {
             ) : (
                 <div className='  flex flex-col items-center mt-20 w-screen h-full'>
                     <div 
-                        className="z-10 text-sm md:text-md flex flex-col items-center overflow-hidden w-[90%] max-w-[650px] h-[500px]"
+                        className="z-10 rounded-tr-3xl rounded-bl-3xl text-sm md:text-md flex flex-col items-center overflow-hidden w-[90%] max-w-[650px] h-[500px]"
                         style={{
                             backgroundImage: "url('./register.jpg')",
                             backgroundSize: 'cover',
