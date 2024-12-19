@@ -52,14 +52,14 @@ const ImageGallery = () => {
                            ${hoveredIndex === index ? 
                              'scale-100 grayscale-0 opacity-100 saturate-100' : 
                              'scale-105 grayscale opacity-70 saturate-50'}`}
-              />
+                />
             </figure>
           ))}
         </div>
       </section>
 
       
-        <p className="absolute cursor-default text-gradient text-zinc-300 z-30 top-48 lg:top-16 font-sour md:text-9xl font-extrabold text-7xl">
+        <p className="absolute cursor-default text-gradient text-zinc-300 z-30 top-48 lg:top-16 font-sour md:text-9xl font-extrabold text-5xl">
           Torque Tribe
         </p>
         <p className='absolute bottom-20 lg:bottom-10'>

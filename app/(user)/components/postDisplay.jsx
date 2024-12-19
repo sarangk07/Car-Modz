@@ -185,7 +185,7 @@ function PostDisplay() {
           <button 
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className='px-4 p py-1 bg-cyan-400 text-white rounded disabled:opacity-50'
+            className='pr-3 text-lg bg-transparent text-white rounded disabled:opacity-30'
           >
             ◀
           </button>
@@ -193,10 +193,10 @@ function PostDisplay() {
             <button
               key={number}
               onClick={() => paginate(number)}
-              className={`px-3 py-2 rounded ${
+              className={`px-2 py-2 rounded ${
                 currentPage === number 
-                  ? 'bg-cyan-500 border text-white' 
-                  : 'bg-transparent border text-cyan-100'
+                  ? 'bg-cyan-500 border text-xs text-white' 
+                  : 'bg-transparent border text-xs text-cyan-100'
               }`}
             >
               {number}
@@ -205,7 +205,7 @@ function PostDisplay() {
           <button 
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className='px-4 py-1 bg-cyan-400 text-white rounded disabled:opacity-50'
+            className='pl-3 text-lg bg-transparent text-white rounded disabled:opacity-30'
           >
             ▶
           </button>
@@ -310,7 +310,7 @@ function PostDisplay() {
                                            
                                         </>
                                     )}
-                                <div className='flex'>
+                                <div className='flex justify-center items-center'>
                                     <Comments postId={x.id}/>
                                 </div>
                             </div>
@@ -333,13 +333,34 @@ function PostDisplay() {
                                 </div>
                                 <div className='flex flex-col cursor-pointer'>
                                     {x.author.is_shopOwner ? 
-                                    <>
+                                    <div className='flex flex-row-reverse mr-2'>
+                                      <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          viewBox="0 0 64 64"
+                                          className='size-6'
+                                      >
+                                          <rect x="10" y="20" width="44" height="36" fill="#34d399" />
+                                          <polygon points="10,20 32,5 54,20" fill="#34d399" />
+                                          <rect x="18" y="20" width="28" height="36" fill="#fff"/>
+                                          <rect x="22" y="30" width="8" height="8" fill="black"/>
+                                          <rect x="34" y="30" width="8" height="8" fill="black"/>
+                                      </svg>
+
                                         <p className='font-mono font-bold text-emerald-400'  >{x.author.username}</p>
-                                    </>
+                                    </div>
                                     :
-                                    <>
+                                    <div className='flex flex-row-reverse mr-2'>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 64 64"
+                                        className='size-6'
+                                    >
+                                        <circle cx="32" cy="20" r="12" fill="#34d399" />
+                                        <path d="M32,36c-16,0-24,8-24,16v4h48v-4C56,44,48,36,32,36z" fill="#34d399" />
+                                    </svg>
+
                                         <p onClick={()=> router.push(`/userView/${x.author.id}`)}>{x.author.fullname}</p>
-                                    </>}
+                                    </div>}
                                     
                                 </div>
                             </div>

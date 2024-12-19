@@ -10,12 +10,14 @@ function Comments({ postId }) {
   const [showcmt, setShowCmt] = useState(null)
   const token = localStorage.getItem('token-access');
   const [deletecmt, setDeletCmtState] = useState('default')
+  const [loading,setLoading] = useState(false);
 
   const user = useSelector((state) => state.user);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true)
       const response = await axios.post(
         'http://127.0.0.1:8000/api/comments/',
         { post: postId, content: cmt },
@@ -26,10 +28,14 @@ function Comments({ postId }) {
         }
       );
       console.log(response.data);
+      setCMT('');
       setChoice('default'); 
       alert('Comment added!');
     } catch (error) {
       console.error(error);
+    }
+    finally{
+      setLoading(false)
     }
   };
 
@@ -76,39 +82,53 @@ function Comments({ postId }) {
     <>
       {choice === 'cmtCreate' ? (
         <>
-          <form onSubmit={handleCommentSubmit}>
-            <input
-              className='text-zinc-700 rounded-full focus:outline-none focus:ring-0 focus:border-b-cyan-400'
-              type="text"
-              placeholder='Type here...'
-              onChange={(e) => setCMT(e.target.value)}
-            />
-            <button type='submit' className='pl-3 pb-3'>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
-              </svg>
-            </button>
-            <div className='flex flex-col justify-around items-center'>
-              <p onClick={() => setChoice('default')} className='cursor-pointer'>Cancel</p>
+          <form onSubmit={handleCommentSubmit} className='flex flex-col w-full items-center justify-center'>
+            <div>
+              <input
+                className='text-zinc-700 rounded-md px-2 focus:outline-none focus:ring-0 focus:border-b-cyan-400'
+                type="text"
+                placeholder='Type here...'
+                onChange={(e) => setCMT(e.target.value)}
+                required
+              />
+              <button type='submit' className='pl-3 relative top-[5px] mb-3'>
+                {loading?
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 animate-spin opacity-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                  </svg>
+                </>:
+                <>
+                  <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 ">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                  </svg>
+                </>}
+                
+              </button>
+              </div>
+            <div>
+              <div className='flex flex-col justify-around items-center'>
+                <p onClick={() => setChoice('default')} className='cursor-pointer'>Cancel</p>
+              </div>
             </div>
           </form>
         </>
       ) : choice === 'cmtShow' ? (
-        <div className='flex flex-col justify-between'>
+        <div className='flex flex-col justify-between w-full'>
           <div className='flex mb-3'>
             <p onClick={() => setChoice('default')} className='ml-3 cursor-pointer'>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 mt-3">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0L9 3M3 9h12a6 6 0 1 1 0 12h-3" />
               </svg>
             </p>
           </div>
-          <div>
+          <div className='flex flex-col items-start bg-zinc-700 mx-3 rounded-b-md justify-start'>
             {showcmt?.filter(x => x.post === postId).map((comment) => (
-              <div key={comment.id} className='flex p-3'>
-                <p className='text-xs mr-3'>{user.id === comment.user.id ? 'You' : comment.user.fullname}</p>
-                <p>{comment.content}</p>
+              <div key={comment.id} className='flex p-3 '>
+                <p className='text-xs border  p-1 rounded-sm text-cyan-200 mr-3'>{user.id === comment.user.id ? 'You' : comment.user.fullname}</p>
+                <p className='flex flex-wrap '>{comment.content}</p>
                 {user.id === comment.user.id && (
-                  <button onClick={() => handleDeleteCmt(comment.id)} className='ml-3 text-red-500'>
+                  <button onClick={() => handleDeleteCmt(comment.id)} className='ml-3 text-red-300 hover:text-red-500'>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5L19.625 18.132a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
                     </svg>
@@ -120,7 +140,15 @@ function Comments({ postId }) {
         </div>
       ) : (
         <div className='flex'>
-          <p onClick={handleShowComments} className='cursor-pointer'>Comments</p>
+          <p onClick={handleShowComments} className='cursor-pointer mt-2'>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="size-6 fill-current text-gray-100"
+            viewBox="0 0 24 24"
+          >
+            <path d="M21 15.5V4a2 2 0 00-2-2H5a2 2 0 00-2 2v11.5l4-4h14a2 2 0 002 2z" />
+          </svg>
+          </p>
           <button onClick={() => setChoice('cmtCreate')} className='ml-5 cursor-pointer'>Add Comment</button>
         </div>
       )}
