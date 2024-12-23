@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
+import gsap from 'gsap';
 
 
 const MentionInput = ({ value, onChange, allUsers, allShops }) => {
@@ -12,6 +13,7 @@ const MentionInput = ({ value, onChange, allUsers, allShops }) => {
   const [cursorPosition, setCursorPosition] = useState(0);
   const [mentionType, setMentionType] = useState(null);
   const inputRef = useRef(null);
+  
 
   console.log(allShops, 'console all shpossssssssssssssssssssssssssssssssssssssssssssssssssss');
 
@@ -99,6 +101,26 @@ function PostCreate() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [choice, setChoice] = useState('default');
   const token = localStorage.getItem('token-access');
+  const buttonREf = useRef(null);
+
+
+
+  const btnMouseEnter = ()=>{
+    gsap.to(buttonREf.current,{
+      borderColor:'green',
+      duration:1,
+      ease:'power2.inOut',
+      borderRadius:'0px',
+    })
+  }
+  const btnMouseLeave = ()=>{
+    gsap.to(buttonREf.current,{
+      borderColor:'cyan',
+      duration:2,
+      ease:'power2.inOut',
+      borderRadius:'6px',
+    })
+  }
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -137,13 +159,17 @@ function PostCreate() {
   };
 
   return (
-    <div>
+    <div >
       <Toaster
       
       position="top-center"
       reverseOrder={false}
     />
-      <button onClick={() => setChoice('create')} className='border-2 p-1 rounded-md border-cyan-400 hover:border-cyan-100 hover:bg-black text-teal-100'>Create Post</button>
+      <button
+        ref={buttonREf}
+        onMouseEnter={btnMouseEnter}
+        onMouseLeave={btnMouseLeave}
+        onClick={() => setChoice('create')} className='border-2 p-1 rounded-md border-cyan-400 hover:border-cyan-100 hover:bg-black text-teal-100'>Create Post</button>
       {choice === 'create' && (
         <form onSubmit={handleSubmit} className='flex flex-col bg-stone-700 items-center rounded-md p-4'>
           <label htmlFor="title" className="mb-2">Title</label>

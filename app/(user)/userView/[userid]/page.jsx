@@ -118,26 +118,26 @@ function UserView({ params }) {
 
   return (
 
-    <div className='flex flex-col md:flex-row h-screen bg-zinc-800'>
+    <div className='flex flex-col md:flex-row h-screen text-zinc-800 bg-blue-200'>
   
     {/* User details */}
-    <div className='bg-zinc-900 md:w-1/5 h-auto md:h-full p-4 flex flex-col items-center'>
+    <div className='bg-blue-200 md:w-1/5 h-auto md:h-full p-4 flex flex-col items-center'>
         <p className='cursor-pointer mb-4 text-white' onClick={() => router.push('/home')}>{`< Back`}</p>
 
-        <div className='flex flex-col items-center mb-6'>
+        <div className='flex flex-col items-center text-zinc-800 mb-6'>
             {userinfo ? (
-                <img className='rounded-full w-32 h-32 border-4 border-zinc-800' src={userinfo.profile_pic ? `${BASE_URL}${userinfo.profile_pic}` : ''} alt="User pic" />
+                <img className='rounded-full w-32 h-32 border-4 border-blue-300' src={userinfo.profile_pic ? `${BASE_URL}${userinfo.profile_pic}` : ''} alt="User pic" />
             ) : (
                 <img src='./profile.png' alt="Default profile pic" className='rounded-full w-32 h-32 border-4 border-zinc-800' />
             )}
 
-            <div className='text-center text-xs text-gray-300 mt-2'>
+            <div className='text-center text-xs text-zinc-800 mt-2'>
                 <p>Followers: {userinfo?.followers?.length || 0}</p>
                 <p>Following: {userinfo?.following?.length || 0}</p>
             </div>
         </div>
 
-        <div className='text-center text-white'>
+        <div className='text-center text-zinc-800'>
             <p className='text-lg font-bold'>{userinfo?.fullname || "User Name"}</p>
             <p>@{userinfo?.username || "username"}</p>
             <p>{userinfo?.car || "Car Model"}</p>

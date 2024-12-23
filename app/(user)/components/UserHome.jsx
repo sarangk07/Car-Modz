@@ -81,10 +81,11 @@ useEffect(() => {
   };
 
   // // Check if user is not authenticated
-  // if (!user.username) {
-  //   route.push('/login');
-  //   return;
-  // }
+  const atoken = localStorage.getItem('token-access')
+  if (!atoken) {
+    route.push('/login');
+    return;
+  }
 
   fetchData();
 }, [dispatch, user.username, route]);
