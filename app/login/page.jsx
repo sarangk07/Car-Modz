@@ -1,5 +1,3 @@
-
-
 'use client'
 
 import axios from 'axios';
@@ -15,6 +13,42 @@ import toast from 'react-hot-toast';
 
 //ISSUE IN TOKEN AUTH....EXPIR.
 
+//axios instance with default config-------
+const api = axios.create({
+    baseURL: 'http://127.0.0.1:8000/api',
+  });
+  
+  //handle token expiration globally----------------
+  api.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const originalRequest = error.config;
+      
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        
+        try {
+          const refreshToken = localStorage.getItem('token-refresh');
+          const response = await axios.post('/api/token/refresh/', { refresh: refreshToken });
+          
+          if (response.status === 200) {
+            const { access } = response.data;
+            localStorage.setItem('token-access', access);
+            api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+            originalRequest.headers['Authorization'] = `Bearer ${access}`;
+            
+            return api(originalRequest);
+          }
+        } catch (refreshError) {
+          localStorage.clear();
+          window.location.href = '/login';
+          return Promise.reject(refreshError);
+        }
+      }
+      return Promise.reject(error);
+    }
+  );
+
 
 function Login() {
     const router = useRouter();
@@ -26,7 +60,25 @@ function Login() {
     const user = useSelector((state) => state.user);
     const [loading,setLoading] = useState(false)
     
-   
+    useEffect(() => {
+        const token = localStorage.getItem('token-access');
+        if (token) {
+            validateToken(token);
+        }
+    }, [router]);
+
+    const validateToken = async (token) => {
+        try {
+            const response = await api.post('/token/verify/', { token });
+            if (response.status === 200) {
+                router.push('/home');
+            }
+        } catch (error) {
+            localStorage.removeItem('token-access');
+            localStorage.removeItem('token-refresh');
+            localStorage.removeItem('username',)
+        }
+    };
 
     useEffect(()=>{
         setRegisterCredentials({ username: '', fullname: '', email: '', car: '', password: '', confirmPassword: '' })
@@ -49,70 +101,67 @@ function Login() {
     };
 
 
-
     const login = async (username, password) => {
-        // const loadingToastL = toast.loading('Logging in...');
-        setLoading(true)
+        setLoading(true);
         try {
+            const response = await api.post('/token/', { username, password });
             
-            const response = await axios.post('http://127.0.0.1:8000/api/token/', { username, password });
             if (response.status === 200) {
-               
-
                 const { access, refresh, user } = response.data;
+                
+                
+                api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+                
+                
                 localStorage.setItem('token-access', access);
                 localStorage.setItem('token-refresh', refresh);
                 localStorage.setItem('username', user.username);
-                dispatch(setUser({ username, accessToken: access, refreshToken: refresh, userInfo: user }));
-                setCredentials({ username: '', password: '' });
-                toast.success("Welcome...")
-                router.push('home');
-            } else {
                 
-
-                toast.error("Login failed. Please try again.")
-
-                console.error('Login failed. Please try again.');
+                
+                dispatch(setUser({ 
+                    username, 
+                    accessToken: access, 
+                    refreshToken: refresh, 
+                    userInfo: user 
+                }));
+                
+                toast.success("Welcome...");
+                router.push('/home');
             }
-           
-
         } catch (error) {
-            if (error.response) {
-                if (error.response.status === 400) {
-                    toast.error("Invalid username or password. Please try again.")
-                    console.error('Invalid username or password. Please try again.');
-                } else if (error.response.status === 401) {
-                    toast.error("Unauthorized. Please check your credentials.")
-                    console.error('Unauthorized. Please check your credentials.');
-                } else {
-                    toast.error("An error occurred during login.")
-                    console.error('An error occurred during login.');
-                }
-            } else if (error.request) {
-                toast.error('Server not responding ', error.request)
-                console.error('No response received:', error.request);
-            } else {
-                toast.error("Error setting up request,try again ",error.message)
-                console.error('Error setting up request:', error.message);
-            }
+            handleLoginError(error);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false)
     };
 
-    const handleSubmit = (e) => {
+    const handleLoginError = (error) => {
+        if (error.response) {
+            if (error.response.status === 400) {
+                toast.error("Invalid username or password.");
+            } else if (error.response.status === 401) {
+                toast.error("Unauthorized. Please check your credentials.");
+            } else {
+                toast.error("An error occurred during login.");
+            }
+        } else {
+            toast.error("Server not responding.");
+        }
+    };
+
+
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (credentials.username && credentials.password) {
-            login(credentials.username, credentials.password);
+            await login(credentials.username, credentials.password);
         } else {
-            toast(
-                'Please fill in all fields',
-                {
-                  duration: 2000,
-                }
-              );
-            console.error('Please fill in all fields');
+            toast.error('Please fill in all fields');
         }
     };
+
+   
+
 
     const register = async (registerCredentials) => {
         // const loadingToast = toast.loading('loading...');
@@ -124,8 +173,8 @@ function Login() {
                 payload.is_shopOwner = true;
             }
 
-            const response = await axios.post('http://127.0.0.1:8000/api/register/', payload);
-            
+            // const response = await axios.post('http://127.0.0.1:8000/api/register/', payload);
+            const response = await api.post('/register/', payload);
             
             if (response.status === 201) {
                 console.log('Registration successful');
@@ -158,12 +207,7 @@ function Login() {
     };
 
 
-    useEffect(() => {
-        const token = localStorage.getItem('token-access');
-        if (token) {
-            router.push('/home');
-        }
-    }, [router]);
+    
     
 
     return (
