@@ -180,7 +180,7 @@ function Products({ shopId }) {
               onChange={handleInputChange}
               required
             >
-              <option value="" disabled>Select a product name</option>
+              <option value="" disabled>Select a product type</option>
               {productNames.map((name, index) => (
                 <option key={index} value={name} className='text-black'>{name}</option>
               ))}

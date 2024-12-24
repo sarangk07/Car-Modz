@@ -10,7 +10,7 @@ function Groups() {
   const dispatch = useDispatch();
   const router = useRouter();
   const allGroups = useSelector((state) => state.user.groups);
-  const currentUser = useSelector((state) => state.user); // Get the current user info
+  const currentUser = useSelector((state) => state.user); 
 
   const handleFetchGroups = useCallback(() => {
     fetchGroups(dispatch);
@@ -29,7 +29,7 @@ function Groups() {
   };
 
   return (
-    <div>
+    < >
       <div>
         {Array.isArray(allGroups) && allGroups.length > 0 ? (
           allGroups.map((group) => (
@@ -74,7 +74,7 @@ function Groups() {
           <p>No groups found! (Length: {Array.isArray(allGroups) ? allGroups.length : 'N/A'})</p>
         )}
       </div>
-    </div>
+    </>
   );
 }
 

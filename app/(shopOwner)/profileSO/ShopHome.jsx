@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
 import Products from './components/Products';
 import { RotateLoader } from 'react-spinners';
+import { editPost } from '@/app/redux/slices/postsSlice';
 
 
 
@@ -34,6 +35,10 @@ function ShopHome() {
 
   const [shopPosts, setShopPosts] = useState([]);
   const [del,setDel] = useState('default')
+
+  const [editingPostId, setEditingPostId] = useState(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editContent, setEditContent] = useState('');
 
 
 
@@ -122,7 +127,7 @@ function ShopHome() {
       try {
         const token = localStorage.getItem('token-access');
   
-        const response = await axios.get('http://127.0.0.1:8000/api/posts/', {
+        const response = await axios.get(`http://127.0.0.1:8000/api/posts/user-posts/${user.id}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -159,7 +164,36 @@ function ShopHome() {
     if (shop.shop_name) {
       fetchPosts();
     }
-  }, [shop.shop_name,shop.id,del]);
+  }, [shop.shop_name,shop.id,del,editingPostId]);
+
+
+
+
+  const handleEditClick = (post) => {
+    setEditingPostId(post.id);
+    setEditTitle(post.title);
+    setEditContent(post.content);
+  };
+
+  const handleEdit = async (postId) => {
+    if (!postId) {
+      return alert('No post Found!');
+    }
+    const formData = new FormData();
+    formData.append('title', editTitle);
+    formData.append('content', editContent);
+    
+    try {
+      await dispatch(editPost({ postId, formData })).unwrap();
+      setEditingPostId(null);
+      setEditTitle('');
+      setEditContent('');
+    } catch (error) {
+      console.error('Error editing post:', error);
+    }
+
+  };
+
   
 
 
@@ -269,7 +303,7 @@ function ShopHome() {
       reverseOrder={false}
     />
     
-    <div className='flex flex-col md:flex-row bg-slate-900 h-[1550px] font-mono w-full'>
+    <div className='flex flex-col cursor-default md:flex-row bg-slate-900 h-[1550px] font-mono w-full'>
       <div className='flex flex-col md:flex md:flex-col md:h-full md:w-1/3 w-full'>
 {/* User info and logout */}
         <div className='flex flex-col md:h-fit md:flex md:flex-col md:rounded-xl bg-slate-800 md:m-2 rounded-md mt-5 mb-5 p-3'>
@@ -407,22 +441,67 @@ function ShopHome() {
         <Products shopId={shop.id}/>
       </div>
       ) : bodyChoice === 'shopPost' ? (
-        <div className='md:w-2/3 w-full md:m-2 overflow-y-auto md:rounded-xl md:p-3 bg-gray-800' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div className='md:w-2/3 w-full  md:m-2 overflow-y-auto md:rounded-xl md:p-3 bg-gray-800' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           <div>
             {shopPosts.length > 0 ? shopPosts.map((x) => (
-              <div key={x.id} className='ml-5 mr-5 mb-10 object-cover p-10'>
-                <div className='rounded-xl border-t-4 border-cyan-300 flex justify-between mb-3 mt-0 pt-2 h-[10%]'>
-                  <div className='flex flex-col'>
+
+
+              <div key={x.id} className="ml-5 h-fit mr-5 mb-10 object-cover p-10">
+                <div className="rounded-xl border-t-4 border-cyan-300 flex justify-between mb-3 mt-0 pt-2 h-[10%]">
+                  <div className="flex flex-col">
                     {/* <h1>{x.author.fullname}</h1> */}
                     <h2>{x.title}</h2>
                     <p>{x.content}</p>
                   </div>
                 </div>
-                <div className='flex justify-center'>
-                  <img src={x.image} alt="" className='relative w-[80vh] rounded-sm' />
+                <div className="flex justify-center">
+                  <img
+                    src={x.image}
+                    alt=""
+                    className="relative w-full h-auto max-h-[40vh] object-cover rounded-sm"
+                  />
                 </div>
-                <button onClick={() => handleDeletePost({ postId: x.id })} >delete</button>
+                <button className="mr-5" onClick={() => handleEditClick(x)}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="size-6"
+                  >
+                    <path d="m2.695 14.762-1.262 3.155a.5.5 0 0 0 .65.65l3.155-1.262a4 4 0 0 0 1.343-.886L17.5 5.501a2.121 2.121 0 0 0-3-3L3.58 13.419a4 4 0 0 0-.885 1.343Z" />
+                  </svg>
+                </button>
+                <button onClick={() => handleDeletePost({ postId: x.id })}>delete</button>
+                {editingPostId === x.id ? (
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleEdit(x.id);
+                    }}
+                    className="flex flex-col font-mono bg-stone-800 p-2 rounded-md"
+                  >
+                    <input
+                      placeholder="title"
+                      type="text"
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      className="text-zinc-900 mb-2 rounded-md w-fit"
+                    />
+                    <input
+                      placeholder="content"
+                      type="text"
+                      value={editContent}
+                      className="text-zinc-900 mb-2 rounded-md"
+                      onChange={(e) => setEditContent(e.target.value)}
+                    />
+                    <button type="submit">Save</button>
+                    <button onClick={() => setEditingPostId(null)}>Cancel</button>
+                  </form>
+                ) : (
+                  <></>
+                )}
               </div>
+
             )) : (
               <p>No posts available</p>
             )}
