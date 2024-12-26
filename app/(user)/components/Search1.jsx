@@ -48,7 +48,7 @@ function Search1({ uniqueIdentifier = '' }) {
   return (
     <div className='flex flex-col justify-center'>
     <div className='flex flex-col justify-center items-center mb-4'>
-         <input onChange={handleChange}  placeholder='Shops,Users,Groups...' type="search" name="" id={`S-U-G-Search-${uniqueIdentifier}`}  className='pl-1 flex w-full rounded-sm  bg-stone-200 text-black' />   
+         <input onChange={handleChange}  placeholder='Shops,Users,Groups...' type="search" name="" id={`S-U-G-Search-${uniqueIdentifier}`}  className='pl-1 flex w-full rounded-t-md  bg-stone-200 text-black' />   
     </div>
     {
         open === true ?
@@ -60,23 +60,24 @@ function Search1({ uniqueIdentifier = '' }) {
               
             {filteredResults.length > 0 ? (
               filteredResults.map((result, index) => {
-                  // Safely extract name/fullname/shop_name with fallback
+                  
                   const displayName = result.name || result.fullname || result.shop_name || 'Unnamed';
                   
                   return (
                       <div key={index}>
-                          <div className='flex items-center'>
-                              {/* Safely render name */}
-                              <p>{displayName}</p>
+                          <div className='flex items-center border mb-2 pr-1 rounded-sm'>
                               
-                              {/* Use type checking instead of chained ternary */}
+                              <p className='bg-zinc-800 pl-1 pr-3 text-xs rounded-e-full'>{displayName}</p>
+
                               {result.name && (
-                                  <span className='ml-3 text-emerald-300 cursor-pointer'>join</span>
+                                  <span 
+                                  onClick={() => route.push(`/groupView//${result.id}`)}
+                                  className='ml-3 text-emerald-300 cursor-pointer'>view</span>
                               )}
                               
                               {result.fullname && (
                                   <span 
-                                      className='ml-3 text-cyan-300 cursor-pointer' 
+                                      className='ml-3  text-cyan-300 cursor-pointer' 
                                       onClick={() => route.push(`/userView/${result.id}`)}
                                   >
                                       view

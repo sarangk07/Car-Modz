@@ -7,20 +7,23 @@ import { useSelector,useDispatch } from 'react-redux';
 import { fetchUserData,fetchAllUsers,followUser,unfollowUser, fetchAllShops } from '@/app/utils/fetchUser';
 import { useRouter } from 'next/navigation';
 import Logout from '@/app/components/Logout';
-// import Group from './Group';
-import Groups from './Groups';
 import Image from 'next/image';
-import PostDisplay from './postDisplay';
-
-import SuggestedUsers from './suggestedUser';
 import EditProfile from './EditProfile';
 import Search1 from './Search1';
 import { RotateLoader } from 'react-spinners';
-
-
 import { getUserProfileImage } from '@/app/components/imageUtils';
+import dynamic from 'next/dynamic'
 
 
+const PostDisplay = dynamic(() => import('./postDisplay'), {
+  loading: () => <p>Loading...</p>
+})
+const SuggestedUsers = dynamic(() => import('./suggestedUser'), {
+  loading: () => <p>Loading...</p>
+})
+const Groups = dynamic(() => import('./Groups'), {
+  loading: () => <p>Loading...</p>
+})
 
 function UserHome() {
   const route = useRouter()

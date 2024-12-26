@@ -156,7 +156,7 @@ function Like({ postId }) {
       }
       </button>
       <p className='text-cyan-400 font-extrabold'>
-      {likes && likes.filter(like => like.post === postId).length}
+      {/* {likes && likes.filter(like => like.post === postId).length} */}
       </p>
     </div>
     </>

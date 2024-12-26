@@ -40,9 +40,11 @@ const api = axios.create({
             return api(originalRequest);
           }
         } catch (refreshError) {
-          localStorage.clear();
-          window.location.href = '/login';
-          return Promise.reject(refreshError);
+            localStorage.removeItem('token-access');
+            localStorage.removeItem('token-refresh');
+            localStorage.removeItem('username',)
+            window.location.href = '/login';
+            return Promise.reject(refreshError);
         }
       }
       return Promise.reject(error);

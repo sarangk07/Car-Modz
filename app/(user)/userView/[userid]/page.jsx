@@ -5,12 +5,21 @@ import { useSelector } from 'react-redux';
 import { fetchAUserInfo } from '@/app/utils/fetchUser';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import Comments from '../../components/comments';
-import Like from '../../components/like';
+// import Comments from '../../components/comments';
+// import Like from '../../components/like';
 import { unfollowUser,followUser } from '@/app/utils/fetchUser';
 import { useDispatch } from 'react-redux';
 
 import { RotateLoader } from 'react-spinners';
+
+//dynamic import for smoother and fasrter page loading----------
+import dynamic from 'next/dynamic'
+const Comments = dynamic(() => import('../../components/comments'), {
+  loading: () => <p>Loading...</p>
+})
+const Like = dynamic(() => import('../../components/like'), {
+  loading: () => <p>Loading...</p>
+})
 
 
 function UserView({ params }) {
